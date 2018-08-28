@@ -17,7 +17,7 @@ set sts=4
 set ts=4
 set sw=4
 
-set foldmethod=syntax
+"set foldmethod=syntax
 
 set laststatus=2
 
@@ -25,11 +25,9 @@ set hls
 
 set scrolloff=5
 
-if has("gui_running")
-        set background=light
-else
-        set background=dark
-endif
+set background=light
+
+"set makeprg=on_make
 
 set modeline
 
@@ -56,6 +54,8 @@ set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%y%r%m%=L%l,C%c\ %P
 command Gadd !git add %
 command Gdiff !git diff %
 command Gstatus !git status
+command Gcommit !git commit
+command Gpush !git push
 
 " Set tabstop, softtabstop and shiftwidth to the same value
 command! -nargs=* Stab call Stab()
@@ -85,16 +85,17 @@ function! SummarizeTabs()
     endtry
 endfunction
 
+augroup filetypedetect
+    au BufRead,BufNewFile *.ts set filetype=javascript
+augroup END
+autocmd BufWritePost CHANGELOG.md exe "!git add CHANGELOG.md; git commit -m 'Updated change log'"
+
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+set splitbelow
+set splitright
+
 execute pathogen#infect()
-"Syntastic config
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_python_checkers = ['pylint', 'pycodestyle']
-let g:syntastic_javascript_checkers = ['jsl']
-let g:syntastic_c_checkers = []
-" let g:syntastic_c_remove_include_errors = 1
-"let g:syntastic_c_include_dirs = split(system("find_include_folders"), "\n")
-"let g:syntastic_c_remove_include_errors = 1
-"let g:syntastic_c_no_default_include_dirs = 1
