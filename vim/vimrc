@@ -97,5 +97,3 @@ nnoremap <C-H> <C-W><C-H>
 
 set splitbelow
 set splitright
-
-execute pathogen#infect()

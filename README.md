@@ -3,7 +3,7 @@ My dotfiles
 
 To install the configuration files, run
 ``` bash
-ln -s vim ~/.vim
+ln -s ${PWD}/vim ~/.vim
 ```
 
 # Handling packages
