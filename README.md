@@ -8,7 +8,7 @@ ln -s ${PWD}/screenrc ~/.screenrc
 ln -s ${PWD}/zshrc ~/.zshrc
 
 mkdir -p ~/.config
-ln -s ~/.config/i3 ${PWD}/.config/i3
+ln -s ~/.config/i3 ${PWD}/i3
 ```
 
 # Handling packages
