@@ -25,7 +25,7 @@ set hls
 
 set scrolloff=5
 
-set background=light
+set background=dark
 
 "set makeprg=on_make
 
