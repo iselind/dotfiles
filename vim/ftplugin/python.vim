@@ -19,3 +19,5 @@ setlocal foldmethod=indent
 "" This will fix white space issues automatically
 "" Better as pre-commit hook?
 ":autocmd BufWritePre *.py :execute "normal mzgggqG'zzz"
+
+:ALEDisable
