@@ -20,4 +20,5 @@ setlocal foldmethod=indent
 "" Better as pre-commit hook?
 ":autocmd BufWritePre *.py :execute "normal mzgggqG'zzz"
 
-:ALEDisable
+":ALEDisable
+let g:ale_python_flake8_executable = 'python3'
