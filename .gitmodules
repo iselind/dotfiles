@@ -4,3 +4,6 @@
 [submodule "vim/pack/mrx/start/ale"]
 	path = vim/pack/mrx/start/ale
 	url = https://github.com/w0rp/ale.git
+[submodule "vim/pack/mrx/start/vader"]
+	path = vim/pack/mrx/start/vader
+	url = https://github.com/junegunn/vader.vim.git
