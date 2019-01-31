@@ -1,8 +1,10 @@
-set nocompatible
+scriptencoding utf-8
 
 set backspace=indent,eol
 
 syntax enable
+
+set spell spelllang=en_gb
 
 set expandtab
 
@@ -10,28 +12,24 @@ set ignorecase
 set smartcase
 set incsearch
 
-set ai
-set si
+set autoindent
+set smartindent
 
-set sts=4
-set ts=4
-set sw=4
-
-"set foldmethod=syntax
+set softtabstop=4
+set tabstop=4
+set shiftwidth=4
 
 set laststatus=2
 
-set hls
+set hlsearch
 
 set scrolloff=5
 
-if has("gui_running")
+if has('gui_running')
     set background=light
 else
     set background=dark
 endif
-
-"set makeprg=on_make
 
 set modeline
 
@@ -40,8 +38,8 @@ set autoread
 
 " Highlight space error
 :highlight ExtraWhitespace term=inverse gui=inverse cterm=inverse
-" Show trailing whitespace and when tabs and space are mixed, also highlight
-" when we have more than one white space between non-whitespace characters
+" Show trailing white space and when tabs and space are mixed, also highlight
+" when we have more than one white space between non-white space characters
 :match ExtraWhitespace /^\s\+$\|\s\+$\|S\s\{2,\}\S\|\t\+ \+/
 
 :set cursorline
@@ -61,39 +59,6 @@ command Gstatus !git status
 command Gcommit !git commit
 command Gpush !git push
 
-" Set tabstop, softtabstop and shiftwidth to the same value
-command! -nargs=* Stab call Stab()
-function! Stab()
-    let l:tabstop = 1 * input('set tabstop = softtabstop = shiftwidth = ')
-    if l:tabstop > 0
-        let &l:sts = l:tabstop
-        let &l:ts = l:tabstop
-        let &l:sw = l:tabstop
-    endif
-    call SummarizeTabs()
-endfunction
-
-function! SummarizeTabs()
-    try
-        echohl ModeMsg
-        echon 'tabstop='.&l:ts
-        echon ' shiftwidth='.&l:sw
-        echon ' softtabstop='.&l:sts
-        if &l:et
-            echon ' expandtab'
-        else
-            echon ' noexpandtab'
-        endif
-    finally
-        echohl None
-    endtry
-endfunction
-
-augroup filetypedetect
-    au BufRead,BufNewFile *.ts set filetype=javascript
-augroup END
-autocmd BufWritePost CHANGELOG.md exe "!git add CHANGELOG.md; git commit -m 'Updated change log'"
-
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -102,10 +67,10 @@ nnoremap <C-H> <C-W><C-H>
 set splitbelow
 set splitright
 
-" Load all plugins now.
-" Plugins need to be added to runtimepath before helptags can be generated.
+" Load all plug ins now.
+" Plug ins need to be added to runtime path before help tags can be generated.
 packloadall
-" Load all of the helptags now, after plugins have been loaded.
+" Load all of the help tags now, after plug ins have been loaded.
 " All messages and errors will be ignored.
 silent! helptags ALL
 
@@ -115,7 +80,7 @@ let g:ale_lint_delay = 1000
 
 " Exercism stuff
 function! s:exercism_tests()
-  if expand('%:e') == 'vim'
+  if expand('%:e') ==# 'vim'
     let testfile = printf('%s/%s.vader', expand('%:p:h'),
           \ tr(expand('%:p:h:t'), '-', '_'))
     if !filereadable(testfile)
@@ -136,5 +101,12 @@ function! s:exercism_tests()
   endif
 endfunction
 
-autocmd BufRead *.{vader,vim} command! -buffer Test call s:exercism_tests()
+augroup exercism
+    autocmd!
+    autocmd BufRead *.{vader,vim} command! -buffer Test call s:exercism_tests()
+augroup END
 
+augroup filetypedetect
+    autocmd!
+    au BufRead,BufNewFile *.ts set filetype=javascript
+augroup END
