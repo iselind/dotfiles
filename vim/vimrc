@@ -109,4 +109,6 @@ augroup END
 augroup filetypedetect
     autocmd!
     au BufRead,BufNewFile *.ts set filetype=javascript
-augroup END
+    au BufRead,BufNewFile *.yml set filetype=yaml nospell
+    au BufRead,BufNewFile vimrc set filetype=vim nospell
+augroup END 
