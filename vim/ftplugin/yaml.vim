@@ -1,7 +1,11 @@
-:set expandtab
+setl expandtab
 
-:set tabstop=2
-:set shiftwidth=2
-:set softtabstop=2
+setl tabstop=2
+setl shiftwidth=2
+setl softtabstop=2
 
-:set list
+setl cursorcolumn
+
+setl colorcolumn=80
+
+setl list

@@ -4,8 +4,6 @@ set backspace=indent,eol
 
 syntax enable
 
-set spell spelllang=en_gb
-
 set expandtab
 
 set ignorecase
@@ -101,6 +99,9 @@ function! s:exercism_tests()
   endif
 endfunction
 
+noremap <F5> :lprevious<CR>
+noremap <F6> :lnext<CR>
+
 augroup exercism
     autocmd!
     autocmd BufRead *.{vader,vim} command! -buffer Test call s:exercism_tests()
@@ -108,7 +109,9 @@ augroup END
 
 augroup filetypedetect
     autocmd!
-    au BufRead,BufNewFile *.ts set filetype=javascript
-    au BufRead,BufNewFile *.yml set filetype=yaml nospell
-    au BufRead,BufNewFile vimrc set filetype=vim nospell
-augroup END 
+    au BufRead,BufNewFile *.ts setlocal filetype=javascript
+    au BufRead,BufNewFile *.yml setlocal filetype=yaml
+    au BufRead,BufNewFile *.go setlocal filetype=go
+    au BufRead,BufNewFile *.py setlocal filetype=python
+    au BufRead,BufNewFile vimrc setlocal filetype=vim
+augroup END

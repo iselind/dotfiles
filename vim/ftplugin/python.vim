@@ -8,7 +8,7 @@ setlocal nosmartindent
 setlocal foldmethod=indent
 
 " Mark how long is 79 columns
-:set colorcolumn=79
+setlocal colorcolumn=79
 
 "" Use autopep8 for formatting Python files
 "" The hyphen '-' at the end of the command is required to make autopep8 read
