@@ -1,12 +1,10 @@
-:set noexpandtab
+setlocal noexpandtab
+setlocal shiftwidth=4
+setlocal softtabstop=4
+setlocal tabstop=4
 
-set noexpandtab
-set shiftwidth=4
-set softtabstop=4
-set tabstop=4
-
-let g:go_fmt_command = "goimports"
-let g:go_list_type = "quickfix"
+let g:go_fmt_command = 'goimports'
+let g:go_list_type = 'quickfix'
 let g:go_auto_sameids = 1
 let g:go_auto_type_info = 1
 
