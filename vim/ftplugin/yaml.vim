@@ -8,4 +8,6 @@ setl cursorcolumn
 
 setl colorcolumn=80
 
+setl foldmethod=indent
+
 setl list
