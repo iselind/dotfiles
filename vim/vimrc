@@ -42,7 +42,7 @@ set autoread
 
 :set cursorline
 
-" How indentation looks like
+" What indentation looks like
 set listchars=tab:▷⋅
 
 filetype plugin indent on
@@ -65,8 +65,8 @@ nnoremap <C-H> <C-W><C-H>
 set splitbelow
 set splitright
 
-" Load all plug ins now.
-" Plug ins need to be added to runtime path before help tags can be generated.
+" Load all plugins now.
+" Plugins need to be added to runtime path before help tags can be generated.
 packloadall
 " Load all of the help tags now, after plug ins have been loaded.
 " All messages and errors will be ignored.
