@@ -17,6 +17,9 @@ set softtabstop=4
 set tabstop=4
 set shiftwidth=4
 
+" Make sure comments continue on <ENTER> and starting new lines with o
+set formatoptions+=ro
+
 set laststatus=2
 
 set hlsearch
