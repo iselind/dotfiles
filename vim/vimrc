@@ -80,35 +80,7 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = 0
 let g:ale_lint_delay = 1000
 
-" Exercism stuff
-function! s:exercism_tests()
-  if expand('%:e') ==# 'vim'
-    let testfile = printf('%s/%s.vader', expand('%:p:h'),
-          \ tr(expand('%:p:h:t'), '-', '_'))
-    if !filereadable(testfile)
-      echoerr 'File does not exist: '. testfile
-      return
-    endif
-    source %
-    execute 'Vader' testfile
-  else
-    let sourcefile = printf('%s/%s.vim', expand('%:p:h'),
-          \ tr(expand('%:p:h:t'), '-', '_'))
-    if !filereadable(sourcefile)
-      echoerr 'File does not exist: '. sourcefile
-      return
-    endif
-    execute 'source' sourcefile
-    Vader
-  endif
-endfunction
-
 noremap <F5> :lprevious<CR>
 noremap <F6> :lnext<CR>
-
-augroup exercism
-    autocmd!
-    autocmd BufRead *.{vader,vim} command! -buffer Test call s:exercism_tests()
-augroup END
 
 set diffopt=vertical,filler,context:3
