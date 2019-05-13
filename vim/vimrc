@@ -53,13 +53,6 @@ filetype plugin indent on
 
 set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%y%r%m%=L%l,C%c\ %P
 
-" Git convenience commands, % is the current file name with folder relative to
-" where vim was started
-command Gadd !git add %
-command Gdiff !git diff %
-command Gstatus !git status
-command Gcommit !git commit
-command Gpush !git push
 
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
