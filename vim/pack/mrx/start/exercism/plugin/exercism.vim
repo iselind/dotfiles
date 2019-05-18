@@ -3,6 +3,11 @@
 " Maintainer: Patrik Iselind
 " Version 0.1
 
+" If not about to edit exercism challenges for vimscript, skip this plugin
+if getcwd() !~ "exercism/vimscript"
+    finish
+endif
+
 if exists('g:loaded_exercism')
     finish
 endif

@@ -1,0 +1,3 @@
+*exercism.txt* The is the Exercism plugin docs
+
+This plugin provides a :Test command to simplify the testing of vimscripts.
