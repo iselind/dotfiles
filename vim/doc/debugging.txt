@@ -1,0 +1,24 @@
+*debugging.txt* My notes on how to debug Vim
+
+Author: Patrik Iselind
+License: MIT
+
+DEBUGGING                               *debugging*
+
+TRACING VARIABLE ASSIGNMENTS            *debugging-var-assignment*
+
+To get a complete trace of where variables get set, take a look at the -V
+option for vim. An example
+>
+    vim -V20vimlog myfile.txt
+<
+This command will save a complete log over all assignements and then some to
+the file named vimlog in the current directory.
+
+TRACING SCRIPT LOADING                  *debugging-script-loading*
+
+After vim has loaded, execute the following command
+>
+   :scriptnames
+<
+This will output all script that has been loaded and in which order.
