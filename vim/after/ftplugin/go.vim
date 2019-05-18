@@ -3,6 +3,9 @@ setlocal shiftwidth=4
 setlocal softtabstop=4
 setlocal tabstop=4
 
+" Unset did_ftplugin to enable vim-go plugin to do its magic
+unlet! b:did_ftplugin
+
 let g:go_fmt_command = 'goimports'
 let g:go_list_type = 'quickfix'
 let g:go_code_completion_enabled = 1
