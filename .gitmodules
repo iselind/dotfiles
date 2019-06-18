@@ -7,3 +7,6 @@
 [submodule "vim/pack/mrx/start/vader"]
 	path = vim/pack/mrx/start/vader
 	url = https://github.com/junegunn/vader.vim.git
+[submodule "vim/pack/mrx/start/graphql"]
+	path = vim/pack/mrx/start/graphql
+	url = https://github.com/jparise/vim-graphql.git

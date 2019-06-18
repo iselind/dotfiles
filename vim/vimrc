@@ -73,7 +73,7 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = 0
 let g:ale_lint_delay = 1000
 
-noremap <F5> :lprevious<CR>
-noremap <F6> :lnext<CR>
+noremap <F5> :ALENextWrap<CR>
+noremap <F6> :ALEPreviousWrap<CR>
 
 set diffopt=vertical,filler,context:3
