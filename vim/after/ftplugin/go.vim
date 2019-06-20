@@ -8,7 +8,8 @@ setlocal tabstop=4
 " If the above is un-commented, then the syntax highlighting will disappear
 " upon saving the file. https://github.com/fatih/vim-go/issues/2279 didn't
 " recommend to unlet did_ftplugin either. Still, I need that being unlet to
-" get omnifunc to be set. Vim is hopelessly old on Debian machines.
+" get omnifunc to be set. Vim is hopelessly old on Debian machines. Another
+" solution is to build vim yourself from source.
 
 let g:go_fmt_command = 'goimports'
 let g:go_list_type = 'quickfix'
