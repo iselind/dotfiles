@@ -56,9 +56,11 @@ prepare_jenkins() {
 }
 
 # Some helper functions
-source /home/patriki/vapix_lib/streaming.sh
-source /home/patriki/vapix_lib/aux.sh
-source /home/patriki/vapix_lib/cam-control.sh
+if [ -d ~/vapix_lib ]; then
+	source /home/patriki/vapix_lib/streaming.sh
+	source /home/patriki/vapix_lib/aux.sh
+	source /home/patriki/vapix_lib/cam-control.sh
+fi
 
 # Program helper functions
 
@@ -176,13 +178,14 @@ export GOPATH=$HOME/go
 export GOROOT=/usr/local/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin:/usr/local/go/bin:/usr/local/node-v6.10.3-linux-x64/bin:/home/patriki/.local/bin:$HOME/projekt/aws/environment/compiled_deploy/_deploytools
 #export PATH=/usr/local/opt/Python-3.5.2/bin:$PATH
-op proot df -h | grep "vg0-home" | awk '{print "Home is " $5 " full" }'
+sudo df -h | grep "vg0-home" | awk '{print "Home is " $5 " full" }'
 
 if [ $commands[kubectl] ]; then
     source <(kubectl completion zsh)
 fi
 
-. ~/projekt/aws/environment/aws-account.sh
+# Kill the bell
+xset -b
 
 [ -f /var/run/reboot-required ] && echo "System needs to reboot!"
 cd ~
