@@ -10,3 +10,6 @@
 [submodule "vim/pack/mrx/start/graphql"]
 	path = vim/pack/mrx/start/graphql
 	url = https://github.com/jparise/vim-graphql.git
+[submodule "vim/pack/mrx/start/godoctor"]
+	path = vim/pack/mrx/start/godoctor
+	url = https://github.com/godoctor/godoctor.vim
