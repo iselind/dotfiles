@@ -149,19 +149,42 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# ---------------------------------------------------------------------
+# DISPLAYS
+# ---------------------------------------------------------------------
+
+# Switch between internal and external display
+bindsym XF86Display exec "~/bin/toggleDisplay"
+
+# Fallback to available display if the current active display gets disconnected
+exec --no-startup-id "~/bin/fallbackToConnectedDisplay"
+
+# Turn on all connected displays
+bindsym $mod+XF86Display exec "xrandr --auto"
+
+# Brightness
+bindsym XF86MonBrightnessDown exec "xbacklight -dec 20"
+bindsym XF86MonBrightnessUp exec "xbacklight -inc 20"
+
+# ---------------------------------------------------------------------
+# SOUND
+# ---------------------------------------------------------------------
+bindsym XF86AudioMute exec "amixer sset Master toggle"
+bindsym XF86AudioRaiseVolume exec "amixer sset Master 5%+"
+bindsym XF86AudioLowerVolume exec "amixer sset Master 5%-"
+bindsym XF86AudioMicMute exec "amixer sset Capture toggle"
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
         status_command i3status
 }
 
-bindsym $mod+a exec /home/patriki/bin/toggle_kb_layout
+bindsym $mod+a exec "~/bin/toggle_kb_layout"
 
 exec /usr/bin/firefox
-#exec /usr/bin/thunderbird
 
 assign [class="Firefox"] 1
-assign [class="Thunderbird"] 2
 
 bindsym $mod+q exec '/home/patriki/bin/fuzzy_lock.sh'
 exec xautolock -time 15 -locker '/home/patriki/bin/fuzzy_lock.sh' &
