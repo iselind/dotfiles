@@ -1,0 +1,13 @@
+{
+  "languageserver": {
+    "python": {
+      "command": "jedi-language-server",
+      "filetypes": ["python"]
+    },
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"]
+    }
+  }
+}
