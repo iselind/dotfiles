@@ -1,4 +1,3 @@
-
 autoload -Uz promptinit
 promptinit
 PROMPT='%(?,,[FAIL] )%1~ %# '
@@ -33,159 +32,41 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-fpath=(~/.zsh/completion $fpath)
-
-alias iu='iputility eth0'
-alias wiu='watch -n10 "iputility eth0 | sort"'
+alias killvpn='/usr/local/pulse/pulsesvc -K'
 alias ls='ls -F'
 alias proxy='http_proxy=http://wwwproxy.se.axis.com:3128 https_proxy=http://wwwproxy.se.axis.com:3128'
 alias tsse="rdesktop -k sv -g 1152x864 tsse02 -d axis.com > /dev/null 2>&1 &"
-alias patch="patch -N --ignore-whitespace"
 alias pylint="pylint -r n"
-alias t32="op proot /usr/local/t32/bin/pc_linux64/t32mips-qt &"
-alias docker="op proot adocker"
-alias vim='proxy /usr/bin/vim'
-alias docker-jessie="adocker chroot artifacts.se.axis.com/axis/debian-axis-dev:jessie -v /n/axis_releases/oe:/home/patriki/oe -v /n/oe:/n/oe -p 5342-5344:5342-5344/tcp -e DISPLAY=$DISPLAY"
-alias docker-jenkins-wheezy="adocker chroot artifacts.se.axis.com/axis/debian-jenkins-slave:wheezy -v /n/oe:/n/oe -e DISPLAY=$DISPLAY"
-alias docker-jenkins-jessie="adocker chroot artifacts.se.axis.com/axis/debian-jenkins-slave:jessie -v /n/oe:/n/oe -e DISPLAY=$DISPLAY"
-alias docker-wheezy="adocker chroot artifacts.se.axis.com/axis/debian-axis-dev:wheezy -e DISPLAY=$DISPLAY"
-alias kubectl="http_proxy=http://wwwproxy.se.axis.com:3128 https_proxy=http://wwwproxy.se.axis.com:3128 $HOME/projekt/aws/environment/compiled_deploy/_deploytools/kubectl"
-
-prepare_jenkins() {
-    source /n/gerrit/jenkins/jenkins.sh
-}
-
-# Some helper functions
-if [ -d ~/vapix_lib ]; then
-	source /home/patriki/vapix_lib/streaming.sh
-	source /home/patriki/vapix_lib/aux.sh
-	source /home/patriki/vapix_lib/cam-control.sh
-fi
 
 # Program helper functions
 
-nmap() {
-    /usr/bin/nmap `fixip $1`
+# Function used to "hard reset" networking when Pulse Secure messes up.
+pulse_hard_reset() {
+    echo "Making a hard reset of routing table and the Pulse Secure service"
+    /usr/local/pulse/pulsesvc -K
+    killall -9 pulsesvc 2>/dev/null
+    sudo ip route flush table main
+    sudo service network-manager restart
 }
 
-telnet() {
-    /usr/bin/telnet `fixip $1`
-}
+alias lnxpatriki1="rdesktop lnxpatriki1 -g 1920x1080 -z"
 
-myssh() {
-    ip=`fixip $1`
-    enable_ssh $1
-    sleep 1
-    /usr/bin/ssh "root@$ip"
-}
-
-ftp() {
-    ip=`fixip $1`
-    /usr/bin/ftp "ftp://root:pass@$ip"
-}
-
-# Nice to have functions
-
-get_unit_repo() {
-    if [ -z "$1" ]
-    then
-        echo "Missing parameter"
-        return 1
-    fi
-    reponame="$1"
-    if [ -d "$reponame" ]
-    then
-        echo "The folder '$reponame' already exist"
-    else
-        git clone "ssh://patriki@gittools.se.axis.com:29418/products-camera-$1"
-
-    fi
-}
-
-flash() {
-   file_for_flash="fimage"
-   echo "$# arguments passed"
-   if [ $# -gt 1 ]
-   then
-       file_for_flash=$2
-   else
-       file_for_flash=$(find_fimage)
-   fi
-
-   if [ $(echo $file_for_flash | wc -l) -ne 1 ] || [ "$file_for_flash" = "" ]
-   then
-       # Found more than one potential, or none
-       echo "Please specify the fimage file"
-       return 1
-   fi
-
-   echo "Flashing $file_for_flash..."
-   sleep 5
-   echo
-
-   wait_for_unit $1
-
-   curl --proxy "" -F"file=@$file_for_flash" -F"uploadFile=Upgrade" -u root:pass --anyauth "http://192.168.0.$1/axis-cgi/firmwareupgrade.cgi?type=factorydefault"
-   sleep 10
-   wait_for_unit $1
-}
-
-# Unit control functions
-
-send_onvif() {
-    ip=`fixip $1`
-    curl --noproxy \* -X POST -d @"$2" "http://root:pass@$ip/onvif/device_service" --header "Content-Type:text/xml" | xmllint --format -
-}
-
-send_onvif_digest() {
-    ip=`fixip $1`
-    curl --digest --noproxy \* -X POST -d @"$2" "http://root:pass@$ip/onvif/device_service" --header "Content-Type:text/xml" | xmllint --format -
-}
-
-send_onvif_anyauth() {
-    ip=`fixip $1`
-    curl --anyauth --noproxy \* -X POST -d @"$2" "http://root:pass@$ip/onvif/device_service" --header "Content-Type:text/xml" | xmllint --format -
-}
-
-get_syslog() {
-    ip=`fixip $1`
-    wget --no-proxy -O /dev/stdout "http://root:pass@$ip/axis-cgi/admin/systemlog.cgi"
-}
-
-build_acap-4() {
-    ip=`fixip $1`
-    create-package.sh artpec-4 && eap-install.sh "$ip" pass remove && eap-install.sh "$ip" pass install && eap-install.sh "$ip" pass start
-}
-
-fix_touch() {
-    xinput set-prop 8 274 0 65534 0 36000
-}
-
-rebuild() {
-    make -C "$1" clean && make -C "$1" install
-}
-
-# Set Standby, suspend, and off for display to 20 minutes
-xset dpms 1200 1200 1200
-
-export T32SYS=/usr/local/t32
-export T32TMP=$HOME/.t32_tmp
-export T32ID=T32
-export LESS=dMqifR
+export PYSPARK_PYTHON=python3
+export PYSPARK_DRIVER_PYTHON=${PYSPARK_PYTHON}
+export LESS=dMQifR
 export LESSCHARSET=utf-8
 export PATH=/home/patriki/bin:$PATH
 export GOPATH=$HOME/go
 export GOROOT=/usr/local/go
-export PATH=$PATH:$GOROOT/bin:$GOPATH/bin:/usr/local/go/bin:/usr/local/node-v6.10.3-linux-x64/bin:/home/patriki/.local/bin:$HOME/projekt/aws/environment/compiled_deploy/_deploytools
-#export PATH=/usr/local/opt/Python-3.5.2/bin:$PATH
-sudo df -h | grep "vg0-home" | awk '{print "Home is " $5 " full" }'
+export PATH=$GOROOT/bin:$GOPATH/bin:/usr/local/go/bin:$HOME/.local/bin:$PATH
+export AWS_PROFILE=idd-dev
 
-if [ $commands[kubectl] ]; then
-    source <(kubectl completion zsh)
-fi
+sudo df -lh | grep "vg0-home" | awk '{print "Home is " $5 " full" }'
+
+[ -f /var/run/reboot-required ] && echo "System needs to reboot!"
 
 # Kill the bell
 xset -b
 
-[ -f /var/run/reboot-required ] && echo "System needs to reboot!"
-cd ~
+# kubectl completion setup
+source <(kubectl completion zsh)

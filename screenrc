@@ -1,2 +1,8 @@
+vbell off
+
+altscreen on
+
+escape ^Jj
+
 startup_message off
 hardstatus alwayslastline "%w"

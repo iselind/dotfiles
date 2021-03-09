@@ -72,4 +72,8 @@ let g:ale_lint_delay = 1000
 noremap <F5> :ALENextWrap<CR>
 noremap <F6> :ALEPreviousWrap<CR>
 
+let $PATH .= ':~/go/bin'
+
 set diffopt=vertical,filler,context:3
+
+au BufNewFile,BufRead Jenkinsfile setf groovy
