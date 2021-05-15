@@ -3,7 +3,7 @@ My dotfiles
 
 To clone with all the submodules, do
 ```bash
-git clone --recurse-submodules https://github.com/iselind/dotfiles
+git clone --recurse-submodules git@github.com:iselind/dotfiles.git
 ```
 
 To install the configuration files, run
