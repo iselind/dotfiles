@@ -11,7 +11,8 @@ SAVEHIST=1000
 #HISTFILE=~/.zsh_history
 
 # Use modern completion system
-autoload -Uz compinit
+fpath=($fpath ~/.zsh/completion)
+autoload -U compinit
 compinit
 
 zstyle ':completion:*' auto-description 'specify: %d'
@@ -37,6 +38,7 @@ alias ls='ls -F'
 alias with_proxy='http_proxy=http://wwwproxy.se.axis.com:3128 https_proxy=http://wwwproxy.se.axis.com:3128'
 alias tsse="rdesktop -k sv -g 1152x864 tsse02 -d axis.com > /dev/null 2>&1 &"
 alias pylint="pylint -r n"
+alias bt_battery="bluetooth_battery 34:75:63:DA:AA:C5"
 
 # Program helper functions
 
@@ -67,6 +69,3 @@ sudo df -lh | grep "vg0-home" | awk '{print "Home is " $5 " full" }'
 
 # Kill the bell
 xset -b
-
-# kubectl completion setup
-source <(kubectl completion zsh)

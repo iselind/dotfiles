@@ -16,6 +16,8 @@ syntax enable
 
 set expandtab
 
+set number
+
 set ignorecase
 set smartcase
 set incsearch
