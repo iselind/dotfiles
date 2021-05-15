@@ -72,7 +72,7 @@
             "shellcheck": {
                 "command": "shellcheck",
                 "debounce": 100,
-                "args": [ "--color=never", "--format=gcc", "-"],
+                "args": [ "--format=gcc", "-"],
                 "offsetLine": 0,
                 "offsetColumn": 0,
                 "sourceName": "shellcheck",
@@ -82,8 +82,7 @@
                     {
                         "line": 1,
                         "column": 2,
-                        "message": 4,
-                        "security": 3
+                        "message": 4
                     }
                 ],
                 "securities": {
