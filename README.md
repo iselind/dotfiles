@@ -1,11 +1,6 @@
 # dotfiles
 My dotfiles
 
-To clone with all the submodules, do
-```bash
-git clone --recurse-submodules git@github.com:iselind/dotfiles.git
-```
-
 To install the configuration files, run
 ``` bash
 ln -s ${PWD}/vim ~/.vim
@@ -15,3 +10,5 @@ ln -s ${PWD}/zshrc ~/.zshrc
 mkdir -p ~/.config
 ln -s ${PWD}/i3 ~/.config/i3
 ```
+
+To initialize the Vim plugins execute `:PlugInstall` within Vim.
