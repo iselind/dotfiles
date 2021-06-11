@@ -39,6 +39,7 @@ alias with_proxy='http_proxy=http://wwwproxy.se.axis.com:3128 https_proxy=http:/
 alias tsse="rdesktop -k sv -g 1152x864 tsse02 -d axis.com > /dev/null 2>&1 &"
 alias pylint="pylint -r n"
 alias bt_battery="bluetooth_battery 34:75:63:DA:AA:C5"
+alias gomvpkg="GO111MODULE=off gomvpkg"
 
 # Program helper functions
 
