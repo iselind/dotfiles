@@ -52,8 +52,6 @@ pulse_hard_reset() {
     sudo service network-manager restart
 }
 
-alias lnxpatriki1="rdesktop lnxpatriki1 -g 1920x1080 -z"
-
 export PYSPARK_PYTHON=python3
 export PYSPARK_DRIVER_PYTHON=${PYSPARK_PYTHON}
 export LESS=dMQifR
