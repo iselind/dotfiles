@@ -186,6 +186,7 @@ exec /home/patriki/bin/toggleDisplayForever
 
 assign [class="Firefox"] 1
 assign [class="google-chrome"] 1
+for_window [class="^rdesktop"] move workspace number 5; floating disable
 
 bindsym $mod+q exec '/home/patriki/bin/fuzzy_lock.sh'
 exec xautolock -time 15 -locker '/home/patriki/bin/fuzzy_lock.sh' &
