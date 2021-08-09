@@ -63,6 +63,7 @@ export GOPATH=$HOME/go
 export GOROOT=/usr/local/go
 export PATH=$(yarn global bin):$HOME/.pipinstall/bin:$GOROOT/bin:$GOPATH/bin:/usr/local/go/bin:$HOME/.local/bin:$PATH
 export AWS_PROFILE=idd-dev
+export GOFLAGS="-tags=aws"
 
 sudo df -lh | grep "vg0-home" | awk '{print "Home is " $5 " full" }'
 
