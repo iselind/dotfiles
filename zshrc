@@ -1,6 +1,6 @@
 autoload -Uz promptinit
 promptinit
-PROMPT='%(?,,[FAIL] )%1~ %# '
+PROMPT='%m %(?,,[FAIL] )%1~ %# '
 
 # Use vim keybindings
 bindkey -v
