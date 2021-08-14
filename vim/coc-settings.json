@@ -47,13 +47,13 @@
             "flake8": {
                 "command": "flake8",
                 "debounce": 100,
-                "args": [ "--format=%(row)d,%(col)d,%(code).1s,%(code)s: %(text)s", "-" ],
+                "args": [ "--format=%(row)d:%(col)d:%(code).1s:%(code)s:%(text)s", "-" ],
                 "offsetLine": 0,
                 "offsetColumn": 0,
                 "sourceName": "flake8",
                 "formatLines": 1,
                 "formatPattern": [
-                    "(\\d+),(\\d+),([A-Z]),(.*)(\\r|\\n)*$",
+                    "(\\d+):(\\d+):([A-Z]):(.*)(\\r|\\n)*$",
                     {
                         "line": 1,
                         "column": 2,
