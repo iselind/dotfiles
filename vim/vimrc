@@ -59,7 +59,7 @@ set listchars=tab:▷⋅
 
 filetype plugin indent on
 
-set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%y%r%m%=L%l,C%c\ %P
+set statusline=%t[%f][%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%y%r%m%=L%l,C%c\ %P
 
 
 nnoremap <C-J> <C-W><C-J>
