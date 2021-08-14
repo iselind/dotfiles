@@ -4,6 +4,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug 'josa42/coc-go', {'do': 'yarn install --frozen-lockfile'}
 Plug 'iamcco/coc-diagnostic', {'do': 'yarn install --frozen-lockfile'}
+Plug 'fannheyward/coc-pyright', {'do': 'yarn install --frozen-lockfile'}
 
 " Initialize plugin system
 call plug#end()
