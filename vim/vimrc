@@ -17,9 +17,6 @@ set expandtab
 
 set number
 
-set spelllang=en
-set spell
-
 set ignorecase
 set smartcase
 set incsearch
