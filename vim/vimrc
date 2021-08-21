@@ -9,6 +9,8 @@ Plug 'mattn/vim-goimports'
 " Initialize plugin system
 call plug#end()
 
+let g:coc_global_extensions = ['coc-json', 'coc-go', 'coc-pyright', 'coc-diagnostic']
+
 scriptencoding utf-8
 set filetype=off
 
