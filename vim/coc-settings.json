@@ -118,6 +118,31 @@
             "flake8",
             "mypy"
           ]
+        },
+        "formatters": {
+          "autopep8": {
+            "command": "autopep8",
+            "args": [
+              "-"
+            ]
+          },
+          "isort": {
+            "command": "isort",
+            "args": [
+              "--quiet",
+              "-"
+            ]
+          },
+          "goimports": {
+            "command": "goimports"
+          }
+        },
+        "formatFiletypes": {
+          "python": [
+            "autopep8",
+            "isort"
+          ],
+          "go": "goimports"
         }
       }
     },

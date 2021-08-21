@@ -3,9 +3,6 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
-" For format and fix imports on save (GoLang)
-Plug 'mattn/vim-goimports'
-
 " Initialize plugin system
 call plug#end()
 
