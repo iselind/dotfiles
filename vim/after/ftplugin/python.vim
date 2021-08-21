@@ -10,5 +10,4 @@ setlocal foldmethod=indent
 " Mark how long is 79 columns
 setlocal colorcolumn=79
 
-":ALEDisable
-let g:ale_python_flake8_executable = 'python3'
+autocmd BufWritePre *.go :silent call CocAction("format")
