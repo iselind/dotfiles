@@ -2,6 +2,7 @@ setlocal noexpandtab
 setlocal shiftwidth=4
 setlocal softtabstop=4
 setlocal tabstop=4
+setlocal foldmethod=syntax
 
 " Add tags to fields
 autocmd FileType go nmap gtj :CocCommand go.tags.add json<cr>
