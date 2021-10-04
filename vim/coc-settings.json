@@ -216,7 +216,17 @@
       ],
       "filetypes": [
         "go"
-      ]
+      ],
+      "settings": {
+        "gopls": {
+          "buildFlags": [
+            "aws",
+            "requireDB"
+          ],
+          "usePlaceholders": true,
+          "completeUnimported": true
+        }
+      }
     }
   }
 }
