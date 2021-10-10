@@ -1,4 +1,14 @@
 {
+  "go": {
+    "buildFlags": "-tags=aws,requireDB,requireAWS",
+    "goplsOptions": {
+      "completeUnimported": true,
+      "usePlaceholders": true,
+      "buildFlags": [
+        "-tags=aws,requireDB,requireAWS"
+      ]
+    }
+  },
   "languageserver": {
     "dls": {
       "command": "diagnostic-languageserver",
@@ -163,28 +173,6 @@
         "haskell",
         "lhaskell"
       ]
-    },
-    "golang": {
-      "command": "gopls",
-      "rootPatterns": [
-        "go.mod",
-        ".vim/",
-        ".git/",
-        ".hg/"
-      ],
-      "filetypes": [
-        "go"
-      ],
-      "settings": {
-        "gopls": {
-          "buildFlags": [
-            "aws",
-            "requireDB"
-          ],
-          "usePlaceholders": true,
-          "completeUnimported": true
-        }
-      }
     }
   }
 }
