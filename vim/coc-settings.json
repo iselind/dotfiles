@@ -39,6 +39,7 @@
       "filetypes": [
         "sh",
         "python",
+        "cs",
         "go"
       ],
       "initializationOptions": {
@@ -152,6 +153,12 @@
           ]
         },
         "formatters": {
+          "astyle": {
+            "command": "astyle",
+            "args": [
+              "-A10"
+            ]
+          },
           "autopep8": {
             "command": "autopep8",
             "args": [
@@ -174,6 +181,7 @@
             "autopep8",
             "isort"
           ],
+          "cs": "astyle",
           "go": "goimports"
         }
       }
