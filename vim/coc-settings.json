@@ -1,12 +1,8 @@
 {
   "go": {
-    "buildFlags": "-tags=aws,requireDB,requireAWS",
     "goplsOptions": {
       "completeUnimported": true,
-      "usePlaceholders": true,
-      "buildFlags": [
-        "-tags=aws,requireDB,requireAWS"
-      ]
+      "usePlaceholders": true
     }
   },
   "languageserver": {
@@ -40,6 +36,7 @@
         "sh",
         "python",
         "cs",
+        "java",
         "go"
       ],
       "initializationOptions": {

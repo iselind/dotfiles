@@ -1,0 +1,1 @@
+highlight CocFloating ctermbg=DarkBlue
