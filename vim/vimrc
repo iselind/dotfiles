@@ -6,7 +6,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Initialize plugin system
 call plug#end()
 
-let g:coc_global_extensions = ['coc-json', 'coc-go', 'coc-jedi', 'coc-diagnostic', 'coc-omnisharp', 'coc-java']
+let g:coc_global_extensions = ['coc-json', 'coc-go', 'coc-jedi', 'coc-diagnostic', 'coc-omnisharp']
 
 scriptencoding utf-8
 set filetype=off
@@ -80,7 +80,6 @@ let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 25
-augroup ProjectDrawer
-  autocmd!
-  autocmd VimEnter * :Vexplore
-augroup END
+
+" Let Vim know we are targeting POSIX compliance
+let g:is_posix = 1

@@ -1,1 +1,1 @@
-highlight CocFloating ctermbg=lightblue
+" highlight CocFloating ctermbg=lightblue

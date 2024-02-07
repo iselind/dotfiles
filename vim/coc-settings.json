@@ -1,4 +1,9 @@
 {
+  "java": {
+      "compile.nullAnalysis.mode": "automatic",
+      "import.generatesMetadataFilesAtProjectRoot": false,
+      "configuration.checkProjectSettingsExclusions": false
+  },
   "go": {
     "goplsOptions": {
       "completeUnimported": true,
