@@ -4,3 +4,5 @@ augroup ProjectDrawer
   autocmd!
   autocmd VimEnter * :Vexplore
 augroup END
+
+setl cursorcolumn

@@ -6,7 +6,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Initialize plugin system
 call plug#end()
 
-let g:coc_global_extensions = ['coc-json', 'coc-go', 'coc-jedi', 'coc-diagnostic', 'coc-omnisharp']
+let g:coc_global_extensions = ['coc-json', 'coc-go', 'coc-jedi', 'coc-diagnostic', 'coc-omnisharp', 'coc-java', 'coc-groovy']
 
 scriptencoding utf-8
 set filetype=off
