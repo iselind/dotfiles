@@ -1,4 +1,4 @@
-autocmd BufWritePre *.java :silent call CocAction("format")
+" autocmd BufWritePre *.java :silent call CocAction("format")
 
 augroup ProjectDrawer
   autocmd!
