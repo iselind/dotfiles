@@ -2,19 +2,18 @@ import sys
 
 from dumpers.dumpers import dump_data
 from formatters.datastructures import merge_multi_level
-from loaders.loaders import load_data
+from loaders.loaders import load_file, load_string
 
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: format_json.py <input_file>")
-        sys.exit(1)
-
-    input_file = sys.argv[1]
-
     try:
-        # Load JSON data
-        data = load_data(input_file, format='json')
+        if len(sys.argv) != 2:
+            print("string input")
+            data = load_string(sys.stdin.read())
+        else:
+            print("file input")
+            input_file = sys.argv[1]
+            data = load_file(input_file, format='json')
 
         # Process data
         nested_data = merge_multi_level(data)

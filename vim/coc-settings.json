@@ -43,6 +43,7 @@
         "python",
         "cs",
         "java",
+        "json",
         "go"
       ],
       "initializationOptions": {
@@ -175,6 +176,9 @@
               "-"
             ]
           },
+          "json": {
+            "command": "~/.vim/python/bin/format_json.py"
+          },
           "goimports": {
             "command": "goimports"
           }
@@ -185,7 +189,8 @@
             "isort"
           ],
           "cs": "astyle",
-          "go": "goimports"
+          "go": "goimports",
+          "json": "json"
         }
       }
     },

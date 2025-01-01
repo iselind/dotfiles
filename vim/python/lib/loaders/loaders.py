@@ -5,7 +5,7 @@ import toml
 import yaml
 
 
-def load_data(input_file: str, format: str) -> Any:
+def load_file(input_file: str, format: str) -> Any:
     """
     Load data from a file in the specified format (JSON, YAML, TOML).
 
@@ -27,3 +27,16 @@ def load_data(input_file: str, format: str) -> Any:
             return toml.load(file)
         else:
             raise ValueError(f"Unsupported format: {format}")
+
+
+def load_string(s: str, format: str = "json") -> Any:
+    """
+    Load data from a raw string in the specified format.
+
+    Currently only works with format == 'json'
+    """
+    if format != 'json':
+        raise ValueError(
+            f"Unsupported format: {format}. Only JSON is supported.")
+
+    return json.loads(s)
