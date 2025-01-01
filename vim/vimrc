@@ -1,3 +1,6 @@
+" Set PYTHONPATH so that the plugins don't have to care
+let $PYTHONPATH = expand('~/.vim/python/lib') . ($PYTHONPATH ? ':' . $PYTHONPATH : '')
+
 " Specify a directory for plugins
 call plug#begin('~/.vim/plugged')
 
