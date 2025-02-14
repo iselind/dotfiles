@@ -1,2 +1,2 @@
-highlight CocFloating ctermbg=blue ctermfg=white
-highlight CocInlayHint ctermbg=white
+" highlight CocFloating ctermbg=blue ctermfg=white
+" highlight CocInlayHint ctermbg=white

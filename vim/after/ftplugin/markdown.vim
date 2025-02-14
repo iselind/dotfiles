@@ -18,3 +18,5 @@ autocmd BufWritePre *.md :silent! %s/\([^\n]\)\n#/\1\r\r#/g
 " autocmd BufWritePre *.md :silent! %s/\([^\n]\)\n-/\1\r\r-/g
     " " Ensure empty row before numbered list
 " autocmd BufWritePre *.md :silent! %s/\([^\n]\)\n1/\1\r\r1/g
+
+setl colorcolumn=80

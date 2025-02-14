@@ -9,6 +9,17 @@ import json
 import sys
 
 
+def merge_dicts(d1, d2):
+    """
+    Recursively merges d2 into d1.
+    """
+    for key, value in d2.items():
+        if key in d1 and isinstance(d1[key], dict) and isinstance(value, dict):
+            merge_dicts(d1[key], value)
+        else:
+            d1[key] = value
+
+
 def merge_multi_level(d):
     """
     >>> merge_multi_level({"q": {"a.b": "c"}, "d":"e"})
@@ -29,7 +40,7 @@ def merge_multi_level(d):
         result = {}
 
         for k, v in d.items():
-            result[k] = merge_multi_level(v)
+            merge_dicts(result, merge_multi_level(v))
 
         return result
     elif isinstance(d, list):
@@ -42,6 +53,8 @@ def merge_one_level(d):
     """
     >>> merge_one_level({"a.b": "c", "d":"e"})
     {'a': {'b': 'c'}, 'd': 'e'}
+    >>> merge_one_level({"a.b.c": "e", "a.b.d": "f"})
+    {'a': {'b': {'c': 'e', 'd': 'f'}}}
     >>> merge_one_level({"a": "b"})
     {'a': 'b'}
     >>> merge_one_level({})
@@ -56,7 +69,7 @@ def merge_one_level(d):
     for k, v in d.items():
         if '.' in k:
             tmp = create_nested_dict(k.split('.'), v)
-            result.update(tmp)
+            merge_dicts(result, tmp)
         else:
             result[k] = v
 
