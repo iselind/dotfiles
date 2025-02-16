@@ -35,8 +35,9 @@ set softtabstop=4
 set tabstop=4
 set shiftwidth=4
 
-" Make sure comments continue on <ENTER> and starting new lines with o
-set formatoptions+=ro
+" Make sure comments continue on <ENTER> and starting new lines with o, start
+" new line when textwidth is set.
+set formatoptions+=rot
 
 set laststatus=2
 
