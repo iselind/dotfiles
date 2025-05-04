@@ -1,11 +1,11 @@
 function! s:FindTemplateFile()
-  return findfile('.vim-template', expand('%:p:h') . ',;')
+  return findfile('.template', expand('%:p:h') . ',;')
 endfunction
 
 function! s:ApplyTemplatePlaceholders()
-  let l:filename = escape(expand('%:t:r'))
+  let l:filename = expand('%:t:r')
   let l:date = strftime('%Y-%m-%d')
-  silent! %s/\V#FILENAME#/\=l:filename/g
+  silent! %s/#FILENAME#/\=l:filename/g
   silent! %s/#DATE#/\=l:date/g
 endfunction
 
@@ -43,9 +43,10 @@ function! s:OpenUnderCursor(splitcmd)
     echo 'Path under cursor is a directory'
     return
   endif
-  execute a:splitcmd . ' ' . fnameescape(l:file)
+  echo 'Opening: ' . l:file
+  execute a:splitcmd . ' ' . l:file
 endfunction
 
 nnoremap <leader>oh :call <SID>OpenUnderCursor('split')<CR>
-noremap <leader>ov :call <SID>OpenUnderCursor('vsplit')<CR>
+nnoremap <leader>ov :call <SID>OpenUnderCursor('vsplit')<CR>
 
