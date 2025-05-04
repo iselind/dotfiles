@@ -7,8 +7,11 @@ setlocal tabstop=4
 setlocal foldmethod=syntax
 
 " Add tags to fields
-autocmd FileType go nmap gtj :CocCommand go.tags.add json<cr>
-autocmd FileType go nmap gty :CocCommand go.tags.add yaml<cr>
-autocmd FileType go nmap gtx :CocCommand go.tags.clear<cr>
+augroup filetype_go_settings
+  autocmd!
+  autocmd FileType go nmap gtj :CocCommand go.tags.add json<cr>
+  autocmd FileType go nmap gty :CocCommand go.tags.add yaml<cr>
+  autocmd FileType go nmap gtx :CocCommand go.tags.clear<cr>
 
-autocmd BufWritePre *.go :silent call CocAction("format")
+  autocmd BufWritePre *.go :silent call CocAction("format")
+augroup END

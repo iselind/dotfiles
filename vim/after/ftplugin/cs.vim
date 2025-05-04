@@ -5,4 +5,7 @@ set formatprg=astyle\ -A10
 set ai
 set si
 
-autocmd BufWritePre *.cs :silent call CocAction("format")
+augroup filetype_cs_settings
+    autocmd!
+    autocmd BufWritePre *.cs :silent call CocAction("format")
+augroup END

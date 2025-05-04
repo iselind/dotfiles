@@ -1,15 +1,18 @@
-" Links on new line
-autocmd BufWritePre *.md :silent! %s/\s\+\[/\r\[/g
-" All lines should end with period. Remove whitespace after it
-autocmd BufWritePre *.md :silent! %s/\.\s\+/.\r/g
-" All lines should end with question mark. Remove whitespace after it
-autocmd BufWritePre *.md :silent! %s/?\s\+/?\r/g
-" All lines should end with question mark. Remove whitespace after it
-autocmd BufWritePre *.md :silent! %s/!\s\+/!\r/g
-" Remove extra line breaks
-autocmd BufWritePre *.md :silent! %s/\n\n\n\+/\r\r/g
-" Ensure empty row before section head, regardless of level
-autocmd BufWritePre *.md :silent! %s/\([^\n]\)\n#/\1\r\r#/g
+augroup filetype_md_settings
+  autocmd!
+  " Links on new line
+  autocmd BufWritePre *.md :silent! %s/\s\+\[/\r\[/g
+  " All lines should end with period. Remove whitespace after it
+  autocmd BufWritePre *.md :silent! %s/\.\s\+/.\r/g
+  " All lines should end with question mark. Remove whitespace after it
+  autocmd BufWritePre *.md :silent! %s/?\s\+/?\r/g
+  " All lines should end with question mark. Remove whitespace after it
+  autocmd BufWritePre *.md :silent! %s/!\s\+/!\r/g
+  " Remove extra line breaks
+  autocmd BufWritePre *.md :silent! %s/\n\n\n\+/\r\r/g
+  " Ensure empty row before section head, regardless of level
+  autocmd BufWritePre *.md :silent! %s/\([^\n]\)\n#/\1\r\r#/g
+augroup END
 
 " The following breaks lists that start with more than one bullet on the first
 " level
@@ -20,3 +23,5 @@ autocmd BufWritePre *.md :silent! %s/\([^\n]\)\n#/\1\r\r#/g
 " autocmd BufWritePre *.md :silent! %s/\([^\n]\)\n1/\1\r\r1/g
 
 setl colorcolumn=80
+
+set spell spelllang=en_us

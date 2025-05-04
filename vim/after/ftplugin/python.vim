@@ -10,4 +10,7 @@ setlocal foldmethod=indent
 " Mark how long is 79 columns
 setlocal colorcolumn=79
 
-autocmd BufWritePre *.py :silent call CocAction("format")
+augroup filetype_py_settings
+  autocmd!
+  autocmd BufWritePre *.py :silent call CocAction("format")
+augroup END

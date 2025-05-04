@@ -5,6 +5,7 @@ let $PYTHONPATH = expand('~/.vim/python/lib') . ($PYTHONPATH ? ':' . $PYTHONPATH
 call plug#begin('~/.vim/plugged')
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Plug 'Vimjas/vint'
 
 " Initialize plugin system
 call plug#end()
@@ -92,4 +93,4 @@ let g:is_posix = 1
 autocmd BufWritePre * :silent! %s/\s\+$//
 autocmd FileType docbk set ft=xml
 
-let $NVIM_COC_LOG_LEVEL = 'trace'
+" let $NVIM_COC_LOG_LEVEL = 'trace'
