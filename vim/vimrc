@@ -12,6 +12,9 @@ call plug#end()
 
 let g:coc_global_extensions = ['coc-xml', 'coc-markdownlint', 'coc-diagnostic', 'coc-json']
 
+" Set leader key to comma (easy to type)
+let mapleader = ','
+
 scriptencoding utf-8
 set filetype=off
 

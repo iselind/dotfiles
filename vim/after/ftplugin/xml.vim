@@ -1,6 +1,3 @@
-" Set leader key to comma (easy to type)
-let mapleader = ','
-
 setl tabstop=4 shiftwidth=4 expandtab
 setl foldmethod=syntax
 
