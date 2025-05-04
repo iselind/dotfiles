@@ -47,6 +47,9 @@ set laststatus=2
 
 set hlsearch
 
+" Enforce that the background is drawn black
+" Subject to the whims of the terminal emulator
+highlight Normal ctermbg=black guibg=black
 set background=dark
 
 set scrolloff=5
