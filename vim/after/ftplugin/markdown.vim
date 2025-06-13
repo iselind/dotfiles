@@ -1,27 +1,44 @@
+" Markdown filetype-specific settings
 augroup filetype_md_settings
   autocmd!
-  " Links on new line
-  autocmd BufWritePre *.md :silent! %s/\s\+\[/\r\[/g
-  " All lines should end with period. Remove whitespace after it
-  autocmd BufWritePre *.md :silent! %s/\.\s\+/.\r/g
-  " All lines should end with question mark. Remove whitespace after it
-  autocmd BufWritePre *.md :silent! %s/?\s\+/?\r/g
-  " All lines should end with question mark. Remove whitespace after it
-  autocmd BufWritePre *.md :silent! %s/!\s\+/!\r/g
-  " Remove extra line breaks
-  autocmd BufWritePre *.md :silent! %s/\n\n\n\+/\r\r/g
-  " Ensure empty row before section head, regardless of level
+
+  " Insert newline before headers (#) if not already preceded by a blank line
   autocmd BufWritePre *.md :silent! %s/\([^\n]\)\n#/\1\r\r#/g
+
+  " Remove excessive blank lines (more than 2)
+  autocmd BufWritePre *.md :silent! %s/\n\n\n\+/\r\r/g
+
+  " Optional: Keep sentences on separate lines (can be manually triggered instead)
+  " Uncomment these if you want automatic sentence splitting on save
+  " autocmd BufWritePre *.md :silent! %s/\.\s\+/.\r/g
+  " autocmd BufWritePre *.md :silent! %s/?\s\+/?\r/g
+  " autocmd BufWritePre *.md :silent! %s/!\s\+/!\r/g
+
 augroup END
 
-" The following breaks lists that start with more than one bullet on the first
-" level
-"
-" " Ensure empty row before unnumbered list
-" autocmd BufWritePre *.md :silent! %s/\([^\n]\)\n-/\1\r\r-/g
-    " " Ensure empty row before numbered list
-" autocmd BufWritePre *.md :silent! %s/\([^\n]\)\n1/\1\r\r1/g
+" Indentation settings for nested bullet editing
+setlocal shiftwidth=2
+setlocal tabstop=2
+setlocal softtabstop=2
+setlocal expandtab
 
-setl colorcolumn=80
+" Visual helper: show 80-character column
+setlocal colorcolumn=80
 
-set spell spelllang=en_us
+" Folding: allow collapsing of deeply nested sections
+setlocal foldmethod=indent
+setlocal foldlevel=2
+
+" Spellcheck
+setlocal spell
+setlocal spelllang=en_us
+
+" Optional: visually wrap long lines like paragraphs
+setlocal wrap
+setlocal linebreak
+setlocal nolist
+
+" Optional: visualize indentation (tabs/trailing)
+setlocal listchars=tab:→\ ,trail:·
+setlocal list
+
