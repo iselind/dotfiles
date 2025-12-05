@@ -1,0 +1,18 @@
+services:
+  devbox:
+    build: .
+    container_name: devbox
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    environment:
+      - HOME=/home/devbox
+      - GOPATH=/home/devbox/go
+      - PATH=/home/devbox/go/bin:/usr/bin:/usr/local/bin
+    volumes:
+      # Recommended: dedicated devbox home
+      - ${USER_HOME}/devbox:/home/devbox
+      # Targeted mounts (optional)
+      - ${USER_HOME}/.ssh:/home/devbox/.ssh:ro
+      - ${USER_HOME}/.gitconfig:/home/devbox/.gitconfig:ro
+    working_dir: /home/devbox
