@@ -24,6 +24,7 @@ setlocal expandtab
 
 " Visual helper: show 80-character column
 setlocal colorcolumn=80
+setlocal tw=80
 
 " Folding: allow collapsing of deeply nested sections
 setlocal foldmethod=indent
