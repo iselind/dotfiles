@@ -8,7 +8,7 @@ set -euo pipefail
 # command as the non-root `devbox` user.
 
 SKEL=/etc/skel
-HOME_DIR=/home/devbox
+HOME_DIR=/home/ubuntu
 
 echo "[init-devbox] checking home..."
 

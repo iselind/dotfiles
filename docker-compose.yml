@@ -10,21 +10,21 @@ services:
       # Recommended: dedicated devbox home
       # Use a named volume for most of the devbox home to avoid host/Windows
       # permission and tampering issues.
-      - devbox_home:/home/devbox
+      - devbox_home:/home/ubuntu
       # Keep local `vim` and `screenrc` in sync with the container. These
       # override any files in the volume at the same path and are useful for
       # iterative editor changes from the host.
-      - ./vim:/home/devbox/.vim
-      - ./screenrc:/home/devbox/.screenrc
+      - ./vim:/home/ubuntu/.vim
+      - ./screenrc:/home/ubuntu/.screenrc
       # Keep plugin files in a container-managed named volume to avoid
       # writing compiled or platform-specific plugin artifacts into the
       # host repository. This overlays the `plugged` subdirectory.
-      - vim_plugged:/home/devbox/.vim/plugged
+      - vim_plugged:/home/ubuntu/.vim/plugged
       # Optional host mounts for secrets/config (kept read-only here)
-      - ${USER_HOME}/.ssh:/home/devbox/.ssh:ro
-      - ${USER_HOME}/.gitconfig:/home/devbox/.gitconfig:ro
+      - ${USER_HOME}/.ssh:/home/ubuntu/.ssh:ro
+      - ${USER_HOME}/.gitconfig:/home/ubuntu/.gitconfig:ro
     entrypoint: ["/usr/local/bin/init-devbox"]
-    working_dir: /home/devbox
+    working_dir: /home/ubuntu
 
 volumes:
   devbox_home: {}
