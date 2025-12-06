@@ -20,6 +20,10 @@ services:
       # override any files in the volume at the same path and are useful for
       # iterative editor changes from the host.
       - ./vim:/home/devbox/.vim
+      # Keep plugin files in a container-managed named volume to avoid
+      # writing compiled or platform-specific plugin artifacts into the
+      # host repository. This overlays the `plugged` subdirectory.
+      - vim_plugged:/home/devbox/.vim/plugged
       - ./screenrc:/home/devbox/.screenrc
       # Optional host mounts for secrets/config (kept read-only here)
       - ${USER_HOME}/.ssh:/home/devbox/.ssh:ro
@@ -29,3 +33,4 @@ services:
 
 volumes:
   devbox_home: {}
+  vim_plugged: {}

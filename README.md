@@ -11,7 +11,16 @@ mkdir -p ~/.config
 ln -s ${PWD}/i3 ~/.config/i3
 ```
 
-To initialize the Vim plugins execute `:PlugInstall` within Vim.
+Vim plugins
+-----------
+
+Vim configuration is mounted from `./vim` into the container at `/home/devbox/.vim`. Plugin files are stored in a container-managed named volume mounted at `/home/devbox/.vim/plugged` so installs do not modify the repository.
+
+On a fresh start the container entrypoint will automatically run `vim +'PlugInstall --sync' +qa` as the `devbox` user if it detects the `plugged` volume is present and empty. If you prefer manual installs, do:
+
+```bash
+start-devbox.sh vim +'PlugInstall --sync' +qa
+```
 
 ## DevBox
 
