@@ -11,15 +11,14 @@ RUN apt-get update \
     python3 python3-pip python3-venv \
     python3-mypy python3-flake8 python3-autopep8 python3-isort \
     vim nodejs npm screen \
-    golang-go ccls shellcheck astyle clang \
+    golang-go shellcheck \
   && ln -s /usr/bin/fdfind /usr/local/bin/fd \
   && ln -s /usr/bin/python3 /usr/local/bin/python \
   && rm -rf /var/lib/apt/lists/*
 
 
-
 # Create a non-root devbox user (UID/GID 1000) and prepare skel
-ENV HOME=/home/devbox
+ENV HOME=/home/ubuntu
 ENV GOPATH=${HOME}/go
 ENV PATH="${GOPATH}/bin:/usr/bin:/usr/local/bin"
 

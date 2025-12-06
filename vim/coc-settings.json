@@ -49,27 +49,6 @@
         }
     },
     "languageserver": {
-        "ccls": {
-            "command": "ccls",
-            "filetypes": [
-                "c",
-                "cpp",
-                "objc",
-                "objcpp"
-            ],
-            "rootPatterns": [
-                ".ccls",
-                "compile_commands.json",
-                ".vim/",
-                ".git/",
-                ".hg/"
-            ],
-            "initializationOptions": {
-                "cache": {
-                    "directory": "/tmp/ccls"
-                }
-            }
-        },
         "dls": {
             "trace": {
                 "server": "verbose"
@@ -198,12 +177,6 @@
                     ]
                 },
                 "formatters": {
-                    "astyle": {
-                        "command": "astyle",
-                        "args": [
-                            "-A10"
-                        ]
-                    },
                     "autopep8": {
                         "command": "autopep8",
                         "args": [
@@ -226,27 +199,9 @@
                         "autopep8",
                         "isort"
                     ],
-                    "cs": "astyle",
                     "go": "goimports"
                 }
             }
-        },
-        "haskell": {
-            "command": "haskell-language-server-wrapper",
-            "args": [
-                "--lsp"
-            ],
-            "rootPatterns": [
-                "*.cabal",
-                "stack.yaml",
-                "cabal.project",
-                "package.yaml",
-                "hie.yaml"
-            ],
-            "filetypes": [
-                "haskell",
-                "lhaskell"
-            ]
         }
     }
 }
