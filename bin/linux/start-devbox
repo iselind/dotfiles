@@ -1,14 +1,12 @@
 #!/bin/bash
-DIR="$(cd "$(dirname "$0")" && pwd)"
-cd "$DIR/../.." || exit 1
 
 CONTAINER_NAME=devbox
 
 # Ensure the devbox container is created and running (noisy output suppressed)
-docker compose up -d --no-recreate >/dev/null 2>&1 || true
+docker compose up -d --no-recreate
 
 if [ $# -eq 0 ]; then
-  docker exec -it "$CONTAINER_NAME" /bin/bash
+  docker compose exec --user ubuntu -it "$CONTAINER_NAME" /bin/bash
 else
-  docker exec -it "$CONTAINER_NAME" "$@"
+  docker compose exec --user ubuntu -it "$CONTAINER_NAME" "$@"
 fi

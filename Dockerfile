@@ -19,8 +19,6 @@ ENV HOME=/home/devbox
 ENV GOPATH=${HOME}/go
 ENV PATH="${GOPATH}/bin:/usr/bin:/usr/local/bin"
 
-RUN adduser --uid 1000 --disabled-password --gecos "" devbox || true
-
 # Copy defaults into /etc/skel so the init script can populate a new volume
 COPY vim /etc/skel/.vim
 COPY screenrc /etc/skel/.screenrc
@@ -29,5 +27,6 @@ COPY screenrc /etc/skel/.screenrc
 COPY docker/init-devbox.sh /usr/local/bin/init-devbox
 RUN chmod +x /usr/local/bin/init-devbox
 
+USER ubuntu
 WORKDIR ${HOME}
 CMD ["/bin/bash"]

@@ -5,26 +5,21 @@ services:
     restart: unless-stopped
     tty: true
     stdin_open: true
-    environment:
-      - HOME=/home/devbox
-      - GOPATH=/home/devbox/go
-      - PATH=/home/devbox/go/bin:/usr/bin:/usr/local/bin
+    user: root
     volumes:
       # Recommended: dedicated devbox home
-      # Targeted mounts (optional)
       # Use a named volume for most of the devbox home to avoid host/Windows
-      # permission and tampering issues, but keep live mounts for editor
-      # config so edits are easy during development.
+      # permission and tampering issues.
       - devbox_home:/home/devbox
       # Keep local `vim` and `screenrc` in sync with the container. These
       # override any files in the volume at the same path and are useful for
       # iterative editor changes from the host.
       - ./vim:/home/devbox/.vim
+      - ./screenrc:/home/devbox/.screenrc
       # Keep plugin files in a container-managed named volume to avoid
       # writing compiled or platform-specific plugin artifacts into the
       # host repository. This overlays the `plugged` subdirectory.
       - vim_plugged:/home/devbox/.vim/plugged
-      - ./screenrc:/home/devbox/.screenrc
       # Optional host mounts for secrets/config (kept read-only here)
       - ${USER_HOME}/.ssh:/home/devbox/.ssh:ro
       - ${USER_HOME}/.gitconfig:/home/devbox/.gitconfig:ro
