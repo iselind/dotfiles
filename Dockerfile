@@ -7,7 +7,7 @@ RUN apt-get update \
     bash ca-certificates git openssh-client \
     build-essential make pkg-config \
     curl wget unzip tar \
-    jq yq ripgrep fd-find \
+    jq yq ripgrep fd-find adduser \
     python3 python3-pip python3-venv \
     vim nodejs npm screen \
   && ln -s /usr/bin/fdfind /usr/local/bin/fd \
@@ -19,8 +19,7 @@ ENV HOME=/home/devbox
 ENV GOPATH=${HOME}/go
 ENV PATH="${GOPATH}/bin:/usr/bin:/usr/local/bin"
 
-RUN groupadd -g 1000 devbox || true \
-  && useradd -m -u 1000 -g devbox -s /bin/bash devbox
+RUN adduser --uid 1000 --disabled-password --gecos "" devbox || true
 
 # Copy defaults into /etc/skel so the init script can populate a new volume
 COPY vim /etc/skel/.vim
