@@ -74,13 +74,10 @@
             "trace": {
                 "server": "verbose"
             },
-            "command": "python3",
+            "command": "diagnostic-languageserver",
             "args": [
-                "/home/patrik/.vim/lsp_sniffer.py",
-                "-c",
-                "diagnostic-languageserver --stdio --log-level=trace",
-                "-f",
-                "/tmp/lsp_communication.log"
+                "--stdio",
+                "--log-level=trace"
             ],
             "filetypes": [
                 "sh",
@@ -220,13 +217,6 @@
                             "-"
                         ]
                     },
-                    "custom-json": {
-                        "command": "python3",
-                        "args": [
-                            "/home/patrik/.vim/python/bin/format_json.py",
-                            "-"
-                        ]
-                    },
                     "goimports": {
                         "command": "goimports"
                     }
@@ -237,8 +227,7 @@
                         "isort"
                     ],
                     "cs": "astyle",
-                    "go": "goimports",
-                    "json": "custom-json"
+                    "go": "goimports"
                 }
             }
         },
