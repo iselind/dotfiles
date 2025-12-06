@@ -14,10 +14,21 @@ RUN apt-get update \
   && ln -s /usr/bin/python3 /usr/local/bin/python \
   && rm -rf /var/lib/apt/lists/*
 
-# Use mounted HOME
+# Create a non-root devbox user (UID/GID 1000) and prepare skel
 ENV HOME=/home/devbox
 ENV GOPATH=${HOME}/go
 ENV PATH="${GOPATH}/bin:/usr/bin:/usr/local/bin"
+
+RUN groupadd -g 1000 devbox || true \
+  && useradd -m -u 1000 -g devbox -s /bin/bash devbox
+
+# Copy defaults into /etc/skel so the init script can populate a new volume
+COPY vim /etc/skel/.vim
+COPY screenrc /etc/skel/.screenrc
+
+# Add init script to populate the home volume on first run
+COPY docker/init-devbox.sh /usr/local/bin/init-devbox
+RUN chmod +x /usr/local/bin/init-devbox
 
 WORKDIR ${HOME}
 CMD ["/bin/bash"]
