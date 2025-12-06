@@ -11,6 +11,8 @@ This repo is a personal "dotfiles" collection that configures a development envi
 - `README.md`: top-level install notes and symlink examples used by the owner. Use this as the canonical quick-start.
 - `Dockerfile` and `docker-compose.yml`: define the DevBox. Changes here affect local development images and volumes.
 - `bin/windows/*.cmd` and `bin/linux/*`: platform-specific helper scripts. Add platform-specific helpers in the appropriate subfolder.
+  - When adding helper scripts, prefer reusing the existing helpers rather than calling the corresponding raw commands directly.
+  - Keep Linux and Windows helpers in sync: when adding or changing a script under `bin/linux`, add or update the corresponding `bin/windows` script (and vice versa). Maintain the same command interface where possible.
 - `vim/vimrc`: the main Vim config. Add or modify plugin declarations here using `Plug 'owner/repo'` inside the `plug#begin`/`plug#end` block.
 - `vim/after/ftplugin/`: language-specific per-filetype tweaks — preferred place for language scoping (examples: `python.vim`, `go.vim`).
 - `vim/plugged/`: vendored plugin copies (e.g., `coc.nvim`). Avoid editing these files unless intentionally updating a vendored plugin; prefer changing `vim/vimrc` or `vim/after/` files.

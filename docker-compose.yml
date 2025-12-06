@@ -26,3 +26,6 @@ services:
       - ${USER_HOME}/.gitconfig:/home/devbox/.gitconfig:ro
     entrypoint: ["/usr/local/bin/init-devbox"]
     working_dir: /home/devbox
+
+volumes:
+  devbox_home: {}
