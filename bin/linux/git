@@ -1,0 +1,29 @@
+#!/bin/bash
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+if [ $# -eq 0 ]; then
+  "$DIR/start-devbox" git --help
+  exit $?
+fi
+
+IS_CLONE_OR_INIT=0
+for ARG in "$@"; do
+  case "$ARG" in
+    clone|init)
+      IS_CLONE_OR_INIT=1
+      break
+      ;;
+  esac
+done
+
+if [ "$IS_CLONE_OR_INIT" -eq 1 ]; then
+  # Build a safely quoted git command to run inside the devbox
+  cmd="mkdir -p \$HOME/code; cd \$HOME/code; git"
+  for a in "$@"; do
+    printf -v qa "%q" "$a"
+    cmd="$cmd $qa"
+  done
+  "$DIR/start-devbox" /bin/bash -lc "$cmd"
+else
+  "$DIR/start-devbox" git "$@"
+fi

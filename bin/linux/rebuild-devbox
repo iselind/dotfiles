@@ -1,0 +1,6 @@
+#!/bin/bash
+DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$DIR/../.." || exit 1
+
+# Rebuild the docker image defined at repo root
+docker compose build
