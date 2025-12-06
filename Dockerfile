@@ -3,7 +3,7 @@ FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
-  && apt-get install -y \
+  && apt-get install -y --no-install-recommends \
     bash ca-certificates git openssh-client \
     build-essential make pkg-config \
     curl wget unzip tar \
@@ -12,19 +12,23 @@ RUN apt-get update \
     python3-mypy python3-flake8 python3-autopep8 python3-isort \
     vim nodejs npm screen \
     golang-go shellcheck \
-  && ln -s /usr/bin/fdfind /usr/local/bin/fd \
-  && ln -s /usr/bin/python3 /usr/local/bin/python \
-  && rm -rf /var/lib/apt/lists/*
+  && ln -s /usr/bin/fdfind /usr/local/bin/fd || true \
+  && ln -s /usr/bin/python3 /usr/local/bin/python || true \
+  && apt-get autoremove -y \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/* /usr/share/doc/* /usr/share/man/*
 
 ENV HOME=/home/ubuntu
 ENV GOPATH=${HOME}/go
 ENV PATH="${GOPATH}/bin:/usr/bin:/usr/local/bin"
 
 # Install some global developer tools that are easier to place in /usr/local
-RUN npm install -g diagnostic-languageserver
+RUN npm install -g diagnostic-languageserver \
+  && npm cache clean --force
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
   | sh -s -- -b /usr/local/bin latest
-RUN GOPATH=/usr/local /usr/bin/env PATH="$PATH" go install golang.org/x/tools/cmd/goimports@latest
+RUN GOPATH=/usr/local /usr/bin/env PATH="$PATH" go install golang.org/x/tools/cmd/goimports@latest \
+  && rm -rf /root/.cache/go-build
 
 # Copy defaults into /etc/skel so the init script can populate a new volume
 COPY vim /etc/skel/.vim
