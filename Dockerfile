@@ -23,7 +23,7 @@ ENV GOPATH=${HOME}/go
 ENV PATH="${GOPATH}/bin:/usr/bin:/usr/local/bin"
 
 # Install some global developer tools that are easier to place in /usr/local
-RUN npm install -g diagnostic-languageserver \
+RUN npm install -g diagnostic-languageserver pyright \
   && npm cache clean --force
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
   | sh -s -- -b /usr/local/bin latest
