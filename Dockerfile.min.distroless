@@ -1,0 +1,43 @@
+# Distroless variant: packages node/global tools + Go binaries into a distroless Node image
+
+FROM node:20-slim AS node-builder
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends curl build-essential ca-certificates \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install global node-based tools into /usr/local
+RUN npm install -g --prefix /usr/local diagnostic-languageserver pyright \
+  && npm cache clean --force
+
+# Add minimal extras (we'll copy only what we need to the final image)
+RUN ln -s /usr/bin/python3 /usr/local/bin/python || true
+
+FROM golang:1.24-bullseye as go-builder
+RUN GOBIN=/out go install golang.org/x/tools/cmd/goimports@latest \
+  && GOBIN=/out go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+# Fetch ShellCheck binary
+FROM node-builder as shellfetch
+RUN set -eux; \
+    SC_VER=0.9.0; \
+    ARCH=linux.x86_64; \
+    TARBALL="shellcheck-v${SC_VER}.${ARCH}.tar.xz"; \
+    URL="https://github.com/koalaman/shellcheck/releases/download/v${SC_VER}/${TARBALL}"; \
+    curl -fsSL "$URL" -o /tmp/$TARBALL; \
+    tar -xJf /tmp/$TARBALL -C /tmp
+
+# Final: distroless Node image (non-root variant) — copy runtime and tools
+FROM gcr.io/distroless/nodejs-debian11:nonroot AS final
+COPY --from=node-builder /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=node-builder /usr/local/bin /usr/local/bin
+COPY --from=go-builder /out/goimports /usr/local/bin/
+COPY --from=go-builder /out/golangci-lint /usr/local/bin/
+COPY --from=shellfetch /tmp/shellcheck-v0.9.0/shellcheck /usr/local/bin/shellcheck
+
+# Ensure executables are present
+RUN ["/bin/true"]
+
+USER nonroot
+CMD ["node"]

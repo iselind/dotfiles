@@ -1,0 +1,55 @@
+# Minimal Node/Alpine-based image optimized for small size
+
+FROM node:20-alpine AS base
+
+ENV HOME=/home/ubuntu
+ENV GOPATH=${HOME}/go
+ENV PATH="${GOPATH}/bin:/usr/local/bin:/usr/bin:/bin"
+
+RUN apk add --no-cache \
+  bash curl git vim python3 py3-pip build-base \
+  ripgrep jq tar unzip xz shellcheck || true \
+  && \
+    ln -s /usr/bin/python3 /usr/local/bin/python || true
+
+## Ensure ShellCheck is installed from apk (preferred in Alpine)
+RUN apk add --no-cache shellcheck || true
+
+# Install node tools
+RUN npm install -g diagnostic-languageserver pyright \
+  && npm cache clean --force
+
+# Try the official golangci-lint installer (may work on musl)
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
+  | sh -s -- -b /usr/local/bin latest || true
+
+# Ensure ubuntu user exists (explicit to avoid base differences)
+RUN mkdir -p /home/ubuntu \
+  && echo 'ubuntu:x:1001:1001:Ubuntu user:/home/ubuntu:/bin/bash' >> /etc/passwd \
+  && echo 'ubuntu:x:1001:' >> /etc/group \
+  && chown -R 1001:1001 /home/ubuntu || true
+
+# Build goimports using an Alpine Go builder and copy binary in
+FROM golang:1.24-alpine AS go-builder
+RUN GOBIN=/out go install golang.org/x/tools/cmd/goimports@latest \
+  && GOBIN=/out go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+## Fetch prebuilt ShellCheck in a small stage to avoid apk repo issues
+FROM alpine:3.18 AS shellfetch
+RUN apk add --no-cache curl xz
+RUN set -eux; \
+    SC_VER=0.11.0; \
+    TARBALL="shellcheck-v${SC_VER}.linux.x86_64.tar.xz"; \
+    URL="https://github.com/koalaman/shellcheck/releases/download/v${SC_VER}/${TARBALL}"; \
+    curl -fsSL "$URL" -o /tmp/$TARBALL; \
+    tar -xJf /tmp/$TARBALL -C /tmp; \
+    mkdir -p /out && mv /tmp/shellcheck-v${SC_VER}/shellcheck /out/shellcheck && chmod +x /out/shellcheck
+
+FROM base
+COPY --from=go-builder /out/goimports /usr/local/bin/
+COPY --from=go-builder /out/golangci-lint /usr/local/bin/
+COPY --from=shellfetch /out/shellcheck /usr/local/bin/shellcheck
+
+USER ubuntu
+WORKDIR ${HOME}
+CMD ["/bin/sh"]

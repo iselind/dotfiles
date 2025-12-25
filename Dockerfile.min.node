@@ -1,0 +1,43 @@
+# Minimal Node-slim-based image optimized for dev tools
+# Uses node:20-slim as base to keep Node preinstalled and reduce layers
+
+FROM node:20-slim AS base
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV HOME=/home/ubuntu
+ENV GOPATH=${HOME}/go
+ENV PATH="${GOPATH}/bin:/usr/local/bin:/usr/bin:/bin"
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    ca-certificates curl git vim python3 python3-pip python3-venv \
+    ripgrep fd-find shellcheck jq yq adduser tar unzip \
+  && ln -s /usr/bin/fdfind /usr/local/bin/fd || true \
+  && ln -s /usr/bin/python3 /usr/local/bin/python || true \
+  && apt-get autoremove -y \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+
+# npm available in base image
+RUN npm install -g diagnostic-languageserver pyright \
+  && npm cache clean --force
+
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
+  | sh -s -- -b /usr/local/bin latest || true
+
+COPY vim /etc/skel/.vim
+
+RUN mkdir -p /home/ubuntu \
+  && echo 'ubuntu:x:1001:1001:Ubuntu user:/home/ubuntu:/bin/bash' >> /etc/passwd \
+  && echo 'ubuntu:x:1001:' >> /etc/group \
+  && chown -R 1001:1001 /home/ubuntu || true
+
+FROM golang:1.24-bullseye AS go-builder
+RUN GOBIN=/out go install golang.org/x/tools/cmd/goimports@latest
+
+FROM base
+COPY --from=go-builder /out/goimports /usr/local/bin/
+
+USER ubuntu
+WORKDIR ${HOME}
+CMD ["/bin/bash"]
