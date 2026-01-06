@@ -128,6 +128,10 @@ export GOPATH
 export PATH="$GOROOT/bin:$GOPATH/bin:$PATH"
 
 echo "==> Installing Go tools"
+# The tool `golangci-lint` is not recommended to be installed using `go install` anymore
+# so we use their official install script
+curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.7.2
+
 install_from_file "packages/go.txt" "go install"
 
 # --------------------------------------------------------------
