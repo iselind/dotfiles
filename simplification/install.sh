@@ -11,6 +11,30 @@ PROFILE="$HOME/.bashrc"
 mkdir -p "$BIN" "$LOCAL_BIN"
 
 # --------------------------------------------------------------
+# Package installation functions
+# --------------------------------------------------------------
+install_from_file() {
+  # Example usage:
+  #   install_from_file "packages.txt" "apt-get install -y"
+  #   install_from_file "packages/python.txt" "uv tool install"
+
+  local file="$1"
+  local cmd="$2"
+
+  if [ ! -f "$file" ]; then
+    echo "==> Skipping missing $file"
+    return
+  fi
+
+  echo "==> Installing from $file"
+  grep -vE '^\s*($|#)' "$file" | while read -r pkg; do
+    echo "    -> $pkg"
+    eval "$cmd \"$pkg\""
+  done
+}
+
+
+# --------------------------------------------------------------
 # PATH handling (POSIX only; Windows PATH is printed later)
 # --------------------------------------------------------------
 ensure_path() {
@@ -37,12 +61,7 @@ echo "==> Installing Python version"
 uv python install 3.12
 
 echo "==> Installing Python tools"
-uv tool install \
-  black \
-  ruff \
-  pyright \
-  mypy \
-  debugpy
+install_from_file "packages/python.txt" "uv tool install"
 
 # --------------------------------------------------------------
 # Node via fnm
@@ -68,12 +87,7 @@ echo "==> Enabling corepack"
 corepack enable || true
 
 echo "==> Installing Node tools"
-npm install -g \
-  typescript \
-  typescript-language-server \
-  eslint \
-  prettier \
-  bash-language-server
+install_from_file "packages/npm.txt" "npm install -g"
 
 # --------------------------------------------------------------
 # Go
@@ -105,9 +119,7 @@ export GOPATH
 export PATH="$GOROOT/bin:$GOPATH/bin:$PATH"
 
 echo "==> Installing Go tools"
-go install golang.org/x/tools/gopls@latest
-go install github.com/go-delve/delve/cmd/dlv@latest
-go install honnef.co/go/tools/cmd/staticcheck@latest
+install_from_file "packages/go.txt" "go install"
 
 # --------------------------------------------------------------
 # PATH summary

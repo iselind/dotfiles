@@ -1,0 +1,8 @@
+# You can pin versions if needed:
+# typescript@5.4.2
+
+typescript
+typescript-language-server
+eslint
+prettier
+bash-language-server

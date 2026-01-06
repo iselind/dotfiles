@@ -1,0 +1,9 @@
+# You can pin versions if needed.
+# black==24.3.0
+# ruff>=0.4
+
+black
+ruff
+pyright
+mypy
+debugpy
