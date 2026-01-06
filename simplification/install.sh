@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# Explaining the set flags:
+# -e: Exit immediately if a command exits with a non-zero status.
+# -u: Treat unset variables as an error and exit immediately.
+# -o pipefail: Prevent errors in a pipeline from being masked. If any command in
+#              a pipeline fails, that return code will be used as the return code
+#              of the whole pipeline.
 
 echo "==> Provisioning dev environment"
 
@@ -14,25 +20,28 @@ mkdir -p "$BIN" "$LOCAL_BIN"
 # Package installation functions
 # --------------------------------------------------------------
 install_from_file() {
-  # Example usage:
-  #   install_from_file "packages.txt" "apt-get install -y"
-  #   install_from_file "packages/python.txt" "uv tool install"
-
   local file="$1"
-  local cmd="$2"
+  shift
+  local cmd=("$@")
 
   if [ ! -f "$file" ]; then
-    echo "==> Skipping missing $file"
+    echo "==> Missing $file (skipping)"
     return
   fi
 
-  echo "==> Installing from $file"
-  grep -vE '^\s*($|#)' "$file" | while read -r pkg; do
-    echo "    -> $pkg"
-    eval "$cmd \"$pkg\""
-  done
-}
+  echo "==> Installing packages from $file"
 
+  # Read file into the current shell, not a subshell
+  while IFS= read -r pkg; do
+    # Skip comments and empty lines
+    case "$pkg" in
+      ""|\#*) continue ;;
+    esac
+
+    echo "    -> $pkg"
+    "${cmd[@]}" "$pkg"
+  done < "$file"
+}
 
 # --------------------------------------------------------------
 # PATH handling (POSIX only; Windows PATH is printed later)
@@ -61,7 +70,7 @@ echo "==> Installing Python version"
 uv python install 3.12
 
 echo "==> Installing Python tools"
-install_from_file "packages/python.txt" "uv tool install"
+install_from_file "packages/python.txt" "uv tool install --upgrade"
 
 # --------------------------------------------------------------
 # Node via fnm
