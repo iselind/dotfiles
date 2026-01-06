@@ -70,7 +70,7 @@ echo "==> Installing Python version"
 uv python install 3.12
 
 echo "==> Installing Python tools"
-install_from_file "packages/python.txt" "uv tool install --upgrade"
+install_from_file "packages/python.txt" uv tool install --upgrade
 
 # --------------------------------------------------------------
 # Node via fnm
@@ -96,7 +96,7 @@ echo "==> Enabling corepack"
 corepack enable || true
 
 echo "==> Installing Node tools"
-install_from_file "packages/npm.txt" "npm install -g"
+install_from_file "packages/npm.txt" npm install -g
 
 # --------------------------------------------------------------
 # Go
@@ -132,7 +132,7 @@ echo "==> Installing Go tools"
 # so we use their official install script
 curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.7.2
 
-install_from_file "packages/go.txt" "go install"
+install_from_file "packages/go.txt" go install
 
 # --------------------------------------------------------------
 # PATH summary
