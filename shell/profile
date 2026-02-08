@@ -1,0 +1,14 @@
+# Session/login-level environment and variables.
+# Put exports and PATH updates here so they apply once per login session.
+# Source interactive shell settings from ~/.bashrc when available.
+case "$-" in
+    *i*)
+        if [ -f "$HOME/.bashrc" ]; then
+            . "$HOME/.bashrc"
+        fi
+        ;;
+esac
+
+# Example: add session-wide exports below
+# export PATH="$HOME/.local/bin:$PATH"
+# export LANG=en_US.UTF-8

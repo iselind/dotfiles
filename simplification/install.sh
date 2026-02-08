@@ -7,6 +7,10 @@ set -euo pipefail
 #              a pipeline fails, that return code will be used as the return code
 #              of the whole pipeline.
 
+# Make sure we are in the expected directory
+SCRIPT_DIR="$(dirname "$0")"
+cd "$SCRIPT_DIR"
+
 echo "==> Provisioning dev environment"
 
 HOME_DIR="$HOME"
@@ -57,6 +61,15 @@ ensure_path "$BIN"
 ensure_path "$LOCAL_BIN"
 
 export PATH="$BIN:$LOCAL_BIN:$PATH"
+
+# --------------------------------------------------------------
+# Apt packages (WSL / Debian-based only)
+# --------------------------------------------------------------
+if command -v apt-get >/dev/null 2>&1; then
+  echo "==> Installing apt packages"
+  sudo apt-get update
+  install_from_file "packages/apt.txt" sudo apt install -y
+fi
 
 # --------------------------------------------------------------
 # Python via uv (TOOLS, not venvs)
@@ -135,28 +148,8 @@ curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(go env GOPATH)/b
 install_from_file "packages/go.txt" go install
 
 # --------------------------------------------------------------
-# PATH summary
+# Finishing summary
 # --------------------------------------------------------------
-echo
-echo "============================================================"
-echo "PATH ENTRIES TO ADD"
-echo "============================================================"
-echo
-echo "POSIX (Git Bash, WSL, etc.):"
-echo
-echo "  $BIN"
-echo "  $LOCAL_BIN"
-echo "  $GOROOT/bin"
-echo "  $GOPATH/bin"
-echo
-echo "Windows (User PATH):"
-echo
-echo "  $(cygpath -w "$BIN")"
-echo "  $(cygpath -w "$LOCAL_BIN")"
-echo "  $(cygpath -w "$GOROOT/bin")"
-echo "  $(cygpath -w "$GOPATH/bin")"
-echo
-echo "============================================================"
 echo
 echo "Restart shells to apply PATH changes."
 echo "Provisioning complete."

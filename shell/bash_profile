@@ -1,0 +1,6 @@
+# Bash login shell configuration.
+# This file is sourced by bash for login shells (e.g., SSH, local tty login).
+# Source ~/.profile for session-wide environment variables and exports.
+if [ -f "$HOME/.profile" ]; then
+    . "$HOME/.profile"
+fi
