@@ -45,6 +45,7 @@ This repo is a personal "dotfiles" collection that configures a development envi
 - **Add packages to install**:
   - Add package names to the appropriate file in `provisioning/packages/` (e.g., apt.txt for apt packages).
   - Run `./setup.sh` to install them.
+  - **Important**: Whenever you change something in the repo, ensure that any additional packages required for those changes are added to the appropriate files in `provisioning/packages/`.
 
 - **Update shell configuration**:
   - Edit files in `shell/` (bashrc, bash_profile, profile).
