@@ -13,9 +13,6 @@ DOT_FILES="${SCRIPT_DIR}"
 ln -sf ${DOT_FILES}/vim ~/.vim
 ln -sf ${DOT_FILES}/screenrc ~/.screenrc
 
-# Make sure the binaries we expect are in place
-./packages/install.sh
-
 # Install shell configuration files by sourcing them from the dotfiles repo.
 # We can't just symlink them because the user might have customizations.
 # Instead, we append a source line to the user's existing config if not already there.
@@ -26,3 +23,6 @@ for config in bashrc profile bash_profile; do
         echo "[ -f ${DOT_FILES}/shell/${config} ] && source ${DOT_FILES}/shell/${config}" >> "$home_config"
     fi
 done
+
+# Make sure the binaries we expect are in place
+./packages/install.sh

@@ -16,7 +16,12 @@ echo "==> Provisioning dev environment"
 HOME_DIR="$HOME"
 BIN="$HOME/bin"
 LOCAL_BIN="$HOME/.local/bin"
-PROFILE="$HOME/.bashrc"
+# Pick a sensible profile file in $HOME for appending environment changes.
+if [ -f "$HOME/.bash_profile" ]; then
+  PROFILE="$HOME/.bash_profile"
+else
+  PROFILE="$HOME/.profile"
+fi
 
 mkdir -p "$BIN" "$LOCAL_BIN"
 
@@ -48,18 +53,27 @@ install_from_file() {
 }
 
 # --------------------------------------------------------------
-# PATH handling (POSIX only; Windows PATH is printed later)
+# PATH handling
 # --------------------------------------------------------------
-ensure_path() {
-  local p="$1"
-  if ! grep -q "$p" "$PROFILE" 2>/dev/null; then
-    echo "export PATH=\"$p:\$PATH\"" >> "$PROFILE"
+ensure_line() {
+  # Append an arbitrary line to a profile file if it doesn't already exist.
+  local line="$1"
+  local file="${2:-$PROFILE}"
+  if ! grep -Fq "$line" "$file" 2>/dev/null; then
+    printf '%s\n' "$line" >> "$file"
   fi
 }
 
+ensure_path() {
+  # Ensure a directory is added to PATH in the chosen profile file.
+  local p="$1"
+  # Use a simple, idempotent export line that will be appended once.
+  ensure_line "export PATH=\"$p:\$PATH\"" "$PROFILE"
+}
+
+# Ensure user-local bins are present for future shells and update current shell.
 ensure_path "$BIN"
 ensure_path "$LOCAL_BIN"
-
 export PATH="$BIN:$LOCAL_BIN:$PATH"
 
 # --------------------------------------------------------------
@@ -93,10 +107,7 @@ if ! command -v fnm >/dev/null 2>&1; then
   curl -fsSL https://fnm.vercel.app/install | bash
 fi
 
-if ! grep -q "fnm env" "$PROFILE"; then
-  echo 'eval "$(fnm env)"' >> "$PROFILE"
-fi
-
+ensure_line 'eval "$(fnm env)"' "$PROFILE"
 eval "$(fnm env)"
 
 if ! command -v node >/dev/null 2>&1; then
@@ -120,21 +131,19 @@ GOPATH="$HOME/go-packages"
 
 if [ ! -d "$GOROOT" ]; then
   echo "==> Installing Go $GO_VERSION"
-  curl -LO "https://go.dev/dl/go${GO_VERSION}.windows-amd64.zip"
-  unzip -q "go${GO_VERSION}.windows-amd64.zip"
+  curl -LO "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+  tar -xzf "go${GO_VERSION}.linux-amd64.tar.gz"
   mv go "$GOROOT"
-  rm "go${GO_VERSION}.windows-amd64.zip"
+  rm "go${GO_VERSION}.linux-amd64.tar.gz"
 fi
 
 mkdir -p "$GOPATH"
 
-if ! grep -q GOROOT "$PROFILE"; then
-  cat >> "$PROFILE" <<EOF
-export GOROOT="$GOROOT"
-export GOPATH="$GOPATH"
-export PATH="\$GOROOT/bin:\$GOPATH/bin:\$PATH"
-EOF
-fi
+ensure_line "export GOROOT=\"$GOROOT\"" "$PROFILE"
+ensure_line "export GOPATH=\"$GOPATH\"" "$PROFILE"
+# Ensure Go bins are in PATH for future shells and for this session.
+ensure_path "$GOROOT/bin"
+ensure_path "$GOPATH/bin"
 
 export GOROOT
 export GOPATH
