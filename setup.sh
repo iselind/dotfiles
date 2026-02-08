@@ -25,4 +25,4 @@ for config in bashrc profile bash_profile; do
 done
 
 # Make sure the binaries we expect are in place
-./packages/install.sh
+./provisioning/install.sh
