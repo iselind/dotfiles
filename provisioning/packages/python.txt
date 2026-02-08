@@ -7,3 +7,4 @@ ruff
 pyright
 mypy
 debugpy
+flake8

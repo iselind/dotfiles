@@ -6,3 +6,4 @@ typescript-language-server
 eslint
 prettier
 bash-language-server
+diagnostic-languageserver
