@@ -1,4 +1,0 @@
-#!/bin/bash
-
-# Rebuild the docker image defined at repo root
-docker compose build

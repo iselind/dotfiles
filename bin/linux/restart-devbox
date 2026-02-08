@@ -1,6 +1,0 @@
-#!/bin/sh -ex
-
-./bin/linux/rebuild-devbox
-./bin/linux/stop-devbox
-docker volume rm dotfiles_devbox_home dotfiles_vim_plugged
-./bin/linux/start-devbox
