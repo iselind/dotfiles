@@ -2,3 +2,4 @@ ripgrep
 fzf
 bat
 shellcheck
+fd-find

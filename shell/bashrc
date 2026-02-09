@@ -47,7 +47,8 @@ sudo df -lh | grep "vg0-home" | awk '{print "Home is " $5 " full" }'
 # Kill the bell
 xset -b
 
-# ripgrep->fzf->vim helper (adapted)
+# ripgrep->fzf->vim helper
+# For file contents searching
 rfv() {
 	RELOAD='reload:rg --column --color=always --smart-case {q} || :'
 	OPENER='if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
@@ -64,4 +65,10 @@ rfv() {
 			--preview 'batcat --style=full --color=always --highlight-line {2} {1}' \
 			--preview-window '~4,+{2}+4/3,<80(up)' \
 			--query "$*"
+}
+
+# fdfind->fzf->vim helper
+# For file name searching
+ffv() {
+    fdfind | fzf --preview 'batcat {}'
 }
