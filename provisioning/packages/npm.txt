@@ -1,6 +1,7 @@
 # You can pin versions if needed:
 # typescript@5.4.2
 
+yarn
 typescript
 typescript-language-server
 eslint

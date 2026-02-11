@@ -41,7 +41,6 @@ export GOFLAGS="-tags=aws"
 export GOPRIVATE="*.se.axis.com"
 
 # Notices
-sudo df -lh | grep "vg0-home" | awk '{print "Home is " $5 " full" }'
 [ -f /var/run/reboot-required ] && echo "System needs to reboot!"
 
 # Kill the bell

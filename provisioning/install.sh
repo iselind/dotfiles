@@ -122,8 +122,14 @@ if ! command -v node >/dev/null 2>&1; then
   fnm use --lts
 fi
 
-echo "==> Enabling corepack"
-corepack enable || true
+# Enable corepack if available (fnm-managed Node typically has it)
+# For system Node without corepack, yarn will be installed via npm packages
+if command -v corepack >/dev/null 2>&1; then
+  echo "==> Enabling corepack"
+  corepack enable || true
+else
+  echo "==> Corepack not available, yarn will be installed via npm"
+fi
 
 echo "==> Configuring npm to use local prefix"
 NPM_PREFIX="$HOME/.npm-global"

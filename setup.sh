@@ -13,8 +13,8 @@ SCRIPT_PATH="$(realpath "$0")"
 SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 DOT_FILES="${SCRIPT_DIR}"
 
-ln -sf ${DOT_FILES}/vim ~/.vim
-ln -sf ${DOT_FILES}/screenrc ~/.screenrc
+ln -sfn ${DOT_FILES}/vim ~/.vim
+ln -sfn ${DOT_FILES}/screenrc ~/.screenrc
 
 # Install shell configuration files by sourcing them from the dotfiles repo.
 # We can't just symlink them because the user might have customizations.
