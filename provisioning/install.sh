@@ -107,6 +107,12 @@ if ! command -v fnm >/dev/null 2>&1; then
   curl -fsSL https://fnm.vercel.app/install | bash
 fi
 
+# Ensure fnm binary directory is in PATH
+FNM_DIR="$HOME/.local/share/fnm"
+ensure_path "$FNM_DIR"
+export PATH="$FNM_DIR:$PATH"
+
+ensure_line 'export PATH="$HOME/.local/share/fnm:$PATH"' "$PROFILE"
 ensure_line 'eval "$(fnm env)"' "$PROFILE"
 eval "$(fnm env)"
 
@@ -118,6 +124,13 @@ fi
 
 echo "==> Enabling corepack"
 corepack enable || true
+
+echo "==> Configuring npm to use local prefix"
+NPM_PREFIX="$HOME/.npm-global"
+mkdir -p "$NPM_PREFIX"
+npm config set prefix "$NPM_PREFIX"
+ensure_path "$NPM_PREFIX/bin"
+export PATH="$NPM_PREFIX/bin:$PATH"
 
 echo "==> Installing Node tools"
 install_from_file "packages/npm.txt" npm install -g

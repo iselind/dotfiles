@@ -3,3 +3,4 @@ fzf
 bat
 shellcheck
 fd-find
+vim

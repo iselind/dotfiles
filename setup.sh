@@ -7,7 +7,10 @@ set -euo pipefail
 #              a pipeline fails, that return code will be used as the return code
 #              of the whole pipeline.
 
-SCRIPT_DIR="$(dirname "$0")"
+# set -x # For debugging, see all commands being executed
+
+SCRIPT_PATH="$(realpath "$0")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 DOT_FILES="${SCRIPT_DIR}"
 
 ln -sf ${DOT_FILES}/vim ~/.vim
@@ -17,7 +20,7 @@ ln -sf ${DOT_FILES}/screenrc ~/.screenrc
 # We can't just symlink them because the user might have customizations.
 # Instead, we append a source line to the user's existing config if not already there.
 for config in bashrc profile bash_profile; do
-    home_config="~/.${config}"
+    home_config="${HOME}/.${config}"
     touch "$home_config" # Ensure the file exists before grepping
     if ! grep -q "source ${DOT_FILES}/shell/${config}" "$home_config" 2>/dev/null; then
         echo "[ -f ${DOT_FILES}/shell/${config} ] && source ${DOT_FILES}/shell/${config}" >> "$home_config"
