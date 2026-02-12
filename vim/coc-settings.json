@@ -8,6 +8,7 @@
                 "json",
                 "java",
                 "xml",
+                "terraform",
                 "docbk"
             ]
         },
@@ -179,10 +180,15 @@
                 "formatters": {
                     "goimports": {
                         "command": "goimports"
+                    },
+                    "terraform-fmt": {
+                        "command": "terraform",
+                        "args": ["fmt", "-"]
                     }
                 },
                 "formatFiletypes": {
-                    "go": "goimports"
+                    "go": "goimports",
+                    "terraform": "terraform-fmt"
                 }
             }
         },
