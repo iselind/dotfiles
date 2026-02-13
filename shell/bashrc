@@ -1,3 +1,4 @@
+#!/bin/bash
 # Only run for interactive bash shells
 if [[ $- != *i* ]]; then
 	return 0 2>/dev/null || exit 0
@@ -8,8 +9,11 @@ fi
 # Prompt: show host, working dir, and mark failed last command
 PS1='$(if [ $? -ne 0 ]; then echo "[FAIL] "; fi)\h:\w\$ '
 
-# Use vim keybindings (like `bindkey -v` in zsh)
-set -o vi
+## Don't set vi mode, that screws up the Ctrl+l mapping
+## Instead we should prefer the emacs mode in the terminal
+## Use vim keybindings (like `bindkey -v` in zsh)
+#set -o vi
+set -o emacs
 
 # History
 HISTSIZE=1000
