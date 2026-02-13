@@ -4,3 +4,4 @@ bat
 shellcheck
 fd-find
 vim
+screen
