@@ -65,7 +65,8 @@ function! s:EnsureSaved() abort
 endfunction
 
 function! s:GetRangeText(start, end) abort
-  return join(getline(a:start, a:end), "\r")
+    echomsg printf('Getting text from lines %d to %d', a:start, a:end)
+  return join(getline(a:start, a:end), "\n")
 endfunction
 
 " Character-precise extraction using '[ and '] marks
@@ -99,7 +100,15 @@ endfunction
 " ---------------- Diagnostics
 
 function! s:GetDiagnostics(start, end) abort
-  let qf = getqflist()
+    " TODO: Should use
+    " CocAction('diagnosticList')
+    " instead.
+    " Example contents:
+    " [{'file': '/home/patrik/code/dotfiles/vim/plugin/ai/foo.go', 'lnum': 6, 'end_lnum': 6, 'source': 'syntax', 'location': {'uri': 'file:///home/patrik/code/dotfiles/vim/plugin/ai/foo.go', 'range': {'end': {'character': 24, 'line': 5}, 'start': {'character': 24, 'line': 5}}}, 'level': 1, 'message': 'missing '','' before newline in argument list', 'end_col': 25, 'col': 25, 'severity': 'Error'}]
+
+    let qf = getqflist({'bufnr': bufnr('%'), 'lnum': a:start, 'end_lnum': a:end })
+  echomsg printf("%s", json_encode(qf))
+
   let msgs = []
 
   for item in qf
@@ -128,46 +137,54 @@ endfunction
 " ============================================================
 " Context Collection
 " ============================================================
-
-function! s:CollectContextShort(operation, start, end, instruction, question) abort
-  let text = s:GetRangeText(a:start, a:end)
+function! s:CollectContextShort(operation, start, end, prompt) abort
+  let text = ''
+  let file = ''
 
   if s:HasFile()
     call s:EnsureSaved()
+    let file = s:CurrentFile()
+  else
+    let text = s:GetRangeText(a:start, a:end)
   endif
 
-  let file = s:HasFile() ? s:CurrentFile() : ''
   let diagnostics = s:GetDiagnostics(a:start, a:end)
 
+  " If a:prompt is empty, use the operation as the prompt
+  if a:prompt == ''
+    let prompt = a:operation
+  else
+    let prompt = a:prompt
+  endif
+
   let context = {
-    \ 'operation': a:operation,
     \ 'file': file,
-    \ 'start': a:start,
-    \ 'end': a:end,
+    \ 'startline': a:start,
+    \ 'endline': a:end,
     \ 'text': text,
     \ 'diagnostics': diagnostics,
-    \ 'instruction': a:instruction,
-    \ 'question': a:question,
+    \ 'prompt': prompt,
     \ }
 
-  " # Print context for debugging
-  " echo 'Collected context:'
-  " for [key, value] in items(context)
-  "   echo printf('  %s: %s', key, value)
-  " endfor
+  " Print context for debugging
+  echo 'Collected context:'
+  for [key, value] in items(context)
+    echo printf('  %s: %s', key, json_encode(value))
+  endfor
 
   return context
 endfunction
 
 " To test CollectContextShort in isolation:
-function! TestCollectContext() abort
-  let context = s:CollectContextShort('fix', 1, 10, 'Make this code more efficient', 'How can I optimize this?')
+function! TestCollectContext(...) range abort
+  " Get range from selection
+  " If no selection, then start and end will be equal.
+  let start = a:firstline
+  let end = a:lastline
 
-  " Print context for debugging
-  echo 'Collected context:'
-  for [key, value] in items(context)
-    echo printf('  %s: %s', key, value)
-  endfor
+  let context = s:CollectContextShort('fix', start, end, 'Make this code more efficient')
+  let context = s:CollectContextShort('explain', start, end, '')
+
 endfunction
 
 " ============================================================
