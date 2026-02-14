@@ -1,36 +1,22 @@
 " ============================================================
 " ai.vim
 " Lightweight AI helpers for plain Vim
-" Claude CLI for intentional operations (fix/review/explain/ask)
+" Supports Claude CLI and Copilot CLI with fallback
 " Plain Vim only, CoC-friendly, deterministic
 " ------------------------------------------------------------
 " Design principles
-"   - Always non-interactive: claude -p
-"   - Stateless by default (sessions only for Ask)
+"   - Backend detection: Claude → Copilot → unavailable
+"   - Always non-interactive
 "   - Save file before disk-based operations
 "   - If buffer has no file -> fall back to stdin text mode
 "   - Long questions use a git-commit–style editor buffer
 " ============================================================
-
-" TODO: Integrate copilot for inline suggestions (e.g. for fix/rewrites, or as
-" an alternative to Ask).
-" The command is `copilot -sp "YOUR PROMPT HERE"` and it accepts input text
-" via stdin, similar to the Claude CLI.
 
 if exists('g:loaded_ai_helpers')
   finish
 endif
 let g:loaded_ai_helpers = 1
 
-
-" ============================================================
-" Config
-" ============================================================
-
-" Ask session behavior: 'file' | 'global' | 'none'
-if !exists('g:ai_claude_session_mode')
-  let g:ai_claude_session_mode = 'file'
-endif
 
 " ============================================================
 " Capability detection
@@ -40,8 +26,22 @@ function! s:ClaudeAvailable() abort
   return executable('claude')
 endfunction
 
+function! s:CopilotAvailable() abort
+  return executable('copilot')
+endfunction
+
+function! s:GetAvailableBackend() abort
+  if s:ClaudeAvailable()
+    return 'claude'
+  elseif s:CopilotAvailable()
+    return 'copilot'
+  else
+    return ''
+  endif
+endfunction
+
 function! s:EchoMissing() abort
-  echo "Claude CLI not available on this machine"
+  echo "No AI CLI available (install claude or copilot)"
 endfunction
 
 
@@ -65,8 +65,7 @@ function! s:EnsureSaved() abort
 endfunction
 
 function! s:GetRangeText(start, end) abort
-  return join(getline(a:start, a:end), "
-")
+  return join(getline(a:start, a:end), "\r")
 endfunction
 
 " Character-precise extraction using '[ and '] marks
@@ -126,25 +125,114 @@ function! s:Scratch(title, content) abort
 endfunction
 
 
-" ---------------- Claude helpers
+" ============================================================
+" Context Collection
+" ============================================================
 
-function! s:ClaudeCmd(args) abort
-  return 'claude -p ' . a:args
+function! s:CollectContextShort(operation, start, end, instruction, question) abort
+  let text = s:GetRangeText(a:start, a:end)
+
+  if s:HasFile()
+    call s:EnsureSaved()
+  endif
+
+  let file = s:HasFile() ? s:CurrentFile() : ''
+  let diagnostics = s:GetDiagnostics(a:start, a:end)
+
+  let context = {
+    \ 'operation': a:operation,
+    \ 'file': file,
+    \ 'start': a:start,
+    \ 'end': a:end,
+    \ 'text': text,
+    \ 'diagnostics': diagnostics,
+    \ 'instruction': a:instruction,
+    \ 'question': a:question,
+    \ }
+
+  " # Print context for debugging
+  " echo 'Collected context:'
+  " for [key, value] in items(context)
+  "   echo printf('  %s: %s', key, value)
+  " endfor
+
+  return context
 endfunction
 
-function! s:AskSessionArg() abort
-  if g:ai_claude_session_mode ==# 'none'
-    return ''
-  elseif g:ai_claude_session_mode ==# 'global'
-    return '--session vim-ask'
-  elseif g:ai_claude_session_mode ==# 'file'
-    if !s:HasFile()
-      return ''
+" To test CollectContextShort in isolation:
+function! TestCollectContext() abort
+  let context = s:CollectContextShort('fix', 1, 10, 'Make this code more efficient', 'How can I optimize this?')
+
+  " Print context for debugging
+  echo 'Collected context:'
+  for [key, value] in items(context)
+    echo printf('  %s: %s', key, value)
+  endfor
+endfunction
+
+" ============================================================
+" Backend Command Builders
+" ============================================================
+
+function! s:BuildClaudeCmd(context) abort
+  let parts = ['claude', '-p', a:context.operation]
+
+  if a:context.operation ==# 'ask'
+    let question = a:context.question
+    if !empty(a:context.file)
+      let question .= ' (in ' . a:context.file . ' lines ' . a:context.start . '-' . a:context.end . ')'
     endif
-    let id = sha256(expand('%:p'))[0:12]
-    return '--session vim-ask-' . id
+    call extend(parts, ['--question', shellescape(question)])
+  else
+    if !empty(a:context.file)
+      call extend(parts, ['--file', shellescape(a:context.file)])
+      call extend(parts, ['--range', a:context.start . ':' . a:context.end])
+    endif
+
+    if !empty(a:context.diagnostics)
+      call extend(parts, ['--diagnostics', shellescape(a:context.diagnostics)])
+    endif
+
+    if !empty(a:context.instruction)
+      call extend(parts, ['--instruction', shellescape(a:context.instruction)])
+    endif
   endif
-  return ''
+
+  return join(parts, ' ')
+endfunction
+
+function! s:BuildCopilotCmd(context) abort
+  if a:context.operation ==# 'ask'
+    let prompt = a:context.question
+    if !empty(a:context.file)
+      let prompt .= ' (in ' . a:context.file . ' lines ' . a:context.start . '-' . a:context.end . ')'
+    endif
+    return 'copilot -sp ' . shellescape(prompt)
+  endif
+
+  let prompt = a:context.operation . ' the code'
+
+  if !empty(a:context.file)
+    let prompt .= ' in ' . a:context.file . ' from line ' . a:context.start . ' to ' . a:context.end
+  endif
+
+  if !empty(a:context.diagnostics)
+    let prompt .= '. Diagnostics: ' . a:context.diagnostics
+  endif
+
+  if !empty(a:context.instruction)
+    let prompt .= '. Instruction: ' . a:context.instruction
+  endif
+
+  return 'copilot -sp ' . shellescape(prompt)
+endfunction
+
+function! s:BuildCmd(backend, context) abort
+  if a:backend ==# 'claude'
+    return s:BuildClaudeCmd(a:context)
+  else
+    return s:BuildCopilotCmd(a:context)
+  endif
 endfunction
 
 
@@ -156,31 +244,21 @@ endfunction
 " FIX  (file-aware, diagnostics-aware)
 " ============================================================
 
-function! ClaudeFix(...) range abort
-  if !s:ClaudeAvailable()
+function! AIFix(...) range abort
+  let backend = s:GetAvailableBackend()
+  if empty(backend)
     call s:EchoMissing()
     return
   endif
 
   let start = a:firstline
-  let end   = a:lastline
+  let end = a:lastline
 
-  if s:HasFile()
-    call s:EnsureSaved()
+  let context = s:CollectContextShort('fix', start, end, '', '')
+  let cmd = s:BuildCmd(backend, context)
 
-    let diagnostics = s:GetDiagnostics(start, end)
-    let cmd = s:ClaudeCmd(printf(
-          \ 'fix --file %s --range %d:%d --diagnostics %s',
-          \ shellescape(s:CurrentFile()), start, end, shellescape(diagnostics)))
-
-    execute start . ',' . end . '!' . cmd
-  else
-    " fallback: stdin only
-    let text = s:GetRangeText(start, end)
-    let cmd  = s:ClaudeCmd('fix')
-    let out  = system(cmd, text)
-    call setline(start, split(out, "\n"))
-  endif
+  let out = system(cmd, text)
+  call setline(start, split(out, "\n"))
 endfunction
 
 
@@ -188,8 +266,9 @@ endfunction
 " REWRITE (instructional, file-aware)
 " ============================================================
 
-function! ClaudeRewrite(...) range abort
-  if !s:ClaudeAvailable()
+function! AIRewrite(...) range abort
+  let backend = s:GetAvailableBackend()
+  if empty(backend)
     call s:EchoMissing()
     return
   endif
@@ -200,22 +279,12 @@ function! ClaudeRewrite(...) range abort
   endif
 
   let start = a:firstline
-  let end   = a:lastline
+  let end = a:lastline
+  let context = s:CollectContextShort('rewrite', start, end, instruction, '')
+  let cmd = s:BuildCmd(backend, context)
 
-  if s:HasFile()
-    call s:EnsureSaved()
-
-    let cmd = s:ClaudeCmd(printf(
-          \ 'rewrite --file %s --range %d:%d --instruction %s',
-          \ shellescape(s:CurrentFile()), start, end, shellescape(instruction)))
-
-    execute start . ',' . end . '!' . cmd
-  else
-    let text = s:GetRangeText(start, end)
-    let cmd  = s:ClaudeCmd('rewrite --instruction ' . shellescape(instruction))
-    let out  = system(cmd, text)
-    call setline(start, split(out, "\n"))
-  endif
+  let out = system(cmd, text)
+  call setline(start, split(out, "\n"))
 endfunction
 
 
@@ -223,39 +292,36 @@ endfunction
 " REVIEW (scratch prose)
 " ============================================================
 
-function! ClaudeReview(...) range abort
-  if !s:ClaudeAvailable()
+function! AIReview(...) range abort
+  let backend = s:GetAvailableBackend()
+  if empty(backend)
     call s:EchoMissing()
     return
   endif
 
   let start = a:firstline
-  let end   = a:lastline
+  let end = a:lastline
+  let context = s:CollectContextShort('review', start, end, '', '')
+  let cmd = s:BuildCmd(backend, context)
 
-  if s:HasFile()
-    call s:EnsureSaved()
-    let cmd = s:ClaudeCmd('review --file ' . shellescape(s:CurrentFile()))
-    let out = system(cmd, s:GetRangeText(start, end))
-  else
-    let cmd = s:ClaudeCmd('review')
-    let out = system(cmd, s:GetRangeText(start, end))
-  endif
-
-  call s:Scratch('[Claude Review]', out)
+  let out = system(cmd, text)
+  call s:Scratch('[AI Review]', out)
 endfunction
 
 " Explain = review but supports char-precise operator motions
-function! ClaudeExplain(...) range abort
-  if !s:ClaudeAvailable()
+function! AIExplain(...) range abort
+  let backend = s:GetAvailableBackend()
+  if empty(backend)
     call s:EchoMissing()
     return
   endif
 
-  " If called via operator, use character-precise text
-  let text = mode() ==# 'no' ? s:GetCharRangeText() : s:GetRangeText(a:firstline, a:lastline)
-
-  let out = system(s:ClaudeCmd('explain'), text)
-  call s:Scratch('[Claude Explain]', out)
+  let start = a:firstline
+  let end = a:lastline
+  let context = s:CollectContextShort('explain', start, end, '', '')
+  let cmd = s:BuildCmd(backend, context)
+  let out = system(cmd, text)
+  call s:Scratch('[AI Explain]', out)
 endfunction
 
 
@@ -263,23 +329,19 @@ endfunction
 " REVIEW -> LOC LIST (navigable)
 " ============================================================
 
-function! ClaudeReviewLoclist(...) range abort
-  if !s:ClaudeAvailable()
+function! AIReviewLoclist(...) range abort
+  let backend = s:GetAvailableBackend()
+  if empty(backend)
     call s:EchoMissing()
     return
   endif
 
   let start = a:firstline
-  let end   = a:lastline
+  let end = a:lastline
+  let context = s:CollectContextShort('review', start, end, '', '')
+  let cmd = s:BuildCmd(backend, context)
 
-  if s:HasFile()
-    call s:EnsureSaved()
-    let cmd = s:ClaudeCmd('review --file ' . shellescape(s:CurrentFile()))
-    let out = system(cmd, s:GetRangeText(start, end))
-  else
-    let cmd = s:ClaudeCmd('review')
-    let out = system(cmd, s:GetRangeText(start, end))
-  endif
+  let out = system(cmd, text)
 
   let items = []
   for l in split(out, "\n")
@@ -293,78 +355,15 @@ function! ClaudeReviewLoclist(...) range abort
   lopen
 endfunction
 
-
-" ============================================================
-" ASK (git-commit style editor, optional sessions)
-" ============================================================
-
-function! s:OpenAskBuffer(start, end) abort
-  let ctx = ''
-
-  if s:HasFile()
-    let ctx = printf('# File: %s\n# Range: %d:%d\n', s:CurrentFile(), a:start, a:end)
-  else
-    let ctx = printf('# Range: %d:%d (no file)\n', a:start, a:end)
-  endif
-
-  botright new
-  setlocal buftype=nofile bufhidden=wipe noswapfile filetype=markdown
-  execute 'file [Claude Ask]'
-
-  call setline(1, split(ctx . '\n# Write your question below. Save and close to send.\n\n', "\n"))
-
-  nnoremap <buffer> <silent> ZZ :call <SID>SubmitAsk()<CR>
-endfunction
-
-function! s:SubmitAsk() abort
-  let lines = getline(1, '$')
-
-  " remove comment lines
-  let question = []
-  for l in lines
-    if l !~ '^#'
-      call add(question, l)
-    endif
-  endfor
-
-  let question = join(question, "\n")
-
-  if empty(trim(question))
-    bd!
-    return
-  endif
-
-  let text = s:GetWholeBuffer()
-  let session = s:AskSessionArg()
-  let cmd = s:ClaudeCmd('ask ' . session . ' --question ' . shellescape(question))
-
-  let out = system(cmd, text)
-
-  bd!
-  call s:Scratch('[Claude Ask]', out)
-endfunction
-
-function! ClaudeAsk(...) range abort
-  if !s:ClaudeAvailable()
-    call s:EchoMissing()
-    return
-  endif
-
-  call s:OpenAskBuffer(a:firstline, a:lastline)
-endfunction
-
-
 " ============================================================
 " Commands
 " ============================================================
 
-command! -range=% ClaudeFix          <line1>,<line2>call ClaudeFix()
-command! -range=% ClaudeRewrite      <line1>,<line2>call ClaudeRewrite()
-command! -range=% ClaudeExplain      <line1>,<line2>call ClaudeReview()
-command! -range=% ClaudeReview       <line1>,<line2>call ClaudeReview()
-command! -range=% ClaudeReviewLoc    <line1>,<line2>call ClaudeReviewLoclist()
-command! -range=% ClaudeAsk          <line1>,<line2>call ClaudeAsk()
-
+command! -range=% AIFix             <line1>,<line2>call AIFix()
+command! -range=% AIRewrite         <line1>,<line2>call AIRewrite()
+command! -range=% AIExplain         <line1>,<line2>call AIExplain()
+command! -range=% AIReview          <line1>,<line2>call AIReview()
+command! -range=% AIReviewLoc       <line1>,<line2>call AIReviewLoclist()
 
 " ============================================================
 " Keymaps
@@ -373,54 +372,47 @@ command! -range=% ClaudeAsk          <line1>,<line2>call ClaudeAsk()
 
 " ---------- Commands (whole buffer)
 
-nnoremap <leader>cf :ClaudeFix<CR>
-nnoremap <leader>cr :ClaudeRewrite<CR>
-nnoremap <leader>cv :ClaudeReview<CR>
-nnoremap <leader>cV :ClaudeReviewLoc<CR>
-nnoremap <leader>ca :ClaudeAsk<CR>
+nnoremap <leader>cf :AIFix<CR>
+nnoremap <leader>cr :AIRewrite<CR>
+nnoremap <leader>cv :AIReview<CR>
+nnoremap <leader>cV :AIReviewLoc<CR>
 
 " ---------- Visual (explicit selection)
 
-vnoremap <leader>cf :ClaudeFix<CR>
-vnoremap <leader>cr :ClaudeRewrite<CR>
-vnoremap <leader>cv :ClaudeReview<CR>
-vnoremap <leader>cV :ClaudeReviewLoc<CR>
-vnoremap <leader>ca :ClaudeAsk<CR>
+vnoremap <leader>cf :AIFix<CR>
+vnoremap <leader>cr :AIRewrite<CR>
+vnoremap <leader>cv :AIReview<CR>
+vnoremap <leader>cV :AIReviewLoc<CR>
 
-" ---------- Operator support (motion/text-object)
-" Makes Claude behave like native operators (gq/d/c/etc)
+" ============================================================
+" Operator support (motion/text-object)
+" Makes AI behave like native operators (gq/d/c/etc)
 " Example:
 "   <leader>cfap   fix paragraph
 "   <leader>criw   rewrite inner word
 "   <leader>cvip   review paragraph
 "   <leader>caG    ask about rest of file
 
-function! s:ClaudeFixOp(type) abort
-  '[,']call ClaudeFix()
+function! s:AIFixOp(type) abort
+  '[,']call AIFix()
 endfunction
 
-function! s:ClaudeRewriteOp(type) abort
-  '[,']call ClaudeRewrite()
+function! s:AIRewriteOp(type) abort
+  '[,']call AIRewrite()
 endfunction
 
-function! s:ClaudeReviewOp(type) abort
-  '[,']call ClaudeReview()
+function! s:AIReviewOp(type) abort
+  '[,']call AIReview()
 endfunction
 
-function! s:ClaudeReviewLocOp(type) abort
-  '[,']call ClaudeReviewLoclist()
+function! s:AIReviewLocOp(type) abort
+  '[,']call AIReviewLoclist()
 endfunction
 
-function! s:ClaudeAskOp(type) abort
-  " Operator-pending ask uses character-precise selection
-  call s:OpenAskBuffer(line("'["), line("']"))
-endfunction
-
-nnoremap <silent> <leader>cf :set opfunc=<SID>ClaudeFixOp<CR>g@
-nnoremap <silent> <leader>cr :set opfunc=<SID>ClaudeRewriteOp<CR>g@
-nnoremap <silent> <leader>cv :set opfunc=<SID>ClaudeReviewOp<CR>g@
-nnoremap <silent> <leader>cV :set opfunc=<SID>ClaudeReviewLocOp<CR>g@
-nnoremap <silent> <leader>ca :set opfunc=<SID>ClaudeAskOp<CR>g@
+nnoremap <silent> <leader>cf :set opfunc=<SID>AIFixOp<CR>g@
+nnoremap <silent> <leader>cr :set opfunc=<SID>AIRewriteOp<CR>g@
+nnoremap <silent> <leader>cv :set opfunc=<SID>AIReviewOp<CR>g@
+nnoremap <silent> <leader>cV :set opfunc=<SID>AIReviewLocOp<CR>g@
 
 " ============================================================
 " End
