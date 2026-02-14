@@ -12,6 +12,11 @@
 "   - Long questions use a git-commit–style editor buffer
 " ============================================================
 
+" TODO: Integrate copilot for inline suggestions (e.g. for fix/rewrites, or as
+" an alternative to Ask).
+" The command is `copilot -sp "YOUR PROMPT HERE"` and it accepts input text
+" via stdin, similar to the Claude CLI.
+
 if exists('g:loaded_ai_helpers')
   finish
 endif
