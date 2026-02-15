@@ -100,12 +100,6 @@ endfunction
 " ---------------- Diagnostics
 
 function! s:GetDiagnostics(start, end) abort
-    " TODO: Should use
-    " CocAction('diagnosticList')
-    " instead.
-    " Example contents:
-    " [{'file': '/home/patrik/code/dotfiles/vim/plugin/ai/foo.go', 'lnum': 6, 'end_lnum': 6, 'source': 'syntax', 'location': {'uri': 'file:///home/patrik/code/dotfiles/vim/plugin/ai/foo.go', 'range': {'end': {'character': 24, 'line': 5}, 'start': {'character': 24, 'line': 5}}}, 'level': 1, 'message': 'missing '','' before newline in argument list', 'end_col': 25, 'col': 25, 'severity': 'Error'}]
-
     let diags = CocAction('diagnosticList')
 
     let target_file = expand('%:p')
@@ -133,17 +127,9 @@ endfunction
 " ============================================================
 " Context Collection
 " ============================================================
-function! s:CollectContextShort(operation, start, end, prompt) abort
-  let text = ''
-  let file = ''
-
-  if s:HasFile()
-    call s:EnsureSaved()
-    let file = s:CurrentFile()
-  else
-    let text = s:GetRangeText(a:start, a:end)
-  endif
-
+function! s:CollectContext(operation, start, end, prompt) abort
+  call s:EnsureSaved()
+  let file = s:CurrentFile()
   let diagnostics = s:GetDiagnostics(a:start, a:end)
 
   " If a:prompt is empty, use the operation as the prompt
@@ -157,7 +143,6 @@ function! s:CollectContextShort(operation, start, end, prompt) abort
     \ 'file': file,
     \ 'startline': a:start,
     \ 'endline': a:end,
-    \ 'text': text,
     \ 'diagnostics': diagnostics,
     \ 'prompt': prompt,
     \ }
@@ -171,15 +156,15 @@ function! s:CollectContextShort(operation, start, end, prompt) abort
   return context
 endfunction
 
-" To test CollectContextShort in isolation:
+" To test CollectContext in isolation:
 function! TestCollectContext(...) range abort
   " Get range from selection
   " If no selection, then start and end will be equal.
   let start = a:firstline
   let end = a:lastline
 
-  let context = s:CollectContextShort('fix', start, end, 'Make this code more efficient')
-  let context = s:CollectContextShort('explain', start, end, '')
+  let context = s:CollectContext('fix', start, end, 'Make this code more efficient')
+  let context = s:CollectContext('explain', start, end, '')
 
 endfunction
 
@@ -267,7 +252,7 @@ function! AIFix(...) range abort
   let start = a:firstline
   let end = a:lastline
 
-  let context = s:CollectContextShort('fix', start, end, '', '')
+  let context = s:CollectContext('fix', start, end, '')
   let cmd = s:BuildCmd(backend, context)
 
   let out = system(cmd, text)
@@ -293,7 +278,7 @@ function! AIRewrite(...) range abort
 
   let start = a:firstline
   let end = a:lastline
-  let context = s:CollectContextShort('rewrite', start, end, instruction, '')
+  let context = s:CollectContext('rewrite', start, end, instruction)
   let cmd = s:BuildCmd(backend, context)
 
   let out = system(cmd, text)
@@ -314,7 +299,7 @@ function! AIReview(...) range abort
 
   let start = a:firstline
   let end = a:lastline
-  let context = s:CollectContextShort('review', start, end, '', '')
+  let context = s:CollectContext('review', start, end, '')
   let cmd = s:BuildCmd(backend, context)
 
   let out = system(cmd, text)
@@ -331,7 +316,7 @@ function! AIExplain(...) range abort
 
   let start = a:firstline
   let end = a:lastline
-  let context = s:CollectContextShort('explain', start, end, '', '')
+  let context = s:CollectContext('explain', start, end, '')
   let cmd = s:BuildCmd(backend, context)
   let out = system(cmd, text)
   call s:Scratch('[AI Explain]', out)
@@ -351,7 +336,7 @@ function! AIReviewLoclist(...) range abort
 
   let start = a:firstline
   let end = a:lastline
-  let context = s:CollectContextShort('review', start, end, '', '')
+  let context = s:CollectContext('review', start, end, '')
   let cmd = s:BuildCmd(backend, context)
 
   let out = system(cmd, text)
