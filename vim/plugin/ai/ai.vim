@@ -136,7 +136,7 @@ function! s:CollectContext(prompt, start, end) abort
     \ 'startline': a:start,
     \ 'endline': a:end,
     \ 'diagnostics': diagnostics,
-    \ 'prompt': prompt,
+    \ 'prompt': a:prompt,
     \ }
 
   "" Print context for debugging
@@ -217,11 +217,22 @@ function! s:BuildCopilotCmd(context) abort
   return 'copilot -sp ' . shellescape(prompt)
 endfunction
 
-function! s:BuildCmd(backend, context) abort
+function! s:ExecuteCmd(context, showoutput=v:true) abort
+  let backend = s:GetAvailableBackend()
+  if empty(backend)
+    call s:EchoMissing()
+    return
+  endif
+
   if a:backend ==# 'claude'
-    return s:BuildClaudeCmd(a:context)
+    let cmd = s:BuildClaudeCmd(a:context)
   else
-    return s:BuildCopilotCmd(a:context)
+    let cmd = s:BuildCopilotCmd(a:context)
+  endif
+
+  let out = system(cmd, text)
+  if a:showoutput
+     call s:Scratch('[AI Output]', out)
   endif
 endfunction
 
@@ -235,144 +246,68 @@ endfunction
 " ============================================================
 
 function! AIFix(...) range abort
-  let backend = s:GetAvailableBackend()
-  if empty(backend)
-    call s:EchoMissing()
-    return
-  endif
-
-  let start = a:firstline
-  let end = a:lastline
-
-  let context = s:CollectContext('fix', start, end)
-  let cmd = s:BuildCmd(backend, context)
-
-  let out = system(cmd, text)
-  call setline(start, split(out, "\n"))
+  let context = s:CollectContext('Fix', a:firstline, a:lastline)
+  s:ExecuteCmd(context)
 endfunction
 
-
-" ============================================================
-" REWRITE (instructional, file-aware)
-" ============================================================
-
-function! AIRewrite(...) range abort
-  let backend = s:GetAvailableBackend()
-  if empty(backend)
-    call s:EchoMissing()
-    return
-  endif
-
+function! AIAsk(...) range abort
   let instruction = input('Rewrite how? ')
   if empty(instruction)
     return
   endif
 
-  let start = a:firstline
-  let end = a:lastline
-  let context = s:CollectContext(instruction, start, end)
-  let cmd = s:BuildCmd(backend, context)
-
-  let out = system(cmd, text)
-  call setline(start, split(out, "\n"))
+  let context = s:CollectContext(instruction, a:firstline, a:lastline)
+  s:ExecuteCmd(context)
 endfunction
 
-
-" ============================================================
-" REVIEW (scratch prose)
-" ============================================================
-
 function! AIReview(...) range abort
-  let backend = s:GetAvailableBackend()
-  if empty(backend)
-    call s:EchoMissing()
-    return
-  endif
-
-  let start = a:firstline
-  let end = a:lastline
-  let context = s:CollectContext('review', start, end)
-  let cmd = s:BuildCmd(backend, context)
-
-  let out = system(cmd, text)
-  call s:Scratch('[AI Review]', out)
+  let context = s:collectcontext('Review', a:firstline, a:lastline)
+  s:ExecuteCmd(context)
 endfunction
 
 " Explain = review but supports char-precise operator motions
 function! AIExplain(...) range abort
-  let backend = s:GetAvailableBackend()
-  if empty(backend)
-    call s:EchoMissing()
-    return
-  endif
-
-  let start = a:firstline
-  let end = a:lastline
-  let context = s:CollectContext('explain', start, end)
-  let cmd = s:BuildCmd(backend, context)
-  let out = system(cmd, text)
-  call s:Scratch('[AI Explain]', out)
+  let context = s:CollectContext('Explain', a:firstline, a:lastline)
+  s:ExecuteCmd(context)
 endfunction
 
-
-" ============================================================
-" REVIEW -> LOC LIST (navigable)
-" ============================================================
-
-function! AIReviewLoclist(...) range abort
-  let backend = s:GetAvailableBackend()
-  if empty(backend)
-    call s:EchoMissing()
-    return
-  endif
-
-  let start = a:firstline
-  let end = a:lastline
-  let context = s:CollectContext('review', start, end)
-  let cmd = s:BuildCmd(backend, context)
-
-  let out = system(cmd, text)
-
-  let items = []
-  for l in split(out, "\n")
-    let m = matchlist(l, '^Line \(\d\+\): \(.*\)')
-    if len(m) == 3
-      call add(items, {'lnum': str2nr(m[1]), 'text': m[2]})
-    endif
-  endfor
-
-  call setloclist(0, items, 'r')
-  lopen
-endfunction
+" Future extensions:
+" - Review produce a loclist with line-specific feedback instead of a prose
+"   summary
 
 " ============================================================
 " Commands
+"
+" These are used when users want to explicitly select a range and then run a
+" command on it.
 " ============================================================
 
-command! -range=% AIFix             <line1>,<line2>call AIFix()
-command! -range=% AIRewrite         <line1>,<line2>call AIRewrite()
-command! -range=% AIExplain         <line1>,<line2>call AIExplain()
-command! -range=% AIReview          <line1>,<line2>call AIReview()
-command! -range=% AIReviewLoc       <line1>,<line2>call AIReviewLoclist()
+command! -range=% AIFix     <line1>,<line2>call AIFix()
+command! -range=% AIAsk     <line1>,<line2>call AIAsk()
+command! -range=% AIExplain <line1>,<line2>call AIExplain()
+command! -range=% AIReview  <line1>,<line2>call AIReview()
 
 " ============================================================
 " Keymaps
+"
+" These are used for quick access and support different selection modes.
+"
 " Includes: normal (whole buffer), visual (range), operator (motion)
 " ============================================================
 
 " ---------- Commands (whole buffer)
 
 nnoremap <leader>cf :AIFix<CR>
-nnoremap <leader>cr :AIRewrite<CR>
-nnoremap <leader>cv :AIReview<CR>
-nnoremap <leader>cV :AIReviewLoc<CR>
+nnoremap <leader>ca :AIAsk<CR>
+nnoremap <leader>ce :AIExplain<CR>
+nnoremap <leader>cr :AIReview<CR>
 
 " ---------- Visual (explicit selection)
 
 vnoremap <leader>cf :AIFix<CR>
-vnoremap <leader>cr :AIRewrite<CR>
-vnoremap <leader>cv :AIReview<CR>
-vnoremap <leader>cV :AIReviewLoc<CR>
+vnoremap <leader>ca :AIAsk<CR>
+vnoremap <leader>ce :AIExplain<CR>
+vnoremap <leader>cr :AIReview<CR>
 
 " ============================================================
 " Operator support (motion/text-object)
@@ -382,30 +317,27 @@ vnoremap <leader>cV :AIReviewLoc<CR>
 "   <leader>criw   rewrite inner word
 "   <leader>cvip   review paragraph
 "   <leader>caG    ask about rest of file
+"
+" These are used when users want to quickly apply an AI operation to a
+" specific text object or motion
 
 function! s:AIFixOp(type) abort
   '[,']call AIFix()
 endfunction
 
-function! s:AIRewriteOp(type) abort
-  '[,']call AIRewrite()
+function! s:AIAskOp(type) abort
+  '[,']call AIAsk()
+endfunction
+
+function! s:AIExplainOp(type) abort
+  '[,']call AIExplain()
 endfunction
 
 function! s:AIReviewOp(type) abort
   '[,']call AIReview()
 endfunction
 
-function! s:AIReviewLocOp(type) abort
-  '[,']call AIReviewLoclist()
-endfunction
-
 nnoremap <silent> <leader>cf :set opfunc=<SID>AIFixOp<CR>g@
-nnoremap <silent> <leader>cr :set opfunc=<SID>AIRewriteOp<CR>g@
-nnoremap <silent> <leader>cv :set opfunc=<SID>AIReviewOp<CR>g@
-nnoremap <silent> <leader>cV :set opfunc=<SID>AIReviewLocOp<CR>g@
-
-" ============================================================
-" End
-" ============================================================
-
-" ============================================================
+nnoremap <silent> <leader>ca :set opfunc=<SID>AIAskOp<CR>g@
+nnoremap <silent> <leader>ce :set opfunc=<SID>AIExplainOp<CR>g@
+nnoremap <silent> <leader>cr :set opfunc=<SID>AIReviewOp<CR>g@
