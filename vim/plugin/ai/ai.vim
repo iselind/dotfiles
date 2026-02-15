@@ -64,39 +64,6 @@ function! s:EnsureSaved() abort
   endif
 endfunction
 
-function! s:GetRangeText(start, end) abort
-    echomsg printf('Getting text from lines %d to %d', a:start, a:end)
-  return join(getline(a:start, a:end), "\n")
-endfunction
-
-" Character-precise extraction using '[ and '] marks
-function! s:GetCharRangeText() abort
-  let sp = getpos("'[")
-  let ep = getpos("']")
-
-  let sline = sp[1]
-  let scol  = sp[2]
-  let eline = ep[1]
-  let ecol  = ep[2]
-
-  if sline == eline
-    let line = getline(sline)
-    return strpart(line, scol - 1, ecol - scol + 1)
-  endif
-
-  let lines = getline(sline, eline)
-  let lines[0] = strpart(lines[0], scol - 1)
-  let lines[-1] = strpart(lines[-1], 0, ecol)
-
-  return join(lines, "
-")
-endfunction
-
-function! s:GetWholeBuffer() abort
-  return join(getline(1, '$'), "\n")
-endfunction
-
-
 " ---------------- Diagnostics
 
 function! s:GetDiagnostics(start, end) abort
@@ -164,57 +131,24 @@ endfunction
 " Backend Command Builders
 " ============================================================
 
-function! s:BuildClaudeCmd(context) abort
-  let parts = ['claude', '-p', a:context.operation]
+function! s:BuildPrompt(context) abort
+  let prompt = a:context.prompt
 
-  if a:context.operation ==# 'ask'
-    let question = a:context.question
-    if !empty(a:context.file)
-      let question .= ' (in ' . a:context.file . ' lines ' . a:context.start . '-' . a:context.end . ')'
-    endif
-    call extend(parts, ['--question', shellescape(question)])
-  else
-    if !empty(a:context.file)
-      call extend(parts, ['--file', shellescape(a:context.file)])
-      call extend(parts, ['--range', a:context.start . ':' . a:context.end])
-    endif
-
-    if !empty(a:context.diagnostics)
-      call extend(parts, ['--diagnostics', shellescape(a:context.diagnostics)])
-    endif
-
-    if !empty(a:context.instruction)
-      call extend(parts, ['--instruction', shellescape(a:context.instruction)])
-    endif
-  endif
-
-  return join(parts, ' ')
-endfunction
-
-function! s:BuildCopilotCmd(context) abort
-  if a:context.operation ==# 'ask'
-    let prompt = a:context.question
-    if !empty(a:context.file)
-      let prompt .= ' (in ' . a:context.file . ' lines ' . a:context.start . '-' . a:context.end . ')'
-    endif
-    return 'copilot -sp ' . shellescape(prompt)
-  endif
-
-  let prompt = a:context.operation . ' the code'
-
-  if !empty(a:context.file)
-    let prompt .= ' in ' . a:context.file . ' from line ' . a:context.start . ' to ' . a:context.end
-  endif
+  let prompt .= ' in ' . a:context.file . ' from line ' . a:context.startline . ' to ' . a:context.endline
 
   if !empty(a:context.diagnostics)
     let prompt .= '. Diagnostics: ' . a:context.diagnostics
   endif
 
-  if !empty(a:context.instruction)
-    let prompt .= '. Instruction: ' . a:context.instruction
-  endif
+  return prompt
+endfunction
 
-  return 'copilot -sp ' . shellescape(prompt)
+function! s:BuildClaudeCmd(prompt) abort
+   return ['claude', '-p', a:prompt]
+endfunction
+
+function! s:BuildCopilotCmd(prompt) abort
+  return ['copilot', '-s', '-p', a:prompt]
 endfunction
 
 function! s:ExecuteCmd(context, showoutput=v:true) abort
@@ -224,13 +158,17 @@ function! s:ExecuteCmd(context, showoutput=v:true) abort
     return
   endif
 
-  if a:backend ==# 'claude'
-    let cmd = s:BuildClaudeCmd(a:context)
+  let prompt = s:BuildPrompt(a:context)
+  if backend ==# 'claude'
+    let cmd = s:BuildClaudeCmd(prompt)
   else
-    let cmd = s:BuildCopilotCmd(a:context)
+    let cmd = s:BuildCopilotCmd(prompt)
   endif
+  let cmd = map(cmd, 'shellescape(v:val)')
+  let cmd = join(cmd, ' ')
 
-  let out = system(cmd, text)
+  echomsg 'Running command: ' . cmd
+  let out = system(cmd)
   if a:showoutput
      call s:Scratch('[AI Output]', out)
   endif
@@ -247,7 +185,7 @@ endfunction
 
 function! AIFix(...) range abort
   let context = s:CollectContext('Fix', a:firstline, a:lastline)
-  s:ExecuteCmd(context)
+  call s:ExecuteCmd(context)
 endfunction
 
 function! AIAsk(...) range abort
@@ -257,18 +195,18 @@ function! AIAsk(...) range abort
   endif
 
   let context = s:CollectContext(instruction, a:firstline, a:lastline)
-  s:ExecuteCmd(context)
+  call s:ExecuteCmd(context)
 endfunction
 
 function! AIReview(...) range abort
   let context = s:collectcontext('Review', a:firstline, a:lastline)
-  s:ExecuteCmd(context)
+  call s:ExecuteCmd(context)
 endfunction
 
 " Explain = review but supports char-precise operator motions
 function! AIExplain(...) range abort
   let context = s:CollectContext('Explain', a:firstline, a:lastline)
-  s:ExecuteCmd(context)
+  call s:ExecuteCmd(context)
 endfunction
 
 " Future extensions:
