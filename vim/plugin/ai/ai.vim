@@ -112,7 +112,6 @@ function! s:GetDiagnostics(start, end) abort
   return filtered
 endfunction
 
-
 " ---------------- Scratch buffers
 
 function! s:Scratch(title, content) abort
@@ -127,17 +126,10 @@ endfunction
 " ============================================================
 " Context Collection
 " ============================================================
-function! s:CollectContext(operation, start, end, prompt) abort
+function! s:CollectContext(prompt, start, end) abort
   call s:EnsureSaved()
   let file = s:CurrentFile()
   let diagnostics = s:GetDiagnostics(a:start, a:end)
-
-  " If a:prompt is empty, use the operation as the prompt
-  if a:prompt == ''
-    let prompt = a:operation
-  else
-    let prompt = a:prompt
-  endif
 
   let context = {
     \ 'file': file,
@@ -147,11 +139,11 @@ function! s:CollectContext(operation, start, end, prompt) abort
     \ 'prompt': prompt,
     \ }
 
-  " Print context for debugging
-  echo 'Collected context:'
-  for [key, value] in items(context)
-    echo printf('  %s: %s', key, json_encode(value))
-  endfor
+  "" Print context for debugging
+  "echo 'Collected context:'
+  "for [key, value] in items(context)
+  "  echo printf('  %s: %s', key, json_encode(value))
+  "endfor
 
   return context
 endfunction
@@ -163,8 +155,8 @@ function! TestCollectContext(...) range abort
   let start = a:firstline
   let end = a:lastline
 
-  let context = s:CollectContext('fix', start, end, 'Make this code more efficient')
-  let context = s:CollectContext('explain', start, end, '')
+  let context = s:CollectContext('Make this code more efficient', start, end)
+  let context = s:CollectContext('explain', start, end)
 
 endfunction
 
@@ -252,7 +244,7 @@ function! AIFix(...) range abort
   let start = a:firstline
   let end = a:lastline
 
-  let context = s:CollectContext('fix', start, end, '')
+  let context = s:CollectContext('fix', start, end)
   let cmd = s:BuildCmd(backend, context)
 
   let out = system(cmd, text)
@@ -278,7 +270,7 @@ function! AIRewrite(...) range abort
 
   let start = a:firstline
   let end = a:lastline
-  let context = s:CollectContext('rewrite', start, end, instruction)
+  let context = s:CollectContext(instruction, start, end)
   let cmd = s:BuildCmd(backend, context)
 
   let out = system(cmd, text)
@@ -299,7 +291,7 @@ function! AIReview(...) range abort
 
   let start = a:firstline
   let end = a:lastline
-  let context = s:CollectContext('review', start, end, '')
+  let context = s:CollectContext('review', start, end)
   let cmd = s:BuildCmd(backend, context)
 
   let out = system(cmd, text)
@@ -316,7 +308,7 @@ function! AIExplain(...) range abort
 
   let start = a:firstline
   let end = a:lastline
-  let context = s:CollectContext('explain', start, end, '')
+  let context = s:CollectContext('explain', start, end)
   let cmd = s:BuildCmd(backend, context)
   let out = system(cmd, text)
   call s:Scratch('[AI Explain]', out)
@@ -336,7 +328,7 @@ function! AIReviewLoclist(...) range abort
 
   let start = a:firstline
   let end = a:lastline
-  let context = s:CollectContext('review', start, end, '')
+  let context = s:CollectContext('review', start, end)
   let cmd = s:BuildCmd(backend, context)
 
   let out = system(cmd, text)
