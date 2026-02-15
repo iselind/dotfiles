@@ -106,20 +106,16 @@ function! s:GetDiagnostics(start, end) abort
     " Example contents:
     " [{'file': '/home/patrik/code/dotfiles/vim/plugin/ai/foo.go', 'lnum': 6, 'end_lnum': 6, 'source': 'syntax', 'location': {'uri': 'file:///home/patrik/code/dotfiles/vim/plugin/ai/foo.go', 'range': {'end': {'character': 24, 'line': 5}, 'start': {'character': 24, 'line': 5}}}, 'level': 1, 'message': 'missing '','' before newline in argument list', 'end_col': 25, 'col': 25, 'severity': 'Error'}]
 
-    let qf = getqflist({'bufnr': bufnr('%'), 'lnum': a:start, 'end_lnum': a:end })
-  echomsg printf("%s", json_encode(qf))
+    let diags = CocAction('diagnosticList')
 
-  let msgs = []
+    let target_file = expand('%:p')
+    let filtered = filter(copy(diags), {_, d ->
+      \ d.file ==# target_file &&
+      \ d.end_lnum >= a:start &&
+      \ d.lnum <= a:end
+      \ })
 
-  for item in qf
-    if get(item, 'bufnr', -1) == bufnr('%')
-      if item.lnum >= a:start && item.lnum <= a:end
-        call add(msgs, printf('Line %d: %s', item.lnum, item.text))
-      endif
-    endif
-  endfor
-
-  return join(msgs, "\n")
+  return filtered
 endfunction
 
 
