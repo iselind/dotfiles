@@ -36,7 +36,7 @@ alias bt_battery="bluetooth_battery 34:75:63:DA:AA:C5"
 # Environment
 export PYSPARK_PYTHON=python3
 export PYSPARK_DRIVER_PYTHON=${PYSPARK_PYTHON}
-export LESS=dMQifR
+export LESS=dMQifRF
 export LESSCHARSET=utf-8
 export GOPATH=$HOME/go
 export GOROOT=/usr/local/go
