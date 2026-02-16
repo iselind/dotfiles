@@ -33,6 +33,8 @@ eval "$(dircolors -b)"
 alias ls='ls -F'
 alias bt_battery="bluetooth_battery 34:75:63:DA:AA:C5"
 
+YARN_PATH=$(yarn global bin)
+
 # Environment
 export PYSPARK_PYTHON=python3
 export PYSPARK_DRIVER_PYTHON=${PYSPARK_PYTHON}
@@ -40,7 +42,7 @@ export LESS=dMQifRF
 export LESSCHARSET=utf-8
 export GOPATH=$HOME/go
 export GOROOT=/usr/local/go
-export PATH=$(yarn global bin):$HOME/.pipinstall/bin:$GOROOT/bin:$GOPATH/bin:/usr/local/go/bin:$HOME/.local/bin:$PATH
+export PATH=$YARN_PATH:$HOME/.pipinstall/bin:$GOROOT/bin:$GOPATH/bin:/usr/local/go/bin:$HOME/.local/bin:$PATH
 export GOFLAGS="-tags=aws"
 export GOPRIVATE="*.se.axis.com"
 
