@@ -1,28 +1,26 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 # Install llama.cpp with model and helper script.
 
 sudo apt update
 sudo apt install build-essential git cmake curl -y
 
-mkdir -p ~/ai
-cd ~/ai
+mkdir -p "$HOME/ai"
+cd "$HOME/ai"
 
-git clone https://github.com/ggerganov/llama.cpp
+git clone "https://github.com/ggerganov/llama.cpp"
 cd llama.cpp
 make -j
 
-mkdir -p ~/ai/models
-if [ ! -f "small.gguf" ]; then
-    (
-        cd ~/ai/models
-        echo "Downloading model..."
-        wget "https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/blob/main/qwen2.5-3b-instruct-q4_k_m.gguf"
-        ln -s "small.gguf" "qwen2.5-3b-instruct-q4_k_m.gguf"
-    )
+mkdir -p "$HOME/ai/models"
+if [ ! -f "$HOME/ai/models/small.gguf" ]; then
+    cd "$HOME/ai/models"
+    echo "Downloading model..."
+    wget "https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/blob/main/qwen2.5-3b-instruct-q4_k_m.gguf"
+    n -s "qwen2.5-3b-instruct-q4_k_m.gguf" "small.gguf"
 fi
 
-mkdir -p ~/ai/bin
-cat > ~/ai/bin/ai <<EOF
+mkdir -p "$HOME/ai/bin"
+cat > "$HOME/ai/bin/ai" <<EOF2
 #!/usr/bin/env bash
 
 MODEL_DIR="$HOME/ai/models"
@@ -65,17 +63,17 @@ $LLAMA \
   --top-p 1 \
   --repeat-penalty 1 \
   --seed 42
-EOF
+EOF2
 
-chmod +x ~/ai/bin/ai
+chmod +x "$HOME/ai/bin/ai"
 # shellcheck disable=SC2016
-echo 'export PATH="$HOME/ai/bin:$PATH"' >> ~/.bashr
-# source ~/.bashrc
+echo 'export PATH="$HOME/ai/bin:$PATH"' >> "$HOME/.bashrc"
+# source $HOME/.bashrc
 
-# Now we have
-# ai -p "Explain this code:" < file.ts
+Now we have
+ai -p "Explain this code:" < file.ts
 
-cat >tuning_guide.txt <<EOF
+cat >tuning_guide.txt <<EOF2
 You said you don’t know temp/top-p yet. Quick intuition:
 
 --temp 0 → no creativity, more deterministic
@@ -89,21 +87,21 @@ You said you don’t know temp/top-p yet. Quick intuition:
 For code review work, this is good.
 
 We can tune later once it’s running.
-EOF
+EOF2
 
-cat > promt-notes.md <<EOF
+cat > prompt-notes.md <<EOF2
 Right now the prompt is:
-\`\`\`
+"""
 Refactor this
 <file content>
-\`\`\`
+"""
 For instruct models, it’s better to explicitly frame the task. Replace:
-\`\`\`
+"""
 FULL_PROMPT="$PROMPT
 $INPUT"
-\`\`\`
+"""
 with
-\`\`\`
+"""
 FULL_PROMPT="You are a senior software engineer performing a code review.
 
 Task:
@@ -113,6 +111,6 @@ Code:
 $INPUT
 
 Response:"
-\`\`\`
+"""
 This dramatically improves smaller models.
-EOF
+EOF2
