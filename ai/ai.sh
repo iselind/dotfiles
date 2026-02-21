@@ -35,6 +35,7 @@ fi
 FULL_PROMPT="$PROMPT
 $INPUT"
 
+set -x
 $LLAMA \
   -m "$MODEL" \
   -p "$FULL_PROMPT" \
@@ -43,4 +44,6 @@ $LLAMA \
   --temp 0 \
   --top-p 1 \
   --repeat-penalty 1 \
-  --seed 42
+  --seed 42 \
+  --single-turn \
+  2>/dev/null
