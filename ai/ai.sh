@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 MODEL_DIR="$HOME/ai/models"
-LLAMA="$HOME/ai/llama.cpp/main"
+LLAMA="$HOME/ai/llama.cpp.bin/bin/llama-cli"
 
+# Default model
 MODEL_SMALL="$MODEL_DIR/small.gguf"
-
 MODEL="$MODEL_SMALL"
 
 PROMPT=""
@@ -16,14 +16,16 @@ while [[ $# -gt 0 ]]; do
       PROMPT="$2"
       shift 2
       ;;
+    -m)
+        MODEL="${MODEL_DIR}/${2}.gguf"
+        shift 2
+        ;;
     *)
       shift
       ;;
   esac
 done
 
-# What is the -t test?
-# -t tests if the file descriptor is associated with a terminal. If it returns true, it means that the script is being run interactively and not receiving input from a pipe or file. If it returns false, it means that the script is receiving input from a pipe or file.`
 if [ -t 0 ]; then
   INPUT=""
 else

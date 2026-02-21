@@ -23,7 +23,8 @@ mkdir -p "$HOME/ai/models"
 if [ ! -f "$HOME/ai/models/small.gguf" ]; then
     cd "$HOME/ai/models"
     echo "Downloading model..."
-    wget "https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/blob/main/qwen2.5-3b-instruct-q4_k_m.gguf"
+    wget -O qwen2.5-3b-instruct-q4_k_m.gguf \
+"https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf"
     n -s "qwen2.5-3b-instruct-q4_k_m.gguf" "small.gguf"
 fi
 
