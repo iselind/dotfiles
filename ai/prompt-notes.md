@@ -39,3 +39,16 @@ Use surrounding context when necessary.
 Do not speculate about missing files.
 Be concise.
 ```
+
+Another interesting aspect:
+Bad prompt:
+```
+Explain this code.
+```
+Better prompt:
+```
+Explain only lines 40–80.
+Use surrounding context only from this file.
+If something is unclear, say so explicitly.
+```
+Small models benefit massively from constraint clarity.
