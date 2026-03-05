@@ -77,3 +77,51 @@ rfv() {
 ffv() {
     fdfind | fzf --preview 'batcat {}'
 }
+
+#######################
+# Git helpers
+#######################
+
+prune_branches() {
+    # We assume that this function is executed within a git repo.
+
+    # Is the current branch's upstream gone?
+    if ! git rev-parse --abrev-ref --symbolic-full-name '@{upstream}' > /dev/null 2>&1; then
+        # If so, delete the current branch and switch to main.
+        echo "Moving to main branch since the current branch's upstream is gone."
+        git checkout main
+        git pull
+    fi
+
+    # Prune all branches that have gone upstream.
+    git fetch --prune
+    git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads/ | while read -r branch upstream; do
+        if [[ "$upstream" == "[gone]" ]]; then
+            git branch -D "$branch"
+        fi
+    done
+}
+
+alias pb='prune_branches'
+
+#######################
+# Kubernetes helpers
+#######################
+
+alias k=kubectl
+
+kns() {
+    if [ -z "$1" ]; then
+	kubectl get namespaces
+    else
+        kubectl config set-context --current --namespace="$1"
+    fi
+}
+
+kctx() {
+    if [ -z "$1" ]; then
+	kubectl config get-contexts | sed -e 's/  \+/ /g' | cut -d' ' -f-2
+    else
+        kubectl config use-context "$1"
+    fi
+}
