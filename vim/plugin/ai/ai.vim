@@ -83,6 +83,7 @@ endfunction
 
 function! s:Scratch(title, content) abort
   botright new
+  " Use `botright vnew` for vertical splits
   setlocal buftype=nofile bufhidden=wipe noswapfile nobuflisted
   execute 'file ' . a:title
   call setline(1, split(a:content, "\n"))
@@ -199,7 +200,7 @@ function! AIAsk(...) range abort
 endfunction
 
 function! AIReview(...) range abort
-  let context = s:collectcontext('Review', a:firstline, a:lastline)
+  let context = s:CollectContext('Review', a:firstline, a:lastline)
   call s:ExecuteCmd(context)
 endfunction
 
