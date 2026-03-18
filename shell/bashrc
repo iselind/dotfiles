@@ -86,7 +86,9 @@ prune_branches() {
     # We assume that this function is executed within a git repo.
 
     # Is the current branch's upstream gone?
-    if ! git rev-parse --abrev-ref --symbolic-full-name '@{upstream}' > /dev/null 2>&1; then
+    local upstream_status
+    upstream_status=$(git for-each-ref --format='%(upstream:track)' "refs/heads/$(git branch --show-current)")
+    if [[ "$upstream_status" == "[gone]" ]]; then
         # If so, delete the current branch and switch to main.
         echo "Moving to main branch since the current branch's upstream is gone."
         git checkout main
