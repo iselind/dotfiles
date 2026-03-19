@@ -104,8 +104,6 @@ prune_branches() {
     done
 }
 
-alias pb='prune_branches'
-
 #######################
 # Kubernetes helpers
 #######################
@@ -114,7 +112,7 @@ alias k=kubectl
 
 kns() {
     if [ -z "$1" ]; then
-	kubectl get namespaces
+        kubectl get namespaces
     else
         kubectl config set-context --current --namespace="$1"
     fi
@@ -122,7 +120,7 @@ kns() {
 
 kctx() {
     if [ -z "$1" ]; then
-	kubectl config get-contexts | sed -e 's/  \+/ /g' | cut -d' ' -f-2
+        kubectl config get-contexts | sed -e 's/  \+/ /g' | cut -d' ' -f-2
     else
         kubectl config use-context "$1"
     fi
