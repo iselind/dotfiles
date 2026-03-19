@@ -190,7 +190,7 @@ function! AIFix(...) range abort
 endfunction
 
 function! AIAsk(...) range abort
-  let instruction = input('Rewrite how? ')
+  let instruction = input('What do you want to know? ')
   if empty(instruction)
     return
   endif
