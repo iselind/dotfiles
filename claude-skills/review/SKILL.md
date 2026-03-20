@@ -102,11 +102,17 @@ Work through open (⬜) items in ascending order, one at a time.
 
 **Do not work on the next item until the user confirms the current one.**
 
-If you reach the last open item and complete it, make sure everything is
-committed.
+If you reach the last open item and complete it, follow the normal confirmation
+flow for that item (step 4 → user confirms → step 5 commit) before proceeding
+to phase 3.
 
-Now declare we have fixed all issues and ask: "Run `/extract-adr` to check for
-architectural decisions worth documenting before this branch merges?"
+---
+
+## Phase 3 — Extract architectural decisions
+
+Once all items are committed, declare that all issues have been fixed and move
+directly into `/extract-adr`. Do not ask for permission — this is a natural
+continuation of the review.
 
 ---
 
