@@ -40,7 +40,6 @@ mkdir -p ~/.claude
 link_dotfile "${DOT_FILES}/claude-skills" ~/.claude/skills
 link_dotfile "${DOT_FILES}/claude-memory" ~/.claude/memory
 
-exit 0
 # Install shell configuration files by sourcing them from the dotfiles repo.
 # We can't just symlink them because the user might have customizations.
 # Instead, we append a source line to the user's existing config if not already there.
