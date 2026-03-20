@@ -93,8 +93,9 @@ Work through open (⬜) items in ascending order, one at a time.
 3. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>` in
    the status table row for that item.
 
-4. Stop and report what you did. Do not commit yet. Wait for the user to say
-   they are ready (e.g. "ready", "looks good", "next", "ship it").
+4. Stop and report what you did. Show the specific change (inline or as a
+   brief diff summary) so the user has something concrete to review. End with:
+   "Ready for review — let me know when you're ready to commit." Then wait.
 
 5. When the user confirms: commit with a message in the style already used on
    this branch (look at recent commits for the pattern). Then ask: "Ready for

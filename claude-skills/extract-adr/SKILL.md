@@ -81,26 +81,23 @@ wait for the user's response before proceeding to Phase 2.
 
 ---
 
-## Phase 2 — Draft, approve, and write
+## Phase 2 — Draft and write
 
 Work through the approved candidates one at a time.
 
 **For each candidate:**
 
-1. Draft the ADR following the format below. Do not write the file yet.
+1. Draft the ADR following the format below.
 
-2. Show the full draft to the user.
-
-3. Wait for one of:
-   - **Approval** ("yes", "ship it", "looks good") → write the file, then move
-     to the next candidate
-   - **Edit request** → revise and show the updated draft; repeat until approved
-   - **Rejection** ("skip", "no", "not this one") → acknowledge and move on
-
-4. When writing an approved ADR:
+2. Write the file immediately — do not wait for approval before writing:
    - Assign the next sequential number (ADR-NNN)
    - Filename: `docs/adrs/ADR-NNN-kebab-case-title.md`
    - Do not commit — leave that to the user
+
+3. The user reviews the file via the diff. Wait for one of:
+   - **Approval** ("yes", "looks good", no comment) → move to the next candidate
+   - **Edit request** → revise the file in place
+   - **Rejection** ("skip", "no", "not this one") → delete the file and move on
 
 After the last candidate, report how many ADRs were written and their filenames.
 

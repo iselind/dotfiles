@@ -85,18 +85,20 @@ ffv() {
 prune_branches() {
     # We assume that this function is executed within a git repo.
 
+    # Fetch and prune first so upstream tracking status is accurate.
+    git fetch --prune
+
     # Is the current branch's upstream gone?
     local upstream_status
     upstream_status=$(git for-each-ref --format='%(upstream:track)' "refs/heads/$(git branch --show-current)")
     if [[ "$upstream_status" == "[gone]" ]]; then
-        # If so, delete the current branch and switch to main.
+        # If so, switch to main so we can delete this branch below.
         echo "Moving to main branch since the current branch's upstream is gone."
         git checkout main
         git pull
     fi
 
-    # Prune all branches that have gone upstream.
-    git fetch --prune
+    # Prune all local branches whose upstream is gone.
     git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads/ | while read -r branch upstream; do
         if [[ "$upstream" == "[gone]" ]]; then
             git branch -D "$branch"
