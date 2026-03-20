@@ -18,17 +18,27 @@ DOT_FILES="${SCRIPT_DIR}"
 # -f: Remove existing destination files before creating the link.
 # -n: Treat the destination as a normal file if it is a symbolic link to a directory.
 # -v: Verbose mode, print what is being done.
-ln -sfnv "${DOT_FILES}/vim" ~/.vim
-ln -sfnv "${DOT_FILES}/screenrc" ~/.screenrc
+# Create a symlink, backing up any existing non-symlink target with a timestamp.
+# -n is not needed because we explicitly remove any existing symlink before calling ln,
+# so ln never sees a symlink-to-directory at the destination and won't dereference it.
+# Usage: link_dotfile <source> <target>
+link_dotfile() {
+    local src="$1"
+    local dst="$2"
+    if [ -L "$dst" ]; then
+        rm -v "$dst"
+    elif [ -e "$dst" ]; then
+        mv -v "$dst" "${dst}.bak$(date +%s)"
+    fi
+    ln -sv "$src" "$dst"
+}
+
+link_dotfile "${DOT_FILES}/vim" ~/.vim
+link_dotfile "${DOT_FILES}/screenrc" ~/.screenrc
 
 mkdir -p ~/.claude
-# If skills is already a symlink, we want to remove it before creating a new one. If it's a directory, we want to back it up before creating the symlink.
-if [ -L ~/.claude/skills ]; then
-    rm -v ~/.claude/skills
-elif [ -d ~/.claude/skills ]; then
-    mv -v ~/.claude/skills "$HOME/.claude/skills.bak$(date +%s)" 2>/dev/null || true  # Backup existing skills if they exist
-fi
-ln -sfv "${DOT_FILES}/claude-skills" ~/.claude/skills  # This is a directory, so we don't use -n
+link_dotfile "${DOT_FILES}/claude-skills" ~/.claude/skills
+link_dotfile "${DOT_FILES}/claude-memory" ~/.claude/memory
 
 exit 0
 # Install shell configuration files by sourcing them from the dotfiles repo.
