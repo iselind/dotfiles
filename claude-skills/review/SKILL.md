@@ -113,16 +113,20 @@ to phase 3.
 
 ---
 
-## Phase 3 — Delete the review tracking file
+## Phase 3 — Extract architectural decisions
 
-Once all items are committed, delete the review tracking file and commit the
-deletion with a message in the style already used on this branch. Do not ask
-for permission — the review is complete and the file has served its purpose.
+Move directly into `/extract-adr`. Do not ask for permission — this is a
+natural continuation of the review.
 
-## Phase 4 — Extract architectural decisions
+## Phase 4 — Delete the review tracking file
 
-After the deletion commit, move directly into `/extract-adr`. Do not ask for
-permission — this is a natural continuation of the review.
+After the ADR extraction commit(s), read the review tracking file. Check
+whether all items are resolved (no ⬜ Open rows remain). Report your
+assessment to the user — either "all items resolved, ready to delete" or a
+summary of what remains open — and ask for confirmation before deleting. Once
+confirmed, delete the file and commit the deletion in its own dedicated commit
+— do not bundle it with any other changes. Use a message in the style already
+used on this branch.
 
 ---
 
