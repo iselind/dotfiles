@@ -74,7 +74,9 @@ Candidates:
 No candidates found.  ← if none
 ```
 
-If there are no candidates, say so clearly and stop.
+If there are no candidates, say so and ask the user if there is anything they
+would like to add or capture before finishing — then wait for the response.
+If there is anything that might need consideration, ask explicitly about those.
 
 Otherwise ask: "Shall I draft all of these, or pick specific numbers?" — then
 wait for the user's response before proceeding to Phase 2.
@@ -106,6 +108,7 @@ After the last candidate, report how many ADRs were written and their filenames.
 ## ADR format
 
 ```markdown
+
 # ADR-NNN: Title in sentence case
 
 ## Context
