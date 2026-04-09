@@ -164,11 +164,15 @@ Work through the approved candidates one at a time.
 Use a commit message in the style already used on this branch.
 
 After the last candidate, report how many ADRs were written and their filenames.
-Do not skip Phase 3 — all phases must run to completion.
+Then proceed to Phase 3 — the skill is not complete until the retrospective runs.
 
 ---
 
-## Phase 3 — Retrospective
+## Phase 3 — Retrospective (mandatory)
+
+This phase must always run — even when no candidates were found, even when the
+skill is invoked as part of another skill. The skill is not finished until the
+retrospective question has been asked and answered.
 
 After Phase 2 is complete (or if no candidates were found and the user has
 nothing to add), ask:
