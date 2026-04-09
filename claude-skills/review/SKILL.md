@@ -88,22 +88,25 @@ Work through open (⬜) items in ascending order, one at a time.
 
 **For each item:**
 
-1. State the item number and describe the issue you are going
-   to fix, the motivations why a fix is needed, and alternatives for fixing the
-   issue. If there are alternatives, ask the user to confirm which one to
-   implement before proceeding.
+1. State the item number and describe the problem: what is wrong, where it is,
+   and why it matters. Do not propose a fix yet — let the user engage with the
+   problem first. Wait for the user to respond.
 
-2. Fix the issue. Read the relevant files first. Make the minimal, focused
+2. Once the user has engaged, propose a fix (and alternatives if they exist).
+   If there are alternatives, ask the user to confirm which one to implement
+   before proceeding.
+
+3. Fix the issue. Read the relevant files first. Make the minimal, focused
    change that resolves the item.
 
-3. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>` in
+4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>` in
    the status table row for that item.
 
-4. Stop and report what you did. Show the specific change (inline or as a
+5. Stop and report what you did. Show the specific change (inline or as a
    brief diff summary) so the user has something concrete to review. End with:
    "Ready for review — let me know when you're ready to commit." Then wait.
 
-5. When the user confirms: commit with a message in the style already used on
+6. When the user confirms: commit with a message in the style already used on
    this branch (look at recent commits for the pattern). Then ask: "Ready for
    item N+1?" and wait.
 
