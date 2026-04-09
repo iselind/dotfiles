@@ -140,6 +140,11 @@ used on this branch.
 - Never skip an item without explaining why it is not applicable.
 - If an item turns out to be a non-issue on closer inspection, update the plan
   to `✅ Accepted — <reason>` rather than silently skipping it.
+- After resolving any item (done, accepted, or otherwise), consider whether the
+  code that triggered the finding is still ambiguous enough that a future
+  reviewer would raise the same question. If so, propose a clarifying change
+  (e.g. a better comment, a more explicit name). The item's resolution fixes the
+  *issue*; the clarifying change fixes the *trigger*.
 - Keep fixes minimal — this is a review pass, not a refactor.
 - If a fix has meaningful risk or side effects, flag it before proceeding.
 
