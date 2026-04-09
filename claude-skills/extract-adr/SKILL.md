@@ -21,7 +21,8 @@ Existing ADRs: !`ls docs/adrs/ 2>/dev/null || echo "(none)"`
 ## Your job
 
 Identify architectural decisions made on this branch that are worth preserving
-as ADRs, draft each one, get approval, then write the files.
+as ADRs, draft each one, get approval, then write the files. We commit the
+changes after the user has reviewed the diffs and approved the changes.
 
 ---
 
@@ -94,12 +95,14 @@ Work through the approved candidates one at a time.
 2. Write the file immediately — do not wait for approval before writing:
    - Assign the next sequential number (ADR-NNN)
    - Filename: `docs/adrs/ADR-NNN-kebab-case-title.md`
-   - Do not commit — leave that to the user
 
 3. The user reviews the file via the diff. Wait for one of:
-   - **Approval** ("yes", "looks good", no comment) → move to the next candidate
-   - **Edit request** → revise the file in place
+   - **Approval** ("yes", "looks good", no comment) → commit the file, then
+     move to the next candidate
+   - **Edit request** → revise the file in place, then wait for approval again
    - **Rejection** ("skip", "no", "not this one") → delete the file and move on
+
+Use a commit message in the style already used on this branch.
 
 After the last candidate, report how many ADRs were written and their filenames.
 
@@ -169,4 +172,6 @@ If the user provides feedback:
 2. Make targeted edits that address the feedback — do not rewrite the file from
    scratch
 3. The user reviews the changes via the IDE diff
-4. Changes take effect on the next invocation of this skill
+4. Resolve the symlink `~/.claude/skills` to find the dotfiles repo, then
+   commit and push the skill file change from that repo
+5. Changes take effect on the next invocation of this skill

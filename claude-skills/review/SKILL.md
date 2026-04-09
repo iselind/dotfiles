@@ -19,7 +19,7 @@ Changed files: !`git diff main...HEAD --stat`
 
 ## Your job
 
-You have two phases. Complete phase 1 before starting phase 2.
+You have multiple phases. Complete them in order.
 
 ---
 
@@ -73,10 +73,12 @@ For each new issue, in one edit:
 2. Append a detailed section at the bottom of the file, following the exact
    heading, paragraph, and code-block style already used in the document.
 
-If no new issues were found, say so clearly and skip to phase 2.
+If no new issues were found, say so clearly. If there are existing open (⬜)
+items in the plan, skip to Phase 2. If there are no open items at all, skip to
+Phase 3.
 
 After editing, tell the user: "Added items N–M to the plan. Ready to start
-with item N?" — then wait for confirmation before beginning phase 2.
+with the next open issue?" — then wait for confirmation before beginning Phase 2.
 
 ---
 
@@ -142,7 +144,7 @@ used on this branch.
 
 ## Phase 5 — Retrospective
 
-After Phase 4 is complete (or after Phase 2 if no issues were found), ask:
+After all previous phases are complete, ask:
 
 > "How did the **review** skill perform? Anything to do differently next
 > time — steps to add, remove, or change?"
@@ -156,4 +158,6 @@ If the user provides feedback:
 2. Make targeted edits that address the feedback — do not rewrite the file from
    scratch
 3. The user reviews the changes via the IDE diff
-4. Changes take effect on the next invocation of this skill
+4. Resolve the symlink `~/.claude/skills` to find the dotfiles repo, then
+   commit and push the skill file change from that repo
+5. Changes take effect on the next invocation of this skill
