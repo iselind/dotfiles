@@ -149,3 +149,24 @@ Test every candidate against this question before drafting:
 
 If the answer is "they'd figure it out from the code", skip it.
 If the answer is "they'd wonder why we did it this way", write it.
+
+---
+
+## Phase 3 — Retrospective
+
+After Phase 2 is complete (or if no candidates were found and the user has
+nothing to add), ask:
+
+> "How did the **extract-adr** skill perform? Anything to do differently next
+> time — steps to add, remove, or change?"
+
+If the user has no feedback, end here.
+
+If the user provides feedback:
+
+1. Read the current skill file at
+   `/home/patrik/.claude/skills/extract-adr/SKILL.md`
+2. Make targeted edits that address the feedback — do not rewrite the file from
+   scratch
+3. The user reviews the changes via the IDE diff
+4. Changes take effect on the next invocation of this skill

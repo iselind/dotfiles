@@ -137,3 +137,23 @@ used on this branch.
   to `✅ Accepted — <reason>` rather than silently skipping it.
 - Keep fixes minimal — this is a review pass, not a refactor.
 - If a fix has meaningful risk or side effects, flag it before proceeding.
+
+---
+
+## Phase 5 — Retrospective
+
+After Phase 4 is complete (or after Phase 2 if no issues were found), ask:
+
+> "How did the **review** skill perform? Anything to do differently next
+> time — steps to add, remove, or change?"
+
+If the user has no feedback, end here.
+
+If the user provides feedback:
+
+1. Read the current skill file at
+   `/home/patrik/.claude/skills/review/SKILL.md`
+2. Make targeted edits that address the feedback — do not rewrite the file from
+   scratch
+3. The user reviews the changes via the IDE diff
+4. Changes take effect on the next invocation of this skill
