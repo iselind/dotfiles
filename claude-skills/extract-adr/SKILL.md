@@ -26,6 +26,59 @@ changes after the user has reviewed the diffs and approved the changes.
 
 ---
 
+## ADR format
+
+```markdown
+
+# ADR-NNN: Title in sentence case
+
+## Context
+
+What situation or forces led to this decision? Include:
+- The problem or need being addressed
+- Constraints that ruled out other approaches
+- Any alternatives that were seriously considered and why they were rejected
+
+Keep this factual and specific to what actually happened on this branch.
+
+## Options considered
+
+For each option, present a pro/con analysis (table or list) so the reader can
+follow the reasoning that led to the decision. Name the options clearly
+(e.g. "Option A: …", "Option B: …") so the Decision section can refer back.
+
+## Decision
+
+What was decided. One or two paragraphs, stated directly.
+If the decision has multiple parts, use sub-headings or a list.
+
+## Rationale
+
+Why this decision is correct given the context above. Focus on the reasoning
+that a future reader could not reconstruct from the code alone. If an
+alternative was rejected, explain why here rather than in Context.
+```
+
+**Format rules:**
+- Title uses sentence case (not title case): `ADR-003: Foo bar baz`, not
+  `ADR-003: Foo Bar Baz`
+- No status field — the branch/PR workflow provides status
+- Sub-headings within Rationale are fine when the reasoning has distinct parts
+- Code blocks and tables are fine where they clarify
+
+---
+
+## What makes a good ADR
+
+Test every candidate against this question before drafting:
+
+> *Would a new team member benefit from reading this in a year?*
+
+If the answer is "they'd figure it out from the code", skip it.
+If the answer is "they'd wonder why we did it this way", write it.
+
+---
+
 ## Phase 1 — Identify candidates
 
 **Step 1 — Read the branch**
@@ -98,60 +151,20 @@ Work through the approved candidates one at a time.
 
 3. The user reviews the file via the diff. Wait for one of:
    - **Approval** ("yes", "looks good", no comment) → commit the file, then
-     move to the next candidate
+     move to step 4
    - **Edit request** → revise the file in place, then wait for approval again
    - **Rejection** ("skip", "no", "not this one") → delete the file and move on
+
+4. After committing the ADR, check whether the decision material was sourced
+   from a plan or other document on the branch. If so, replace the extracted
+   content in the source document with a reference to the new ADR — the source
+   should not duplicate what the ADR now captures. Commit this update alongside
+   or immediately after the ADR commit.
 
 Use a commit message in the style already used on this branch.
 
 After the last candidate, report how many ADRs were written and their filenames.
-
----
-
-## ADR format
-
-```markdown
-
-# ADR-NNN: Title in sentence case
-
-## Context
-
-What situation or forces led to this decision? Include:
-- The problem or need being addressed
-- Constraints that ruled out other approaches
-- Any alternatives that were seriously considered and why they were rejected
-
-Keep this factual and specific to what actually happened on this branch.
-
-## Decision
-
-What was decided. One or two paragraphs, stated directly.
-If the decision has multiple parts, use sub-headings or a list.
-
-## Rationale
-
-Why this decision is correct given the context above. Focus on the reasoning
-that a future reader could not reconstruct from the code alone. If an
-alternative was rejected, explain why here rather than in Context.
-```
-
-**Format rules:**
-- Title uses sentence case (not title case): `ADR-003: Foo bar baz`, not
-  `ADR-003: Foo Bar Baz`
-- No status field — the branch/PR workflow provides status
-- Sub-headings within Rationale are fine when the reasoning has distinct parts
-- Code blocks and tables are fine where they clarify
-
----
-
-## What makes a good ADR
-
-Test every candidate against this question before drafting:
-
-> *Would a new team member benefit from reading this in a year?*
-
-If the answer is "they'd figure it out from the code", skip it.
-If the answer is "they'd wonder why we did it this way", write it.
+Do not skip Phase 3 — all phases must run to completion.
 
 ---
 
