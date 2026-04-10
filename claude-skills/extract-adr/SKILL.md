@@ -161,6 +161,15 @@ Work through the approved candidates one at a time.
    should not duplicate what the ADR now captures. Commit this update alongside
    or immediately after the ADR commit.
 
+5. After resolving any candidate (written, rejected, or accepted as already
+   covered), consider whether the code that triggered the candidate is still
+   ambiguous enough that a future reviewer would raise the same question. If so,
+   propose a clarifying change (e.g. a better comment, a more explicit name).
+   The candidate resolution addresses the *decision*; the clarifying change
+   addresses the *trigger*. This applies equally when no candidates are found —
+   if something looked like it might need an ADR but doesn't, the trigger is
+   worth fixing.
+
 Use a commit message in the style already used on this branch.
 
 After the last candidate, report how many ADRs were written and their filenames.
