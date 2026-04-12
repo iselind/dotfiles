@@ -77,6 +77,12 @@ echo
 echo "Prompt:"
 echo "$PROMPT"
 
+echo
+echo "*********"
+echo "This uses Ollama which we have concluded is to hungry for context."
+echo "*********"
+exit 0
+
 curl -s "$OLLAMA_URL" \
   -d "{
     \"model\": \"$MODEL\",
