@@ -29,7 +29,9 @@ if [ ! -f "$HOME/ai/models/small.gguf" ]; then
 fi
 
 mkdir -p "$HOME/ai/bin"
-cp "$SCRIPT_DIR/ai.sh" "$HOME/ai/bin/ai"
+cd "$HOME/ai/bin"
+ln -sf "$SCRIPT_DIR/ai.sh" ai
+ln -sf "$SCRIPT_DIR/ai2.sh" ai2
 chmod +x "$HOME/ai/bin/ai"
 
 # shellcheck disable=SC2016
