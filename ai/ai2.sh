@@ -26,8 +26,16 @@ if [[ -z "$TARGET" ]]; then
   exit 1
 fi
 
+TARGET=$(realpath "$TARGET")
+
+echo "Mode: $MODE"
+echo "Target: $TARGET"
+
 FILE="${TARGET%%:*}"
 RANGE="${TARGET#*:}"
+
+echo "File: $FILE"
+echo "Range: $RANGE"
 
 if [[ "$FILE" == "$RANGE" ]]; then
   RANGE=""
@@ -64,6 +72,10 @@ Rules:
 - Be concise.
 EOF
 )
+
+echo
+echo "Prompt:"
+echo "$PROMPT"
 
 curl -s "$OLLAMA_URL" \
   -d "{
