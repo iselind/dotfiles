@@ -123,6 +123,11 @@ to phase 3.
 Move directly into `/extract-adr`. Do not ask for permission — this is a
 natural continuation of the review.
 
+**Important:** Phase 3 runs before Phase 4 deliberately. The review tracking
+file may contain resolutions that are architectural decisions worth capturing
+as ADRs (e.g., a bug fix that required choosing between approaches). The
+extract-adr skill needs access to this file before it is deleted.
+
 ## Phase 4 — Delete the review tracking file
 
 After the ADR extraction commit(s), read the review tracking file. Check

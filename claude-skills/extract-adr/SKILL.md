@@ -83,9 +83,14 @@ If the answer is "they'd wonder why we did it this way", write it.
 
 **Step 1 — Read the branch**
 
-Read the full diff and all changed files. You are looking for decisions, not
-bugs or improvements — things that required a deliberate choice between real
-alternatives.
+Read the full diff and all changed files. Also check for a review tracking file
+(typically `*-review.md` alongside the branch's plan). Review resolutions often
+contain architectural decisions — a bug fix that required choosing between
+approaches, or a verification item whose resolution established a convention.
+These are easy to miss in the diff alone.
+
+You are looking for decisions, not bugs or improvements — things that required
+a deliberate choice between real alternatives.
 
 Strong ADR signals:
 - A layout or naming convention was established (directory structure, file
