@@ -13,9 +13,14 @@ user-invocable: true
 
 Current branch: !`git branch --show-current`
 
-Branch commits (vs main): !`git log main...HEAD --oneline`
+<!-- Both commands use an explicit merge-base to avoid git's inconsistent two/three-dot
+     behaviour: `git log A...B` is symmetric difference (both sides), whereas
+     `git diff A...B` diffs from merge-base to B. Using $(git merge-base) with `..`
+     makes the intent explicit and consistent: show commits/changes from the fork point
+     to HEAD, nothing more. The fetch ensures origin/main is current. -->
+Branch commits (vs main): !`git fetch origin main -q 2>/dev/null; git log $(git merge-base origin/main HEAD)..HEAD --oneline`
 
-Changed files: !`git diff main...HEAD --stat`
+Changed files: !`git diff $(git merge-base origin/main HEAD)..HEAD --stat`
 
 ## Your job
 
