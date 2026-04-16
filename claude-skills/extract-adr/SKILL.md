@@ -12,9 +12,14 @@ user-invocable: true
 
 Current branch: !`git branch --show-current`
 
-Branch commits (vs main): !`git log main...HEAD --oneline`
+<!-- Both commands use an explicit merge-base to avoid git's inconsistent two/three-dot
+     behaviour: `git log A...B` is symmetric difference (both sides), whereas
+     `git diff A...B` diffs from merge-base to B. Using $(git merge-base) with `..`
+     makes the intent explicit and consistent: show commits/changes from the fork point
+     to HEAD, nothing more. The fetch ensures origin/main is current. -->
+Branch commits (vs main): !`git fetch origin main -q 2>/dev/null; git log $(git merge-base origin/main HEAD)..HEAD --oneline`
 
-Changed files: !`git diff main...HEAD --stat`
+Changed files: !`git diff $(git merge-base origin/main HEAD)..HEAD --stat`
 
 Existing ADRs: !`ls docs/adrs/ 2>/dev/null || echo "(none)"`
 
@@ -83,9 +88,14 @@ If the answer is "they'd wonder why we did it this way", write it.
 
 **Step 1 — Read the branch**
 
-Read the full diff and all changed files. You are looking for decisions, not
-bugs or improvements — things that required a deliberate choice between real
-alternatives.
+Read the full diff and all changed files. Also check for a review tracking file
+(typically `*-review.md` alongside the branch's plan). Review resolutions often
+contain architectural decisions — a bug fix that required choosing between
+approaches, or a verification item whose resolution established a convention.
+These are easy to miss in the diff alone.
+
+You are looking for decisions, not bugs or improvements — things that required
+a deliberate choice between real alternatives.
 
 Strong ADR signals:
 - A layout or naming convention was established (directory structure, file
@@ -131,6 +141,7 @@ No candidates found.  ← if none
 If there are no candidates, say so and ask the user if there is anything they
 would like to add or capture before finishing — then wait for the response.
 If there is anything that might need consideration, ask explicitly about those.
+Do NOT proceed to Phase 3 until the user has responded — one phase at a time.
 
 Otherwise ask: "Shall I draft all of these, or pick specific numbers?" — then
 wait for the user's response before proceeding to Phase 2.
