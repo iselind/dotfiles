@@ -107,9 +107,8 @@ Work through open (⬜) items in ascending order, one at a time.
 4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>` in
    the status table row for that item.
 
-5. Stop and report what you did. Show the specific change (inline or as a
-   brief diff summary) so the user has something concrete to review. End with:
-   "Ready for review — let me know when you're ready to commit." Then wait.
+5. Stop for review. End with: "Ready for review — let me know when you're
+   ready to commit." Then wait.
 
 6. When the user confirms: commit with a message in the style already used on
    this branch (look at recent commits for the pattern). Then ask: "Ready for
@@ -118,8 +117,8 @@ Work through open (⬜) items in ascending order, one at a time.
 **Do not work on the next item until the user confirms the current one.**
 
 If you reach the last open item and complete it, follow the normal confirmation
-flow for that item (step 4 → user confirms → step 5 commit) before proceeding
-to phase 3.
+flow for that item (step 4 → step 5 review → user confirms → step 6 commit)
+before proceeding to phase 3.
 
 ---
 
@@ -150,11 +149,6 @@ used on this branch.
 - Never skip an item without explaining why it is not applicable.
 - If an item turns out to be a non-issue on closer inspection, update the plan
   to `✅ Accepted — <reason>` rather than silently skipping it.
-- After resolving any item (done, accepted, or otherwise), consider whether the
-  code that triggered the finding is still ambiguous enough that a future
-  reviewer would raise the same question. If so, propose a clarifying change
-  (e.g. a better comment, a more explicit name). The item's resolution fixes the
-  *issue*; the clarifying change fixes the *trigger*.
 - Keep fixes minimal — this is a review pass, not a refactor.
 - If a fix has meaningful risk or side effects, flag it before proceeding.
 
@@ -175,26 +169,4 @@ Then ask:
 
 > "Anything to add, or anything I missed?"
 
-If your own assessment surfaced "could have been better" items, propose concrete
-skill changes to address them — do not wait for the user to raise them. Then
-ask for the user's additions.
-
-If there is nothing actionable from either your assessment or the user's
-response, end here.
-
-Otherwise, work through the skill changes one at a time:
-
-1. **Implement the change.** Read the current skill file at
-   `/home/patrik/.claude/skills/review/SKILL.md`, then make the targeted edit.
-   Do not rewrite the file from scratch.
-
-2. **Stop for review.** End with: "Ready for review — let me know when you're
-   ready to commit." Then wait. If the user requests changes, apply them and
-   repeat this step.
-
-3. **Once the user confirms**, commit the change. Resolve the symlink
-   `~/.claude/skills` to find the dotfiles repo and commit from there.
-
-4. Ask: "Ready for the next change?" and wait before proceeding.
-
-Changes take effect on the next invocation of this skill.
+!`cat ~/.claude/skills/_shared/retrospective-protocol.md`

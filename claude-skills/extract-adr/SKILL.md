@@ -247,15 +247,6 @@ edits using line numbers, then commit.
    should not duplicate what the ADR now captures. Commit this update alongside
    or immediately after the ADR commit.
 
-5. After resolving any candidate (written, rejected, or accepted as already
-   covered), consider whether the code that triggered the candidate is still
-   ambiguous enough that a future reviewer would raise the same question. If so,
-   propose a clarifying change (e.g. a better comment, a more explicit name).
-   The candidate resolution addresses the *decision*; the clarifying change
-   addresses the *trigger*. This applies equally when no candidates are found —
-   if something looked like it might need an ADR but doesn't, the trigger is
-   worth fixing.
-
 Use a commit message in the style already used on this branch.
 
 After the last candidate, report how many ADRs were written and their filenames.
@@ -283,26 +274,4 @@ Then ask:
 
 > "Anything to add, or anything I missed?"
 
-If your own assessment surfaced "could have been better" items, propose concrete
-skill changes to address them — do not wait for the user to raise them. Then
-ask for the user's additions.
-
-If there is nothing actionable from either your assessment or the user's
-response, end here.
-
-Otherwise, work through the skill changes one at a time:
-
-1. **Implement the change.** Read the current skill file at
-   `/home/patrik/.claude/skills/extract-adr/SKILL.md`, then make the targeted
-   edit. Do not rewrite the file from scratch.
-
-2. **Stop for review.** End with: "Ready for review — let me know when you're
-   ready to commit." Then wait. If the user requests changes, apply them and
-   repeat this step.
-
-3. **Once the user confirms**, commit the change. Resolve the symlink
-   `~/.claude/skills` to find the dotfiles repo and commit from there.
-
-4. Ask: "Ready for the next change?" and wait before proceeding.
-
-Changes take effect on the next invocation of this skill.
+!`cat ~/.claude/skills/_shared/retrospective-protocol.md`

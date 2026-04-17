@@ -150,13 +150,6 @@ asked to skip in Phase 1.
 other changes, or applies to code that no longer exists) — say so, describe
 why, and ask the user whether to skip it or reply to it before moving on.
 
-**After resolving any comment** (fixed, skipped, or accepted as non-actionable),
-consider whether the code that triggered it is still ambiguous enough that a
-future reviewer would raise the same question. If so, propose a clarifying
-change — a better comment, a clearer name, a more explicit structure. The
-comment resolution fixes the *finding*; the clarifying change fixes the
-*trigger*.
-
 ---
 
 ## Phase 3 — Retrospective
@@ -172,27 +165,4 @@ Then ask:
 
 > "Anything to add, or anything I missed?"
 
-If your own assessment surfaced "could have been better" items, propose concrete
-skill changes to address them — do not wait for the user to raise them. Then
-ask for the user's additions.
-
-If there is nothing actionable from either your assessment or the user's
-response, end here.
-
-Otherwise, work through the skill changes one at a time, following the same
-flow used for PR comments:
-
-1. **Implement the change.** Read the current skill file at
-   `/home/patrik/.claude/skills/fix-pr-comments/SKILL.md`, then make the
-   targeted edit. Do not rewrite the file from scratch.
-
-2. **Stop for review.** End with: "Ready for review — let me know when you're
-   ready to commit." Then wait. If the user requests changes, apply them and
-   repeat this step.
-
-3. **Once the user confirms**, commit the change. Resolve the symlink
-   `~/.claude/skills` to find the dotfiles repo and commit from there.
-
-4. Ask: "Ready for the next change?" and wait before proceeding.
-
-Changes take effect on the next invocation of this skill.
+!`cat ~/.claude/skills/_shared/retrospective-protocol.md`
