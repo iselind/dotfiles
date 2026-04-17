@@ -257,21 +257,6 @@ Then proceed to Phase 3 — the skill is not complete until the retrospective ru
 ## Phase 3 — Retrospective (mandatory)
 
 This phase must always run — even when no candidates were found, even when the
-skill is invoked as part of another skill. The skill is not finished until the
-retrospective question has been asked and answered.
+skill is invoked as part of another skill.
 
-After Phase 2 is complete (or if no candidates were found and the user has
-nothing to add), give your own honest assessment first:
-
-- What went well — candidates correctly identified and classified, documents
-  that were good quality from the first write, process steps that ran smoothly
-- What could have been better — be honest and open-ended here, for example:
-  candidates missed or misclassified, documents that needed many iterations
-  to get right, anything the user had to prompt that should have been
-  noticed independently
-
-Then ask:
-
-> "Anything to add, or anything I missed?"
-
-!`cat ~/.claude/skills/_shared/retrospective-protocol.md`
+Move directly into `/retro extract-adr`. Do not ask for permission.

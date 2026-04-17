@@ -154,15 +154,5 @@ why, and ask the user whether to skip it or reply to it before moving on.
 
 ## Phase 3 — Retrospective
 
-After all comments are addressed (or skipped), give your own honest assessment:
-
-- What went well — comments correctly understood on first read, minimal fixes,
-  steps that ran without friction
-- What could have been better — misunderstood comments, fixes that were larger
-  than necessary, anything the user had to correct or re-explain
-
-Then ask:
-
-> "Anything to add, or anything I missed?"
-
-!`cat ~/.claude/skills/_shared/retrospective-protocol.md`
+Move directly into `/retro fix-pr-comments`. Do not ask for permission — this
+is a natural continuation of the fix.
