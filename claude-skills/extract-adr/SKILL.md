@@ -73,14 +73,62 @@ alternative was rejected, explain why here rather than in Context.
 
 ---
 
+## OPEN format
+
+```markdown
+# OPEN-NNN: Title in sentence case
+
+## Question
+
+What is the unresolved question?
+
+## Context
+
+What situation or forces surfaced this question? What work on this branch
+made it relevant? Include what is already known or settled so the reader
+starts with a clear baseline.
+
+## Options considered
+
+For each option, present a pro/con analysis (table or list). Name options
+clearly so they can be referenced in discussion.
+
+## Open questions
+
+What needs to be resolved, learned, or decided before a conclusion can
+be reached?
+```
+
+**Format rules:**
+- OPEN documents use a separate number sequence from ADRs: OPEN-001, OPEN-002, …
+- No Decision or Rationale sections — those do not exist yet
+- When the question is decided, the OPEN becomes the foundation for an ADR:
+  Context transfers directly, Decision and Rationale are added, OPEN is deleted
+- OPEN documents are never referenced by ADRs (the reference would outlive the file)
+
+---
+
 ## What makes a good ADR
 
-Test every candidate against this question before drafting:
+Test every ADR candidate against this question before drafting:
 
 > *Would a new team member benefit from reading this in a year?*
 
 If the answer is "they'd figure it out from the code", skip it.
 If the answer is "they'd wonder why we did it this way", write it.
+
+## What makes a good OPEN
+
+Test every OPEN candidate against this question before drafting:
+
+> *Would future work in this area need to rediscover these trade-offs without this document?*
+
+If the answer is "the trade-offs are obvious or already captured", skip it.
+If the answer is "someone will need to decide this and the analysis is worth preserving", write it.
+
+An OPEN is not a failed ADR — it is a different artifact. Something can clearly
+not merit an ADR (the decision is obvious) but still merit an OPEN (how to
+implement it has real unresolved trade-offs). Evaluate both independently.
 
 ---
 
@@ -107,10 +155,17 @@ Strong ADR signals:
 - An alternative was explicitly rejected somewhere (comment, commit message,
   plan doc)
 
-Weak signals — do not propose an ADR for these alone:
+Strong OPEN signals:
+- A question came up during the work but was deferred or left unresolved
+- Two or more real approaches exist with genuine trade-offs and no clear winner
+- A decision was made but the team expressed uncertainty or flagged it for revisiting
+- An implementation path is non-obvious and the options haven't been fully explored
+
+Weak signals — do not propose an ADR or OPEN for these alone:
 - Bug fixes with no architectural dimension
 - Routine additions that follow an already-documented pattern
 - Config changes whose rationale is self-evident from the values
+- Questions with an obvious answer that just hasn't been written down yet
 
 **Step 2 — Read existing ADRs**
 
@@ -125,20 +180,25 @@ If there are no existing ADRs, the next number is 001.
 For each candidate decision, check whether it is already covered (fully or
 partially) by an existing ADR. Skip anything already documented.
 
-**Step 4 — Present the candidate list**
+**Step 4 — Present the candidate lists**
 
-Output a numbered list of candidate decisions, one line each:
+Output two lists — ADR candidates and OPEN candidates — one line each:
 
 ```
-Candidates:
-1. <Short description of decision>
-2. <Short description of decision>
+ADR candidates:
+1. <Short description of settled decision>
 ...
 
-No candidates found.  ← if none
+OPEN candidates:
+1. <Short description of unresolved question>
+...
+
+No candidates found.  ← if neither list has entries
 ```
 
-If there are no candidates, say so and ask the user if there is anything they
+Either or both lists may be empty. Present both regardless.
+
+If neither list has entries, say so and ask the user if there is anything they
 would like to add or capture before finishing — then wait for the response.
 If there is anything that might need consideration, ask explicitly about those.
 Do NOT proceed to Phase 3 until the user has responded — one phase at a time.
@@ -150,14 +210,16 @@ wait for the user's response before proceeding to Phase 2.
 
 ## Phase 2 — Draft and write
 
-Work through the approved candidates one at a time.
+Work through the approved candidates one at a time. ADR and OPEN candidates
+follow the same write-immediately flow — write first, refine through targeted
+edits using line numbers, then commit.
 
-**For each candidate:**
+**For each ADR candidate:**
 
-1. Draft the ADR following the format below.
+1. Draft the ADR following the ADR format above.
 
 2. Write the file immediately — do not wait for approval before writing:
-   - Assign the next sequential number (ADR-NNN)
+   - Assign the next sequential ADR number (ADR-NNN)
    - Filename: `docs/adrs/ADR-NNN-kebab-case-title.md`
 
 3. The user reviews the file via the diff. Wait for one of:
@@ -165,6 +227,19 @@ Work through the approved candidates one at a time.
      move to step 4
    - **Edit request** → revise the file in place, then wait for approval again
    - **Rejection** ("skip", "no", "not this one") → delete the file and move on
+
+**For each OPEN candidate:**
+
+1. Draft the OPEN document following the OPEN format above.
+
+2. Write the file immediately — do not wait for approval before writing:
+   - Assign the next sequential OPEN number (OPEN-NNN), separate from ADR numbers
+   - Filename: `docs/adrs/OPEN-NNN-kebab-case-title.md`
+
+3. The user reviews the file via the diff. Wait for one of:
+   - **Approval** → commit the file, then move to step 4
+   - **Edit request** → revise the file in place, then wait for approval again
+   - **Rejection** → delete the file and move on
 
 4. After committing the ADR, check whether the decision material was sourced
    from a plan or other document on the branch. If so, replace the extracted
