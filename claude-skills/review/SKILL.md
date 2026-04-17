@@ -175,15 +175,26 @@ Then ask:
 
 > "Anything to add, or anything I missed?"
 
-If the user has no feedback, end here.
+If your own assessment surfaced "could have been better" items, propose concrete
+skill changes to address them — do not wait for the user to raise them. Then
+ask for the user's additions.
 
-If the user provides feedback:
+If there is nothing actionable from either your assessment or the user's
+response, end here.
 
-1. Read the current skill file at
-   `/home/patrik/.claude/skills/review/SKILL.md`
-2. Make targeted edits that address the feedback — do not rewrite the file from
-   scratch
-3. The user reviews the changes via the IDE diff
-4. Resolve the symlink `~/.claude/skills` to find the dotfiles repo, then
-   commit and push the skill file change from that repo
-5. Changes take effect on the next invocation of this skill
+Otherwise, work through the skill changes one at a time:
+
+1. **Implement the change.** Read the current skill file at
+   `/home/patrik/.claude/skills/review/SKILL.md`, then make the targeted edit.
+   Do not rewrite the file from scratch.
+
+2. **Stop for review.** End with: "Ready for review — let me know when you're
+   ready to commit." Then wait. If the user requests changes, apply them and
+   repeat this step.
+
+3. **Once the user confirms**, commit the change. Resolve the symlink
+   `~/.claude/skills` to find the dotfiles repo and commit from there.
+
+4. Ask: "Ready for the next change?" and wait before proceeding.
+
+Changes take effect on the next invocation of this skill.
