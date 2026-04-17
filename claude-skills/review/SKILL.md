@@ -162,10 +162,18 @@ used on this branch.
 
 ## Phase 5 — Retrospective
 
-After all previous phases are complete, ask:
+After all previous phases are complete, give your own honest assessment first:
 
-> "How did the **review** skill perform? Anything to do differently next
-> time — steps to add, remove, or change?"
+- What went well — items that were genuine findings, fixes that were minimal
+  and correct, process steps that ran smoothly
+- What could have been better — be honest and open-ended here, for example:
+  items caught late rather than in the initial scan, fixes larger than
+  necessary, steps that took more iterations than expected, anything the
+  user had to prompt that should have been noticed independently
+
+Then ask:
+
+> "Anything to add, or anything I missed?"
 
 If the user has no feedback, end here.
 

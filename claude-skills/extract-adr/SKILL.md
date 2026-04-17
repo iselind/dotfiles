@@ -270,10 +270,18 @@ skill is invoked as part of another skill. The skill is not finished until the
 retrospective question has been asked and answered.
 
 After Phase 2 is complete (or if no candidates were found and the user has
-nothing to add), ask:
+nothing to add), give your own honest assessment first:
 
-> "How did the **extract-adr** skill perform? Anything to do differently next
-> time — steps to add, remove, or change?"
+- What went well — candidates correctly identified and classified, documents
+  that were good quality from the first write, process steps that ran smoothly
+- What could have been better — be honest and open-ended here, for example:
+  candidates missed or misclassified, documents that needed many iterations
+  to get right, anything the user had to prompt that should have been
+  noticed independently
+
+Then ask:
+
+> "Anything to add, or anything I missed?"
 
 If the user has no feedback, end here.
 
