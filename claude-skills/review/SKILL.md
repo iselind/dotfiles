@@ -151,6 +151,10 @@ used on this branch.
   to `✅ Accepted — <reason>` rather than silently skipping it.
 - Keep fixes minimal — this is a review pass, not a refactor.
 - If a fix has meaningful risk or side effects, flag it before proceeding.
+- When an item involves cross-document references, capture the full scope in
+  the item description — not just the visible symptom. Check both directions:
+  that existing references are accurate AND that new content is reachable from
+  the relevant context. A fix that only corrects one direction is incomplete.
 
 ---
 
