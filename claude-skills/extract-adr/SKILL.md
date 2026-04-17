@@ -180,13 +180,30 @@ If there are no existing ADRs, the next number is 001.
 For each candidate decision, check whether it is already covered (fully or
 partially) by an existing ADR. Skip anything already documented.
 
+For candidates that are closely related to an existing ADR, consider whether
+extending that ADR is more appropriate than writing a new one. Extending is
+only safe when both conditions hold:
+
+1. **The addition is purely additive** — a new section appended to the existing
+   ADR. Nothing in the existing text is modified, qualified, or contradicted.
+2. **Existing references are unaffected** — scan plans, other ADRs, and docs for
+   references to the target ADR. If any reference describes the ADR's scope in a
+   way the extension would undermine, or sits near content the extension touches,
+   a new ADR is safer.
+
+If either condition fails, propose a new ADR that cross-references the related
+one instead.
+
 **Step 4 — Present the candidate lists**
 
-Output two lists — ADR candidates and OPEN candidates — one line each:
+Output two lists — ADR candidates and OPEN candidates — one line each. For each
+ADR candidate that should extend an existing ADR rather than create a new one,
+note the target ADR explicitly:
 
 ```
 ADR candidates:
 1. <Short description of settled decision>
+2. Extend ADR-NNN: <short description of the addendum>
 ...
 
 OPEN candidates:
