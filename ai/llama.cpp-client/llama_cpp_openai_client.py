@@ -2,6 +2,8 @@ import requests
 import json
 import random
 import click
+import inspect
+import textwrap
 from typing import Callable, Any
 
 """
@@ -12,31 +14,65 @@ Find IP of llama.cpp when it's running on Windows and this script is in WSL:
 BASE_URL = "http://172.30.48.1:8080/v1"
 
 
-def list_models():
-    resp = requests.get(f"{BASE_URL}/models")
-    resp.raise_for_status()
-    return resp.json().get("data", [])
-
-
-def pick_model(models):
-    if not models:
-        raise RuntimeError("No models available")
-    return models[0]["id"]
-
-
-# ------------------ TOOLS ------------------
+# ------------------ Tool chest ------------------
 
 def generate_random_number() -> Any:
+    """
+    Returns a random integer between 0 and 100. A new number is generated on
+    each call.
+    """
     return random.randint(0, 100)
 
 
+def read_file(filename: str) -> Any:
+    """
+    filename: absolute path to the file to read
+
+    Returns all lines in the file. Use read_file_range for line range
+    selection.
+    """
+    return read_file_range(filename, -1, -1)
+
+
+def read_file_range(filename: str, startline: int, endline: int) -> Any:
+    """
+    filename: absolute path to the file to read
+    startline: starting line number (1-indexed)
+    endline: ending line number (1-indexed)
+
+    Returns lines from startline to endline (inclusive).
+    """
+    try:
+        with open(filename, 'r') as f:
+            content = f.read()
+            lines = content.splitlines()
+            if startline < 1:
+                startline = 1
+            if endline > len(lines) or endline < 1:
+                endline = len(lines)
+            selected_lines = lines[startline - 1:endline]
+            return "\n".join(selected_lines)
+    except Exception as e:
+        return f"Error reading file: {e}"
+
+
 readonly_tools: dict[str, Callable] = {
-    "generate_random_number": generate_random_number
+    "generate_random_number": generate_random_number,
+    "read_file": read_file,
+    "read_file_range": read_file_range
 }
 
 write_tools: dict[str, Callable] = {
     # Add side-effect tools here if needed
 }
+
+
+# ------------------ API CALL ------------------
+
+def list_models():
+    resp = requests.get(f"{BASE_URL}/models")
+    resp.raise_for_status()
+    return resp.json().get("data", [])
 
 
 def call_completion(model, messages):
@@ -55,15 +91,34 @@ def call_completion(model, messages):
 # ------------------ AGENT LOOP ------------------
 
 def run_agent(model, tools, user_prompt):
-    system_prompt = """
+    tool_descriptions = "\n\n".join(
+        [
+            "- {name}\n"
+            "  {sig}\n"
+            "{doc}"
+            .format(
+                name=name,
+                sig=inspect.signature(func),
+                doc=textwrap.indent(
+                    textwrap.dedent(func.__doc__ or "").strip(),
+                    "  "
+                )
+            )
+            for name, func in tools.items()
+        ]
+    )
+
+    print("Available tools:")
+    print(tool_descriptions)
+    system_prompt = f"""
 You are an agent that can use tools.
 
 Available tools:
-- generate_random_number(): returns integer 0-100
+{tool_descriptions}
 
 Rules:
 - If a tool is needed, respond ONLY with JSON:
-  {"tool": "tool_name", "arguments": {}}
+  {{"tool": "tool_name", "arguments": {{}}}}
 - Otherwise, respond with the final answer as plain text.
 - You may call tools multiple times.
 """
@@ -114,17 +169,22 @@ Rules:
 
 # ------------------ CLI ------------------
 
+def pick_model(debug):
+    models = list_models()
+    if (debug):
+        print("Available models:", models)
+    if not models:
+        raise RuntimeError("No models available")
+    return models[0]["id"]
+
+
 @click.command()
 @click.option("-p", "--prompt", required=True, help="Prompt for the agent")
 @click.option("-d", "--debug", is_flag=True, help="Enable debug mode")
 @click.option("-ro", "--real-only", is_flag=True,
               help="Only allow read-only tools (no side effects)")
 def main(prompt, debug, real_only):
-    models = list_models()
-    if (debug):
-        print("Available models:", models)
-
-    model_id = pick_model(models)
+    model_id = pick_model(debug)
     print("Using model:", model_id)
 
     tools = readonly_tools if real_only else {**readonly_tools, **write_tools}
