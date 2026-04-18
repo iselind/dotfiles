@@ -145,6 +145,8 @@ Available tools:
 Rules:
 - If a tool is needed, respond ONLY with JSON:
   {{"tool": "tool_name", "arguments": {{}}}}
+- Make sure the tool calls use valid JSON for the arguments, otherwise the tool
+execution will fail.
 - Otherwise, respond with the final answer as plain text.
 - You may call tools multiple times.
 """
@@ -165,6 +167,7 @@ Rules:
         try:
             data = json.loads(content)
         except json.JSONDecodeError:
+            print("Response is not valid JSON, treating as final answer.")
             # Not JSON → final answer
             return content
 
