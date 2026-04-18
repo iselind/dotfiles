@@ -1,6 +1,7 @@
 import requests
 import json
 import random
+import click
 
 """
 Find IP of llama.cpp when it's running on Windows and this script is in WSL:
@@ -22,23 +23,23 @@ def pick_model(models):
     return models[0]["id"]
 
 
-# Tool implementation (local)
+# ------------------ TOOLS ------------------
+
 def generate_random_number():
     return random.randint(0, 100)
 
 
-def call_completion(model, prompt):
-    """
-    Use llama.cpp's simpler completion-style endpoint instead of Responses API.
-    """
+TOOLS = {
+    "generate_random_number": generate_random_number
+}
+
+
+def call_completion(model, messages):
     url = f"{BASE_URL}/chat/completions"
 
     resp = requests.post(url, json={
         "model": model,
-        "messages": [
-            {"role": "system", "content": "You can call tools by returning JSON."},
-            {"role": "user", "content": prompt}
-        ],
+        "messages": messages,
         "temperature": 0
     })
 
@@ -46,68 +47,77 @@ def call_completion(model, prompt):
     return resp.json()
 
 
-def run_agent(model):
-    """
-    Simple manual agent loop using JSON-based tool calling.
-    """
+# ------------------ AGENT LOOP ------------------
 
-    prompt = """
-You have access to this tool:
+def run_agent(model, user_prompt):
+    system_prompt = """
+You are an agent that can use tools.
 
+Available tools:
 - generate_random_number(): returns integer 0-100
 
-Instructions:
-1. First call the tool
-2. Then double the result
-
-If calling a tool, respond ONLY with JSON like:
-{"tool": "generate_random_number", "arguments": {}}
-
-Otherwise return final answer as plain text.
+Rules:
+- If a tool is needed, respond ONLY with JSON:
+  {"tool": "tool_name", "arguments": {}}
+- Otherwise, respond with the final answer as plain text.
+- You may call tools multiple times.
 """
 
-    # Step 1: ask model what to do
-    response = call_completion(model, prompt)
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt}
+    ]
 
-    content = response["choices"][0]["message"]["content"]
-    print("Model response:", content)
+    while True:
+        response = call_completion(model, messages)
+        content = response["choices"][0]["message"]["content"]
 
-    # Step 2: try to parse tool call
-    try:
-        data = json.loads(content)
-    except json.JSONDecodeError:
-        print("Model did not return JSON, aborting")
-        return content
+        print("Model:", content)
 
-    if data.get("tool") == "generate_random_number":
-        result = generate_random_number()
-        print("Tool generated:", result)
+        # Try parse JSON
+        try:
+            data = json.loads(content)
+        except json.JSONDecodeError:
+            # Not a tool call → final answer
+            return content
 
-        # Step 3: send result back
-        followup_prompt = f"""
-The tool returned: {result}
+        tool_name = data.get("tool")
 
-Now double it and return the final answer.
-"""
+        if tool_name not in TOOLS:
+            print("Unknown tool, stopping")
+            return content
 
-        final = call_completion(model, followup_prompt)
-        final_content = final["choices"][0]["message"]["content"]
-        return final_content
+        # Execute tool
+        result = TOOLS[tool_name]()
+        print(f"Tool [{tool_name}] ->", result)
 
-    return content
+        # Append tool interaction to conversation
+        messages.append({
+            "role": "assistant",
+            "content": content
+        })
+
+        messages.append({
+            "role": "user",
+            "content": f"Tool {tool_name} returned: {result}"
+        })
 
 
-def main():
+# ------------------ CLI ------------------
+
+@click.command()
+@click.option("-p", "--prompt", required=True, help="Prompt for the agent")
+def main(prompt):
     models = list_models()
     print("Available models:", models)
 
     model_id = pick_model(models)
     print("Using model:", model_id)
 
-    final_response = run_agent(model_id)
+    result = run_agent(model_id, prompt)
 
-    print("Final response:")
-    print(final_response)
+    print("\nFinal response:")
+    print(result)
 
 
 if __name__ == "__main__":
