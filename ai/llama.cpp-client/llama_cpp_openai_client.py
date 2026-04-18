@@ -1,4 +1,5 @@
 import requests
+import patch
 import json
 import random
 import click
@@ -58,6 +59,23 @@ def read_file_range(filename: str, startline: int, endline: int) -> Any:
         return f"Error reading file: {e}"
 
 
+def apply_patch(file_path: str, patch_content: str) -> str:
+    """
+    file_path: absolute path to the file to patch
+    patch_content: content of the patch to apply
+
+    Applies the given patch to the specified file. The patch should be in a
+    unified diff format. Returns a success message or an error message if the
+    patch could not be applied.
+    """
+    patcher = patch.fromstring(patch_content)
+    try:
+        patcher.apply(file_path)
+    except Exception as e:
+        return f"Error applying patch: {e}"
+    return "Patch applied successfully"
+
+
 readonly_tools: dict[str, Callable] = {
     "generate_random_number": generate_random_number,
     "read_file": read_file,
@@ -65,7 +83,7 @@ readonly_tools: dict[str, Callable] = {
 }
 
 write_tools: dict[str, Callable] = {
-    # Add side-effect tools here if needed
+    "apply_patch": apply_patch
 }
 
 
