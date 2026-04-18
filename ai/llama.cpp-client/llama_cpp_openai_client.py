@@ -67,7 +67,31 @@ write_tools: dict[str, Callable] = {
 }
 
 
+def tool_docs(debug, tools) -> str:
+    tool_descriptions = "\n\n".join(
+        [
+            "- {name}\n"
+            "  {sig}\n"
+            "{doc}"
+            .format(
+                name=name,
+                sig=inspect.signature(func),
+                doc=textwrap.indent(
+                        textwrap.dedent(func.__doc__ or "").strip(),
+                        "  "
+                )
+            )
+            for name, func in tools.items()
+        ]
+    )
+
+    if (debug):
+        print("Available tools:")
+        print(tool_descriptions)
+    return tool_descriptions
+
 # ------------------ API CALL ------------------
+
 
 def list_models():
     resp = requests.get(f"{BASE_URL}/models")
@@ -91,26 +115,7 @@ def call_completion(model, messages):
 # ------------------ AGENT LOOP ------------------
 
 def run_agent(debug, model, tools, user_prompt):
-    tool_descriptions = "\n\n".join(
-        [
-            "- {name}\n"
-            "  {sig}\n"
-            "{doc}"
-            .format(
-                name=name,
-                sig=inspect.signature(func),
-                doc=textwrap.indent(
-                    textwrap.dedent(func.__doc__ or "").strip(),
-                    "  "
-                )
-            )
-            for name, func in tools.items()
-        ]
-    )
-
-    if (debug):
-        print("Available tools:")
-        print(tool_descriptions)
+    tool_descriptions = tool_docs(debug, tools)
     system_prompt = f"""
 You are an agent that can use tools.
 
