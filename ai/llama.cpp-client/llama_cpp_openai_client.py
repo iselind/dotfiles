@@ -19,7 +19,7 @@ BASE_URL = "http://172.30.48.1:8080/v1"
 
 # ------------------ Tool chest ------------------
 
-def generate_random_number() -> Any:
+def generate_random_number() -> int:
     """
     Returns a random integer between 0 and 100. A new, potentially different,
     number is generated on each call.
@@ -27,17 +27,24 @@ def generate_random_number() -> Any:
     return random.randint(0, 100)
 
 
-def read_file(filename: str) -> Any:
+# Save context tokens by not re-reading the same file multiple times.
+read_file_cache = set()
+
+
+def read_file(filename: str) -> str:
     """
     filename: absolute path to the file to read
 
     Returns all lines in the file. Use read_file_range for line range
-    selection.
+    selection. Avoid using this function if possible.
     """
+    if (filename in read_file_cache):
+        return f"File '{filename}' has already been read. Avoid re-reading the same file."
+    read_file_cache.add(filename)
     return read_file_range(filename, -1, -1)
 
 
-def read_file_range(filename: str, startline: int, endline: int) -> Any:
+def read_file_range(filename: str, startline: int, endline: int) -> str:
     """
     filename: absolute path to the file to read
     startline: starting line number (1-indexed)
@@ -45,6 +52,7 @@ def read_file_range(filename: str, startline: int, endline: int) -> Any:
 
     Returns lines from startline to endline (inclusive).
     """
+    print(f"Reading file '{filename}' from line {startline} to {endline}...")
     try:
         with open(filename, 'r') as f:
             content = f.read()
@@ -59,20 +67,42 @@ def read_file_range(filename: str, startline: int, endline: int) -> Any:
         return f"Error reading file: {e}"
 
 
-def apply_patch(file_path: str, patch_content: str) -> str:
+def apply_patch(patch_content: str) -> str:
     """
-    file_path: absolute path to the file to patch
-    patch_content: content of the patch to apply
+    patch_content: content of the patch to apply. Paths must be absolute and
+    the patch should be in unified diff format.
 
-    Applies the given patch to the specified file. The patch should be in a
-    unified diff format. Returns a success message or an error message if the
-    patch could not be applied.
+    Applies the provided patch. Returns a success message or an error message
+    if the patch could not be applied.
+
+    The number of lines used as context is usually 5. If the patch fails, it
+    may be because the context lines do not match the current state of the
+    file. In that case, try adjusting the context lines in the patch and
+    reapplying.
+
+    To construct a valid patch, you need to read and use at least 5 lines of
+    context around the lines that are to be changed from the target file. You
+    can use the read_file_range tool to read specific line ranges from the file
+    to get the necessary context for the patch.
+
+    This function is ill-suited for creating and deleting files. It is best
+    used for modifying existing files.
     """
+    print("Attempting to patch...")
     patcher = patch.fromstring(patch_content)
-    try:
-        patcher.apply(file_path)
-    except Exception as e:
-        return f"Error applying patch: {e}"
+    print("Patcher created")
+
+    result = patcher.apply()
+    print("Patch applied with result:", result)
+
+    print("Patch applied to the following files:")
+    for p in patcher:
+        print(f"- {p.path} ({p.result})")
+
+    if not result:
+        failed = [p for p in patcher if getattr(p, "failed", False)]
+        return f"Patch failed for {len(failed)} files"
+
     return "Patch applied successfully"
 
 
@@ -82,6 +112,14 @@ readonly_tools: dict[str, Callable] = {
     "read_file_range": read_file_range
 }
 
+"""
+TODO: create additional write tools for
+- creating new files
+- deleting files
+- executing shell command
+- Git commands
+- web requests, like Google search or API calls
+"""
 write_tools: dict[str, Callable] = {
     "apply_patch": apply_patch
 }
@@ -143,12 +181,16 @@ Available tools:
 {tool_descriptions}
 
 Rules:
-- If a tool is needed, respond ONLY with JSON:
+- If a tool is needed, respond ONLY with valid JSON:
   {{"tool": "tool_name", "arguments": {{}}}}
-- Make sure the tool calls use valid JSON for the arguments, otherwise the tool
+- Make sure the tool calls use valid JSON for the arguments, otherwise the
+tool.
+- Escape any special characters as needed to ensure valid JSON.
 execution will fail.
-- Otherwise, respond with the final answer as plain text.
+- Prefer reading segments of files over reading whole files.
 - You may call tools multiple times.
+- On tool call failure, try again with the issue fixed.
+- Respond with the final answer as plain text.
 """
 
     messages = [
@@ -187,9 +229,14 @@ execution will fail.
             try:
                 result = tools[tool_name](**data["arguments"])
             except Exception as e:
+                print(f"Error executing tool '{tool_name}': {e}")
                 result = f"Error executing tool: {e}"
         else:
-            result = tools[tool_name]()
+            try:
+                result = tools[tool_name]()
+            except Exception as e:
+                print(f"Error executing tool '{tool_name}': {e}")
+                result = f"Error executing tool: {e}"
 
         print(f"Tool '{tool_name}' called")
         if debug:
@@ -203,7 +250,7 @@ execution will fail.
 
         messages.append({
             "role": "user",
-            "content": f"Tool {tool_name} returned: {result}"
+            "content": f"Tool {tool_name} returned:\n{result}"
         })
 
 
