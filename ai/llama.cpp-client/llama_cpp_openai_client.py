@@ -90,7 +90,7 @@ def call_completion(model, messages):
 
 # ------------------ AGENT LOOP ------------------
 
-def run_agent(model, tools, user_prompt):
+def run_agent(debug, model, tools, user_prompt):
     tool_descriptions = "\n\n".join(
         [
             "- {name}\n"
@@ -108,8 +108,9 @@ def run_agent(model, tools, user_prompt):
         ]
     )
 
-    print("Available tools:")
-    print(tool_descriptions)
+    if (debug):
+        print("Available tools:")
+        print(tool_descriptions)
     system_prompt = f"""
 You are an agent that can use tools.
 
@@ -132,7 +133,8 @@ Rules:
         response = call_completion(model, messages)
         content = response["choices"][0]["message"]["content"]
 
-        print("Model:", content)
+        if (debug):
+            print("Model:", content)
 
         # Try parse JSON
         try:
@@ -148,7 +150,7 @@ Rules:
         tool_name = data.get("tool")
 
         if tool_name not in tools:
-            print("Unknown tool, stopping")
+            print(f"Unknown tool '{tool_name}', stopping")
             return content
 
         # Execute tool
@@ -160,7 +162,9 @@ Rules:
                 result = f"Error executing tool: {e}"
         else:
             result = tools[tool_name]()
-        print(f"Tool [{tool_name}] ->", result)
+
+        if (debug):
+            print(f"Tool [{tool_name}] ->", result)
 
         # Append tool interaction to conversation
         messages.append({
@@ -195,7 +199,7 @@ def main(prompt, debug, real_only):
     print("Using model:", model_id)
 
     tools = readonly_tools if real_only else {**readonly_tools, **write_tools}
-    result = run_agent(model_id, tools, prompt)
+    result = run_agent(debug, model_id, tools, prompt)
 
     if (debug):
         print("\nFinal response:")
