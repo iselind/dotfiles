@@ -152,7 +152,14 @@ Rules:
             return content
 
         # Execute tool
-        result = tools[tool_name]()
+        # Apply arguments if provided, otherwise call with no arguments
+        if "arguments" in data and isinstance(data["arguments"], dict):
+            try:
+                result = tools[tool_name](**data["arguments"])
+            except Exception as e:
+                result = f"Error executing tool: {e}"
+        else:
+            result = tools[tool_name]()
         print(f"Tool [{tool_name}] ->", result)
 
         # Append tool interaction to conversation
