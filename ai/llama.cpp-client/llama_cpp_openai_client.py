@@ -16,46 +16,10 @@ def list_models():
     return resp.json().get("data", [])
 
 
-def model_supports_tools(model_obj):
-    """
-    Heuristic check for tool/function-calling support.
-    llama.cpp OpenAI-compatible servers may expose capabilities in different ways.
-    We try a few common patterns and fall back to name-based heuristics.
-    """
-    # 1) Explicit capabilities flags (best case)
-    caps = model_obj.get("capabilities") or model_obj.get("metadata") or {}
-    if isinstance(caps, dict):
-        if caps.get("tool_use") is True or caps.get("function_calling") is True:
-            return True
-
-    # 2) Some servers expose a list of supported features
-    features = model_obj.get("features") or []
-    if isinstance(features, list) and any(f in features for f in ["tools", "function_calling", "tool_use"]):
-        return True
-
-    # 3) Fallback: name heuristics (not perfect, but practical)
-    mid = (model_obj.get("id") or "").lower()
-    if any(k in mid for k in ["instruct", "chat", "function", "tool"]):
-        return True
-
-    return False
-
-
 def pick_model(models):
     if not models:
         raise RuntimeError("No models available")
-
-    if len(models) > 1:
-        print("Warning: more than one model found, picking the first one")
-
-    chosen = models[0]
-
-    if not model_supports_tools(chosen):
-        raise RuntimeError(
-            f"Selected model '{chosen.get('id')}' does not appear to support tool/function calling."
-        )
-
-    return chosen["id"]
+    return models[0]["id"]
 
 
 # Tool implementation (local)
@@ -63,61 +27,74 @@ def generate_random_number():
     return random.randint(0, 100)
 
 
-def run_agent(model):
-    url = f"{BASE_URL}/responses"
+def call_completion(model, prompt):
+    """
+    Use llama.cpp's simpler completion-style endpoint instead of Responses API.
+    """
+    url = f"{BASE_URL}/chat/completions"
 
-    # Step 1: ask model, provide tool
-    response = requests.post(url, json={
+    resp = requests.post(url, json={
         "model": model,
-        "input": "Use the tool to get a random number, then double it and return the result.",
-        "tools": [
-            {
-                "type": "function",
-                "function": {
-                    "name": "generate_random_number",
-                    "description": "Generate a random integer between 0 and 100",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {},
-                        "required": []
-                    }
-                }
-            }
-        ]
+        "messages": [
+            {"role": "system", "content": "You can call tools by returning JSON."},
+            {"role": "user", "content": prompt}
+        ],
+        "temperature": 0
     })
 
-    response.raise_for_status()
-    data = response.json()
+    resp.raise_for_status()
+    return resp.json()
 
-    # Step 2: check if model wants to call tool
-    tool_calls = data.get("output", [])
 
-    for item in tool_calls:
-        if item.get("type") == "tool_call":
-            name = item["name"]
-            call_id = item["id"]
+def run_agent(model):
+    """
+    Simple manual agent loop using JSON-based tool calling.
+    """
 
-            if name == "generate_random_number":
-                result = generate_random_number()
-                print("Tool generated:", result)
+    prompt = """
+You have access to this tool:
 
-                # Step 3: send tool result back
-                follow_up = requests.post(url, json={
-                    "model": model,
-                    "input": [
-                        {
-                            "type": "tool_result",
-                            "tool_name": name,
-                            "tool_call_id": call_id,
-                            "content": str(result)
-                        }
-                    ]
-                })
+- generate_random_number(): returns integer 0-100
 
-                follow_up.raise_for_status()
-                return follow_up.json()
+Instructions:
+1. First call the tool
+2. Then double the result
 
-    return data
+If calling a tool, respond ONLY with JSON like:
+{"tool": "generate_random_number", "arguments": {}}
+
+Otherwise return final answer as plain text.
+"""
+
+    # Step 1: ask model what to do
+    response = call_completion(model, prompt)
+
+    content = response["choices"][0]["message"]["content"]
+    print("Model response:", content)
+
+    # Step 2: try to parse tool call
+    try:
+        data = json.loads(content)
+    except json.JSONDecodeError:
+        print("Model did not return JSON, aborting")
+        return content
+
+    if data.get("tool") == "generate_random_number":
+        result = generate_random_number()
+        print("Tool generated:", result)
+
+        # Step 3: send result back
+        followup_prompt = f"""
+The tool returned: {result}
+
+Now double it and return the final answer.
+"""
+
+        final = call_completion(model, followup_prompt)
+        final_content = final["choices"][0]["message"]["content"]
+        return final_content
+
+    return content
 
 
 def main():
@@ -130,7 +107,7 @@ def main():
     final_response = run_agent(model_id)
 
     print("Final response:")
-    print(json.dumps(final_response, indent=2))
+    print(final_response)
 
 
 if __name__ == "__main__":
