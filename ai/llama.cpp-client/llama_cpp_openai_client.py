@@ -2,6 +2,7 @@ import requests
 import json
 import random
 import click
+from typing import Callable, Any
 
 """
 Find IP of llama.cpp when it's running on Windows and this script is in WSL:
@@ -25,12 +26,16 @@ def pick_model(models):
 
 # ------------------ TOOLS ------------------
 
-def generate_random_number():
+def generate_random_number() -> Any:
     return random.randint(0, 100)
 
 
-TOOLS = {
+readonly_tools: dict[str, Callable] = {
     "generate_random_number": generate_random_number
+}
+
+write_tools: dict[str, Callable] = {
+    # Add side-effect tools here if needed
 }
 
 
@@ -49,7 +54,7 @@ def call_completion(model, messages):
 
 # ------------------ AGENT LOOP ------------------
 
-def run_agent(model, user_prompt):
+def run_agent(model, tools, user_prompt):
     system_prompt = """
 You are an agent that can use tools.
 
@@ -78,17 +83,21 @@ Rules:
         try:
             data = json.loads(content)
         except json.JSONDecodeError:
-            # Not a tool call → final answer
+            # Not JSON → final answer
+            return content
+
+        # If JSON but not a dict (e.g. number like 54), treat as final answer
+        if not isinstance(data, dict):
             return content
 
         tool_name = data.get("tool")
 
-        if tool_name not in TOOLS:
+        if tool_name not in tools:
             print("Unknown tool, stopping")
             return content
 
         # Execute tool
-        result = TOOLS[tool_name]()
+        result = tools[tool_name]()
         print(f"Tool [{tool_name}] ->", result)
 
         # Append tool interaction to conversation
@@ -107,16 +116,22 @@ Rules:
 
 @click.command()
 @click.option("-p", "--prompt", required=True, help="Prompt for the agent")
-def main(prompt):
+@click.option("-d", "--debug", is_flag=True, help="Enable debug mode")
+@click.option("-ro", "--real-only", is_flag=True,
+              help="Only allow read-only tools (no side effects)")
+def main(prompt, debug, real_only):
     models = list_models()
-    print("Available models:", models)
+    if (debug):
+        print("Available models:", models)
 
     model_id = pick_model(models)
     print("Using model:", model_id)
 
-    result = run_agent(model_id, prompt)
+    tools = readonly_tools if real_only else {**readonly_tools, **write_tools}
+    result = run_agent(model_id, tools, prompt)
 
-    print("\nFinal response:")
+    if (debug):
+        print("\nFinal response:")
     print(result)
 
 
