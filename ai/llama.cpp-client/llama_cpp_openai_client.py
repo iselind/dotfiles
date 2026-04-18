@@ -8,7 +8,9 @@ from typing import Callable, Any
 
 """
 Find IP of llama.cpp when it's running on Windows and this script is in WSL:
-    export LLAMA_HOST=$(ip route | awk '/default/ {print $3}')
+```bash
+ip route | awk '/default/ {print $3}'
+```
 """
 
 BASE_URL = "http://172.30.48.1:8080/v1"
@@ -18,8 +20,8 @@ BASE_URL = "http://172.30.48.1:8080/v1"
 
 def generate_random_number() -> Any:
     """
-    Returns a random integer between 0 and 100. A new number is generated on
-    each call.
+    Returns a random integer between 0 and 100. A new, potentially different,
+    number is generated on each call.
     """
     return random.randint(0, 100)
 
@@ -168,7 +170,8 @@ Rules:
         else:
             result = tools[tool_name]()
 
-        if (debug):
+        print(f"Tool '{tool_name}' called")
+        if debug:
             print(f"Tool [{tool_name}] ->", result)
 
         # Append tool interaction to conversation
