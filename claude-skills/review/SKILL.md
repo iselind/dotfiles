@@ -155,6 +155,13 @@ used on this branch.
   the item description — not just the visible symptom. Check both directions:
   that existing references are accurate AND that new content is reachable from
   the relevant context. A fix that only corrects one direction is incomplete.
+- Before logging an external caller **migration concern**, verify the affected
+  behaviour exists on `main`. If it was introduced on the current branch, no
+  external caller has adopted it — the migration concern does not apply.
+- Before logging a **missing section** or completeness item, test whether the
+  absent content would add information a reader could not derive from what is
+  already present. If the document already conveys the substance, the item is a
+  structural preference, not a real gap.
 
 ---
 
