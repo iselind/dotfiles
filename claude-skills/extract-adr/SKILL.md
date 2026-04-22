@@ -99,6 +99,10 @@ What needs to be resolved, learned, or decided before a conclusion can
 be reached?
 ```
 
+Before listing something as an open question, test it: could it be answered
+from the context already established in the document or the branch? If yes,
+move it to Context as a settled fact rather than listing it as open.
+
 **Format rules:**
 - OPEN documents use a separate number sequence from ADRs: OPEN-001, OPEN-002, …
 - No Decision or Rationale sections — those do not exist yet
