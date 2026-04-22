@@ -39,6 +39,7 @@ link_dotfile "${DOT_FILES}/screenrc" ~/.screenrc
 mkdir -p ~/.claude
 link_dotfile "${DOT_FILES}/claude-skills" ~/.claude/skills
 link_dotfile "${DOT_FILES}/claude-memory" ~/.claude/memory
+link_dotfile "${DOT_FILES}/claude-CLAUDE.md" ~/.claude/CLAUDE.md
 
 # Install shell configuration files by sourcing them from the dotfiles repo.
 # We can't just symlink them because the user might have customizations.
