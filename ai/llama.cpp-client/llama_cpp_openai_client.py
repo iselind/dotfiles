@@ -78,9 +78,8 @@ def read_file_range(filename: str, startline: int, endline: int) -> str:
 
 def update_file_contents(file_path: str, operations: list[dict]) -> str:
     """
-    When calling the "update_file_contents" tool, provide arguments in this
-    format:
-    ```
+    Call this tool with:
+
     {
       "file_path": str,
       "operations": [
@@ -91,64 +90,66 @@ def update_file_contents(file_path: str, operations: list[dict]) -> str:
         }
       ]
     }
-    ```
-    The contents of `this` must come from the file to be modified, and match
-    exactly character-by-character (case- and whitespace-sensitive). Perform a
-    read_file or read_file_range calls first to get the exact text to modify,
-    and use that text in the `this` field for the update operations.
 
-    Prefer read_file_range for getting specific segments of the file to modify,
-    rather than read_file, to save context tokens.
+    General:
 
-    Re-read the relevant sections of the file before constructing the
-    operations to ensure the `this` field matches the current contents of the
-    file.
-
-    Make sure the resulting file contents is still valid after the
-    modifications!
-
-    Definitions:
-
-    - `file_path` is the absolute path to the file to modify.
+    - `file_path`: absolute path to an existing file.
     - `this` and `that` are exact multi-line strings, including all whitespace,
       indentation, and line breaks.
-    - `this` is the text to be modified in the file, and must match exactly
-      (case- and whitespace-sensitive).
-    - `that` is the new text to apply in the modification. Don't forget to
-      include necessary whitespace, indentation, and line breaks in `that`.
+    - You MUST first read the file (or relevant range) and copy `this` exactly
+      from the current file contents.
+    - Prefer reading only relevant ranges to save tokens.
 
-    Semantics:
-
-    - "replace": replace `this` with `that`
-    - "prepend": insert `that` immediately before `this`
-    - "append": insert `that` immediately after `this`
-    - if `this` occurs in `that`, then the sought operation is most likely a
-      "replace" operation.
-    - "prepend" and "append" keeps the original `this` content, while "replace"
-      removes it. So if the modification is intended to keep the original
-      content and add new content, then "prepend" or "append" is more suitable
-      than "replace".
-    - If the modification is intended to remove some existing content, then
-      "replace" is the only choice.
-    - Neither prepend nor append require `this` in `that` unless the
-      modification is intending to duplicate the content for some reason, which
-      is less common but still valid.
-
-    Rules:
+    Matching rules:
 
     - `this` must match exactly (case- and whitespace-sensitive)
     - `this` must occur exactly once in the file
     - 0 or >1 matches → operation fails
-    - operations are applied sequentially
-    - stop on first failure
+
+    Operation semantics:
+
+    - "replace": replace `this` with `that`
+    - "prepend": insert `that` immediately before `this`
+    - "append": insert `that` immediately after `this`
+
+    CRITICAL RULES:
+
+    - For "prepend" and "append", `that` must contain ONLY the new content.
+    - NEVER include `this` inside `that` for 'append' and 'prepend' operations.
+    - The system performs the combination:
+      - prepend → result = that + this
+      - append  → result = this + that
+    - DO NOT construct the final combined string yourself.
+
+    Examples:
+
+    Given original text:
+      "foo"
+
+    To prepend "bar":
+      CORRECT:   { "operation": "prepend", "this": "foo", "that": "bar" }
+      INCORRECT: { "operation": "prepend", "this": "foo", "that": "barfoo" }
+
+    To append "bar":
+      CORRECT:   { "operation": "append", "this": "foo", "that": "bar" }
+      INCORRECT: { "operation": "append", "this": "foo", "that": "foobar" }
+
+    Execution:
+
+    - Operations are applied sequentially.
+    - Each operation sees the updated file.
+    - Stop on first failure (no partial success).
 
     Guidance:
 
-    - make `this` specific enough to be unique
-    - prefer copying exact text from the file
+    - Make `this` specific enough to be unique (include multiple lines if needed).
+    - Copy exact text from the file—do not retype or approximate.
+    - Ensure the final file remains valid after changes.
 
-    This function cannot create and delete files. It is best
-    used for modifying existing files.
+    Limitations:
+
+    - Cannot create or delete files.
+    - Only modifies existing file contents.
     """
     print(f"Updating file '{file_path}' with {len(operations)} operations...")
     for op in operations:
@@ -181,10 +182,14 @@ def update_file_contents(file_path: str, operations: list[dict]) -> str:
 
         if operation == "replace":
             content = content.replace(this, that)
-        elif operation == "prepend":
-            content = content.replace(this, that + this)
-        elif operation == "append":
-            content = content.replace(this, this + that)
+        else:
+            if that.count(this) > 0:
+                return f"Warning: 'this' occurs in 'that' for operation {opIdx}, that is not allowed for 'prepend' and 'append' operations"
+
+            if operation == "prepend":
+                content = content.replace(this, that + this)
+            elif operation == "append":
+                content = content.replace(this, this + that)
 
         opIdx += 1
     with open(file_path, 'w') as f:
@@ -198,9 +203,13 @@ readonly_tools: dict[str, Callable] = {
     "generate_random_number": generate_random_number,
     "read_file": read_file,
     "read_file_range": read_file_range
+
+
 }
 
 """
+
+
 TODO: create additional write tools for
 - creating new files
 - deleting files
@@ -274,7 +283,7 @@ Rules:
 - If a tool is needed, respond ONLY with valid JSON:
   {{"tool": "tool_name", "arguments": {{}}}}
 - Make sure the tool calls use valid JSON for the arguments, otherwise the
-tool.
+tool call will fail.
 - Escape any special characters as needed to ensure valid JSON.
 execution will fail.
 - Prefer reading segments of files over reading whole files.
