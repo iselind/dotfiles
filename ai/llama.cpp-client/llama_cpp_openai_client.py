@@ -39,9 +39,15 @@ def read_file(filename: str) -> str:
     selection. Avoid using this function if possible.
     """
     if (filename in read_file_cache):
+        print(f"File '{filename}' has already been read, skipping re-read.")
         return f"File '{filename}' has already been read. Avoid re-reading the same file."
     read_file_cache.add(filename)
-    return read_file_range(filename, -1, -1)
+
+    with open(filename, 'r') as f:
+        content = f.read()
+        print(
+            f"File '{filename}' read successfully, {len(content)} characters.")
+        return content
 
 
 def read_file_range(filename: str, startline: int, endline: int) -> str:
@@ -62,48 +68,130 @@ def read_file_range(filename: str, startline: int, endline: int) -> str:
             if endline > len(lines) or endline < 1:
                 endline = len(lines)
             selected_lines = lines[startline - 1:endline]
-            return "\n".join(selected_lines)
+            content = "\n".join(selected_lines)
+            print(
+                f"Selected lines {startline}-{endline} from file '{filename}', {len(content)} characters.")
+            return content
     except Exception as e:
         return f"Error reading file: {e}"
 
 
-def apply_patch(patch_content: str) -> str:
+def update_file_contents(file_path: str, operations: list[dict]) -> str:
     """
-    patch_content: content of the patch to apply. Paths must be absolute and
-    the patch should be in unified diff format.
+    When calling the "update_file_contents" tool, provide arguments in this
+    format:
+    ```
+    {
+      "file_path": str,
+      "operations": [
+        {
+          "operation": "replace" | "prepend" | "append",
+          "this": str,
+          "that": str
+        }
+      ]
+    }
+    ```
+    The contents of `this` must come from the file to be modified, and match
+    exactly character-by-character (case- and whitespace-sensitive). Perform a
+    read_file or read_file_range calls first to get the exact text to modify,
+    and use that text in the `this` field for the update operations.
 
-    Applies the provided patch. Returns a success message or an error message
-    if the patch could not be applied.
+    Prefer read_file_range for getting specific segments of the file to modify,
+    rather than read_file, to save context tokens.
 
-    The number of lines used as context is usually 5. If the patch fails, it
-    may be because the context lines do not match the current state of the
-    file. In that case, try adjusting the context lines in the patch and
-    reapplying.
+    Re-read the relevant sections of the file before constructing the
+    operations to ensure the `this` field matches the current contents of the
+    file.
 
-    To construct a valid patch, you need to read and use at least 5 lines of
-    context around the lines that are to be changed from the target file. You
-    can use the read_file_range tool to read specific line ranges from the file
-    to get the necessary context for the patch.
+    Make sure the resulting file contents is still valid after the
+    modifications!
 
-    This function is ill-suited for creating and deleting files. It is best
+    Definitions:
+
+    - `file_path` is the absolute path to the file to modify.
+    - `this` and `that` are exact multi-line strings, including all whitespace,
+      indentation, and line breaks.
+    - `this` is the text to be modified in the file, and must match exactly
+      (case- and whitespace-sensitive).
+    - `that` is the new text to apply in the modification. Don't forget to
+      include necessary whitespace, indentation, and line breaks in `that`.
+
+    Semantics:
+
+    - "replace": replace `this` with `that`
+    - "prepend": insert `that` immediately before `this`
+    - "append": insert `that` immediately after `this`
+    - if `this` occurs in `that`, then the sought operation is most likely a
+      "replace" operation.
+    - "prepend" and "append" keeps the original `this` content, while "replace"
+      removes it. So if the modification is intended to keep the original
+      content and add new content, then "prepend" or "append" is more suitable
+      than "replace".
+    - If the modification is intended to remove some existing content, then
+      "replace" is the only choice.
+    - Neither prepend nor append require `this` in `that` unless the
+      modification is intending to duplicate the content for some reason, which
+      is less common but still valid.
+
+    Rules:
+
+    - `this` must match exactly (case- and whitespace-sensitive)
+    - `this` must occur exactly once in the file
+    - 0 or >1 matches → operation fails
+    - operations are applied sequentially
+    - stop on first failure
+
+    Guidance:
+
+    - make `this` specific enough to be unique
+    - prefer copying exact text from the file
+
+    This function cannot create and delete files. It is best
     used for modifying existing files.
     """
-    print("Attempting to patch...")
-    patcher = patch.fromstring(patch_content)
-    print("Patcher created")
+    print(f"Updating file '{file_path}' with {len(operations)} operations...")
+    for op in operations:
+        operation = op.get("operation")
+        this: str = op.get("this")
+        that: str = op.get("that")
+        print(
+            f"  Operation: {operation}\n  This:\n  '{this}'\n  That:\n  '{that}'\n---")
+    with open(file_path, 'r') as f:
+        content = f.read()
 
-    result = patcher.apply()
-    print("Patch applied with result:", result)
+    opIdx = 0
+    for op in operations:
+        operation = op.get("operation")
+        this: str = op.get("this")
+        that: str = op.get("that")
 
-    print("Patch applied to the following files:")
-    for p in patcher:
-        print(f"- {p.path} ({p.result})")
+        if operation not in ["replace", "prepend", "append"]:
+            return f"Invalid operation '{operation}'"
 
-    if not result:
-        failed = [p for p in patcher if getattr(p, "failed", False)]
-        return f"Patch failed for {len(failed)} files"
+        count = content.count(this)
+        if count == 0:
+            print(
+                f"Content to modify not found for operation {opIdx}: '{this}'")
+            return f"Failed on operation with index {opIdx}, text to modify not found: '{this}'"
+        elif count > 1:
+            print(
+                f"Content to modify is not unique for operation {opIdx} (occurs {count} times): '{this}'")
+            return f"Failed on operation with index {opIdx}, text to modify is not unique (occurs {count} times): '{this}'"
 
-    return "Patch applied successfully"
+        if operation == "replace":
+            content = content.replace(this, that)
+        elif operation == "prepend":
+            content = content.replace(this, that + this)
+        elif operation == "append":
+            content = content.replace(this, this + that)
+
+        opIdx += 1
+    with open(file_path, 'w') as f:
+        f.write(content)
+
+    print(f"File '{file_path}' updated successfully.")
+    return f"Patch applied successfully to '{file_path}'"
 
 
 readonly_tools: dict[str, Callable] = {
@@ -121,7 +209,7 @@ TODO: create additional write tools for
 - web requests, like Google search or API calls
 """
 write_tools: dict[str, Callable] = {
-    "apply_patch": apply_patch
+    "update_file_contents": update_file_contents
 }
 
 
@@ -181,6 +269,8 @@ Available tools:
 {tool_descriptions}
 
 Rules:
+- Construct a detailed plan to solve the user's request, and then execute the
+  plan step by step, calling tools as needed.
 - If a tool is needed, respond ONLY with valid JSON:
   {{"tool": "tool_name", "arguments": {{}}}}
 - Make sure the tool calls use valid JSON for the arguments, otherwise the
@@ -209,7 +299,7 @@ execution will fail.
         try:
             data = json.loads(content)
         except json.JSONDecodeError:
-            print("Response is not valid JSON, treating as final answer.")
+            print("\t** Response is not valid JSON, treating as final answer.")
             # Not JSON → final answer
             return content
 
