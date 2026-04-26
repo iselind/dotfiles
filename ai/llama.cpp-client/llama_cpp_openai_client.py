@@ -98,6 +98,9 @@ def update_file_contents(file_path: str, operations: list[dict]) -> str:
       indentation, and line breaks.
     - You MUST first read the file (or relevant range) and copy `this` exactly
       from the current file contents.
+    - You MUST ensure line breaks and indentation in `this` and `that` are
+      exactly as intended, otherwise the operation may fail or produce
+      unintended results.
     - Prefer reading only relevant ranges to save tokens.
 
     Matching rules:
@@ -290,6 +293,8 @@ execution will fail.
 - You may call tools multiple times.
 - On tool call failure, try again with the issue fixed.
 - Respond with the final answer as plain text.
+- check the result after a successful tool call and adjust the plan if needed
+before the next step.
 """
 
     messages = [
