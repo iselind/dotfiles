@@ -8,4 +8,4 @@
 
 echo
 
-python llama_cpp_openai_client.py -p "change $(realpath ./llama_cpp_openai_client.py) by adding a 'hello Patrik' on line 6."
+python llama_cpp_openai_client.py -p "change $(realpath ./llama_cpp_openai_client.py) by adding a 'hello Patrik' on a new line as line 6. Re-read lines 1-10 after the successful updating the file to make sure the change produced the requested outcome. If the change was not made correctly, try again until it is correct."
