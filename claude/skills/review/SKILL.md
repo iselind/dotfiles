@@ -98,11 +98,17 @@ Work through open (⬜) items in ascending order, one at a time.
    problem first. Wait for the user to respond.
 
 2. Once the user has engaged, propose a fix (and alternatives if they exist).
+   Prefer structural fixes over scattered per-instance changes — if a single
+   change point (e.g. a shared function, a global redirect, a convention) can
+   replace many individual changes, propose that first.
    If there are alternatives, ask the user to confirm which one to implement
    before proceeding.
 
 3. Fix the issue. Read the relevant files first. Make the minimal, focused
-   change that resolves the item.
+   change that resolves the item. Before declaring the fix complete, check
+   whether the fix should apply consistently to all sibling or parallel
+   instances of the same pattern (e.g. if fixing one of four symmetric steps,
+   verify the other three are correct too).
 
 4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>` in
    the status table row for that item.

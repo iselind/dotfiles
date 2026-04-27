@@ -70,6 +70,11 @@ alternative was rejected, explain why here rather than in Context.
 - No status field — the branch/PR workflow provides status
 - Sub-headings within Rationale are fine when the reasoning has distinct parts
 - Code blocks and tables are fine where they clarify
+- Do not reference specific tickets (Jira, GitHub issues, etc.) by ID in ADR
+  content. Tickets are ephemeral and add context-dependency — describe the
+  problem or constraint directly instead. Ticket IDs may appear in filenames
+  (e.g. a hook script named after its ticket) when quoting that filename as an
+  example, but never as a reference to follow for context.
 
 ---
 
