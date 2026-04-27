@@ -17,7 +17,10 @@ ip route | awk '/default/ {print $3}'
 BASE_URL = "http://172.30.48.1:8080/v1"
 
 
+DEBUG_CONVERSATION_FILE = "conversation_debug.json"
+
 # ------------------ Tool chest ------------------
+
 
 def generate_random_number() -> int:
     """
@@ -356,6 +359,9 @@ before the next step.
             "role": "user",
             "content": f"Tool {tool_name} returned:\n{result}"
         })
+
+        with open(DEBUG_CONVERSATION_FILE, "w") as f:
+            json.dump(messages, f, indent=2)
 
 
 # ------------------ CLI ------------------
