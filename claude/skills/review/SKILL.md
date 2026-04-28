@@ -44,11 +44,15 @@ whose names suggest a readiness checklist, review tracker, or issue list
 (e.g. `*readiness*.md`, `*review*.md`, `*plan*.md`, `*tracker*.md`) in
 `.github/`, `docs/plans/`, and the repo root.
 
-If no plan exists, tell the user and ask where to create one before proceeding. The
-preferred pattern is a separate `<plan-name>-review.md` file alongside the plan (e.g.
+If no plan exists, create a review tracking file and proceed. The preferred pattern
+is a separate `<plan-name>-review.md` file alongside the plan (e.g.
 `helm-chart-migration-review.md` for `helm-chart-migration.md`). This keeps the plan
 itself clean — it records what to do, not what reviewers found. The review file is
-deleted when all items are resolved; it never outlives the plan it accompanies.
+ephemeral: deleted when all items are resolved; it never outlives the plan it accompanies.
+
+Derive the name from the branch's plan file (present or recently deleted in git history).
+If the right location is genuinely unclear — multiple candidate plans, no obvious
+sibling — tell the user and ask before proceeding.
 
 **Step 2 — Read the plan**
 
