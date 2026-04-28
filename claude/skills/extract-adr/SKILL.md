@@ -178,9 +178,10 @@ Weak signals — do not propose an ADR or OPEN for these alone:
 
 **Step 2 — Read existing ADRs**
 
-Read each file in `docs/adrs/`. For each existing ADR, note:
-- Its number and topic (to avoid duplication)
-- The highest number (to continue the sequence)
+List all files in `docs/adrs/` to identify the highest existing number and
+avoid duplication. Read in full only the ADRs that are topically related to
+the branch's changed files — title and number alone are sufficient for
+unrelated ADRs.
 
 If there are no existing ADRs, the next number is 001.
 
@@ -286,3 +287,9 @@ This phase must always run — even when no candidates were found, even when the
 skill is invoked as part of another skill.
 
 Move directly into `/retro extract-adr`. Do not ask for permission.
+
+After the retrospective completes, if this skill was invoked by another skill
+that has remaining phases to execute, explicitly tell the user which skill
+invoked it and that control is returning to that skill. Do not assume the
+invoking skill will continue automatically — make the handoff visible so
+remaining phases are not silently skipped.
