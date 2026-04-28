@@ -138,6 +138,10 @@ file may contain resolutions that are architectural decisions worth capturing
 as ADRs (e.g., a bug fix that required choosing between approaches). The
 extract-adr skill needs access to this file before it is deleted.
 
+extract-adr runs its own mandatory retrospective before returning. When it
+does, proceed directly to Phase 4 — do not treat extract-adr's completion as
+the end of the review skill.
+
 ## Phase 4 — Delete the review tracking file
 
 After the ADR extraction commit(s), read the review tracking file. Check
@@ -164,6 +168,10 @@ used on this branch.
 - Before logging an external caller **migration concern**, verify the affected
   behaviour exists on `main`. If it was introduced on the current branch, no
   external caller has adopted it — the migration concern does not apply.
+- When fixing a GitHub Actions workflow, verify that any variable referenced in
+  a `run:` block is actually in scope for that step. `env:` is step-scoped —
+  a variable defined in one step's `env:` block is not available in a later
+  step unless that step also defines it.
 - Before logging a **missing section** or completeness item, test whether the
   absent content would add information a reader could not derive from what is
   already present. If the document already conveys the substance, the item is a
