@@ -226,9 +226,9 @@ No candidates found.  ← if neither list has entries
 Either or both lists may be empty. Present both regardless.
 
 If neither list has entries, say so and ask the user if there is anything they
-would like to add or capture before finishing — then wait for the response.
-If there is anything that might need consideration, ask explicitly about those.
-Do NOT proceed to Phase 3 until the user has responded — one phase at a time.
+would like to add or capture before finishing. If there is anything that might
+need consideration, ask explicitly about those. **STOP. Do not proceed to
+Phase 3 until the user has responded — wait for an explicit reply.**
 
 Otherwise ask: "Shall I draft all of these, or pick specific numbers?" — then
 wait for the user's response before proceeding to Phase 2.
