@@ -127,8 +127,24 @@ Work through open (⬜) items in ascending order, one at a time.
 **Do not work on the next item until the user confirms the current one.**
 
 If you reach the last open item and complete it, follow the normal confirmation
-flow for that item (step 4 → step 5 review → user confirms → step 6 commit)
-before proceeding to phase 3.
+flow for that item (step 4 → step 5 review → user confirms → step 6 commit).
+
+**After all items are done — second pass**
+
+Re-read every document that was edited during Phase 2. Check whether the fixes
+introduced new issues that were not present before. If new issues are found,
+present the list to the user and ask: "These new issues surfaced from the
+edits — work through them, or skip?" Do not proceed to Phase 3 until the user
+answers.
+
+- If the user says **work through them**: add them to the tracking file and
+  continue the Phase 2 loop. Do not do a third pass — this second pass runs
+  exactly once.
+- If the user says **skip**: add them to the tracking file as
+  `⏭ Skipped — <reason>` so they are visible to later phases and not silently
+  lost, then proceed to Phase 3.
+
+If no new issues are found, proceed to Phase 3.
 
 ---
 
