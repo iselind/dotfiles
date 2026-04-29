@@ -115,7 +115,9 @@ Work through open (⬜) items in ascending order, one at a time.
    change that resolves the item. Before declaring the fix complete, check
    whether the fix should apply consistently to all sibling or parallel
    instances of the same pattern (e.g. if fixing one of four symmetric steps,
-   verify the other three are correct too).
+   verify the other three are correct too). When the fix involves terminology,
+   naming, or references, search across all documents in scope — a symptom in
+   one file often has counterparts in others.
 
 4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>` in
    the status table row for that item.
