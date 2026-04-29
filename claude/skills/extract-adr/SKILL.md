@@ -178,10 +178,20 @@ Weak signals — do not propose an ADR or OPEN for these alone:
 
 **Step 2 — Read existing ADRs**
 
-List all files in `docs/adrs/` to identify the highest existing number and
-avoid duplication. Read in full only the ADRs that are topically related to
-the branch's changed files — title and number alone are sufficient for
-unrelated ADRs.
+List all files in `docs/adrs/` to identify the correct next number for both
+ADRs and OPENs. The next number is not always the highest existing number plus
+one — gaps can exist because:
+
+- An OPEN was promoted to an ADR on a different branch, freeing its OPEN slot
+- Another branch added ADRs or OPENs that are not yet merged, and the directory
+  reflects the state of the default branch, not all in-flight work
+
+Check `git log --all --oneline -- docs/adrs/` or scan branch names if you
+suspect in-flight additions. Fill the lowest free slot rather than assuming
+max+1 is safe.
+
+Read in full only the ADRs that are topically related to the branch's changed
+files — title and number alone are sufficient for unrelated ADRs.
 
 If there are no existing ADRs, the next number is 001.
 
@@ -241,6 +251,11 @@ Work through the approved candidates one at a time. ADR and OPEN candidates
 follow the same write-immediately flow — write first, refine through targeted
 edits using line numbers, then commit.
 
+If the user said "draft all", that means write all files immediately — but the
+commit-per-item approval loop still applies. Write every file first, then go
+through each one in order: present it, wait for approval, commit it, then move
+to the next. Do not batch commits.
+
 **For each ADR candidate:**
 
 1. Draft the ADR following the ADR format above.
@@ -272,7 +287,8 @@ edits using line numbers, then commit.
    from a plan or other document on the branch. If so, replace the extracted
    content in the source document with a reference to the new ADR — the source
    should not duplicate what the ADR now captures. Commit this update alongside
-   or immediately after the ADR commit.
+   or immediately after the ADR commit. This step applies to every ADR
+   individually — do not skip it when processing multiple candidates.
 
 Use a commit message in the style already used on this branch.
 
