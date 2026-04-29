@@ -128,6 +128,10 @@ Test every ADR candidate against this question before drafting:
 If the answer is "they'd figure it out from the code", skip it.
 If the answer is "they'd wonder why we did it this way", write it.
 
+Before proposing an ADR, check whether the rationale depends on an unresolved question.
+If clearly yes, propose an OPEN instead — the ADR is premature. If uncertain whether the
+dependency is truly open, surface it to the user before classifying the candidate.
+
 ## What makes a good OPEN
 
 Test every OPEN candidate against this question before drafting:
@@ -202,6 +206,11 @@ If there are no existing ADRs, the next number is 001.
 For each candidate decision, check whether it is already covered (fully or
 partially) by an existing ADR. Skip anything already documented.
 
+Plans are ephemeral and will be deleted when the work is complete. If a candidate's
+rationale is documented only in the plan, treat it as undocumented — using the plan as
+evidence that no ADR is needed is circular. That is precisely the gap extract-adr exists
+to close.
+
 For candidates that are closely related to an existing ADR, consider whether
 extending that ADR is more appropriate than writing a new one. Extending is
 only safe when both conditions hold:
@@ -257,6 +266,10 @@ If the user said "draft all", that means write all files immediately — but the
 commit-per-item approval loop still applies. Write every file first, then go
 through each one in order: present it, wait for approval, commit it, then move
 to the next. Do not batch commits.
+
+When drafting any document, verify that enumerated sets (like lists of cases, scenarios, or
+examples) are exhaustive before writing. An incomplete set implies the omitted cases do
+not exist.
 
 **For each ADR candidate:**
 
