@@ -44,7 +44,9 @@ What situation or forces led to this decision? Include:
 - Constraints that ruled out other approaches
 - Any alternatives that were seriously considered and why they were rejected
 
-Keep this factual and specific to what actually happened on this branch.
+Keep this factual and specific to what actually happened on this branch. When describing
+failure modes, edge cases, or reasons something can occur, prefer a general statement over
+an enumerated list — enumeration implies the list is complete, which is rarely true.
 
 ## Options considered
 
