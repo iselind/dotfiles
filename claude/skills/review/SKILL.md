@@ -138,8 +138,9 @@ edits — work through them, or skip?" Do not proceed to Phase 3 until the user
 answers.
 
 - If the user says **work through them**: add them to the tracking file and
-  continue the Phase 2 loop. Do not do a third pass — this second pass runs
-  exactly once.
+  continue the Phase 2 loop. After that round completes, do another pass over
+  the newly edited documents. Repeat until either no new issues are found or
+  the user chooses to skip.
 - If the user says **skip**: add them to the tracking file as
   `⏭ Skipped — <reason>` so they are visible to later phases and not silently
   lost, then proceed to Phase 3.
