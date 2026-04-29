@@ -70,6 +70,9 @@ Read the full diff and all changed files. Identify issues across these categorie
 - **Suggestion** — correct but improvable patterns or inconsistencies
 - **Verification** — things that must be confirmed before merge
 - **Cleanup** — dead code, stale comments, misleading names
+- **Overlap** — unwarranted duplication between plans, ADRs, and OPENs (e.g. a plan
+  section restating rationale that an ADR now captures, or an OPEN repeating context
+  already settled elsewhere)
 - **Minor** — low-impact observations worth recording
 
 For each issue, check the existing plan items — skip anything already tracked
