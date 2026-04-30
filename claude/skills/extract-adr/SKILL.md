@@ -227,9 +227,18 @@ one instead.
 
 **Step 4 — Present the candidate lists**
 
-Output two lists — ADR candidates and OPEN candidates — one line each. For each
-ADR candidate that should extend an existing ADR rather than create a new one,
-note the target ADR explicitly:
+Before the lists, write a brief scan summary — one or two sentences covering:
+what files were read, how many commits were on the branch, and how many existing
+ADRs are topically related. This makes the conclusion (candidates found or not)
+feel earned rather than asserted. Example:
+
+> "Scanned 12 commits, 4 changed files, and read ADR-007 and ADR-011 in full
+> (the topically relevant ones). No new decisions surfaced that aren't already
+> captured."
+
+Then output two lists — ADR candidates and OPEN candidates — one line each. For
+each ADR candidate that should extend an existing ADR rather than create a new
+one, note the target ADR explicitly:
 
 ```
 ADR candidates:
