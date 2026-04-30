@@ -75,6 +75,11 @@ Read the full diff and all changed files. Identify issues across these categorie
   already settled elsewhere)
 - **Minor** — low-impact observations worth recording
 
+When reviewing ADRs and OPENs specifically, check that each section stays in its lane:
+Context should not preview or argue for options; Options should be complete with no
+missing failure modes or language that pre-empts the decision; Rationale should not
+repeat Options content.
+
 For each issue, check the existing plan items — skip anything already tracked
 (open or resolved).
 
@@ -125,9 +130,12 @@ Work through open (⬜) items in ascending order, one at a time.
 5. Stop for review. End with: "Ready for review — let me know when you're
    ready to commit." Then wait.
 
-6. When the user confirms: commit with a message in the style already used on
-   this branch (look at recent commits for the pattern). Then ask: "Ready for
-   item N+1?" and wait.
+6. When the user's response clearly signals intent to commit — not just closes
+   a side discussion or answers a question about the fix — commit with a message
+   in the style already used on this branch (look at recent commits for the
+   pattern). If the response raises a new concern, addresses wording, or asks a
+   question, treat it as continued review, not confirmation. Then ask: "Ready
+   for item N+1?" and wait.
 
 **Do not work on the next item until the user confirms the current one.**
 
