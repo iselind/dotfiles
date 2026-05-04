@@ -237,6 +237,10 @@ used on this branch.
 - After any fix that **moves or removes content**, compare the removed lines
   against the replacement to confirm no substance was silently dropped. Do not
   rely on a high-level read of the result — check line by line.
+- When proposing a wording fix for a **data-flow or behavioral description**,
+  establish the correct conceptual framing before suggesting a substitution —
+  ask what intent is being described, not just which term is imprecise.
+  Replacing one imprecise term with another is not an improvement.
 
 ---
 
