@@ -86,7 +86,11 @@ When reviewing ADRs and OPENs specifically, apply two levels of scrutiny:
   decision; Rationale should not repeat Options content.
 - *Framing* (OPENs): Is the question well-posed? Is context factually accurate —
   no false implementation claims, no assertions about what "currently" exists unless
-  verified? Are all options presented at comparable levels of depth?
+  verified? Are all options presented at comparable levels of depth? Are analogies
+  in options sections grounded — is the property they rely on established in the
+  document for the things being compared? An analogy that imports an assumption
+  never stated in the document should be flagged regardless of whether it seems
+  plausible.
 
 **Topically related ADRs and OPENs not introduced on the branch — coherence check:**
 - Do the new additions conflict with, duplicate, or leave gaps relative to existing
