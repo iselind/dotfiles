@@ -51,13 +51,19 @@ response, end here.
 ## Phase 3 — Apply changes
 
 Work through the skill changes one at a time using the
-change → review → commit → next flow:
+change → assess → review → commit → next flow:
 
 1. **Implement the change.** Read the skill file at
    `~/.claude/skills/<name>/SKILL.md`, then make the targeted edit. Do not
    rewrite the file from scratch.
 
-2. When committing, resolve the symlink `~/.claude/skills` to find the dotfiles
+2. **Assess coverage.** Before asking the user to review, assess how likely the
+   implemented change is to prevent the original issue from recurring. Be honest:
+   if the change addresses the surface symptom but leaves the underlying cause
+   unaddressed, say so and propose a refinement. Only move to review once the
+   change is well-aimed at the root cause.
+
+3. When committing, resolve the symlink `~/.claude/skills` to find the dotfiles
    repo and commit from there.
 
 Changes take effect on the next invocation of the skill.
