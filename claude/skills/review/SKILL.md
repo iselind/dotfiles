@@ -75,10 +75,25 @@ Read the full diff and all changed files. Identify issues across these categorie
   already settled elsewhere)
 - **Minor** — low-impact observations worth recording
 
-When reviewing ADRs and OPENs specifically, check that each section stays in its lane:
-Context should not preview or argue for options; Options should be complete with no
-missing failure modes or language that pre-empts the decision; Rationale should not
-repeat Options content.
+When reviewing ADRs and OPENs specifically, apply two levels of scrutiny:
+
+**Branch-introduced ADRs and OPENs — full quality review:**
+- *Classification*: Is it correctly an ADR or OPEN? An ADR whose rationale depends
+  on an unresolved question is premature and should be an OPEN. An OPEN whose
+  question is already answerable from context in the document should be promoted.
+- *Section discipline*: Context should not preview or argue for options; Options
+  should be complete with no missing failure modes or language that pre-empts the
+  decision; Rationale should not repeat Options content.
+- *Framing* (OPENs): Is the question well-posed? Is context factually accurate —
+  no false implementation claims, no assertions about what "currently" exists unless
+  verified? Are all options presented at comparable levels of depth?
+
+**Topically related ADRs and OPENs not introduced on the branch — coherence check:**
+- Do the new additions conflict with, duplicate, or leave gaps relative to existing
+  documents? Does the whole set tell a coherent story now that new documents have
+  been added?
+- Flag tensions or inconsistencies as review items. Do not propose rewriting
+  existing settled documents — surface the issue and let the user decide.
 
 For each issue, check the existing plan items — skip anything already tracked
 (open or resolved).
