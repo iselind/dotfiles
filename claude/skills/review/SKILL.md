@@ -229,6 +229,14 @@ used on this branch.
   absent content would add information a reader could not derive from what is
   already present. If the document already conveys the substance, the item is a
   structural preference, not a real gap.
+- When fixing an **ambiguous term or reference**, investigate what it actually
+  refers to across the full document set before proposing a substitution. An
+  ambiguous term may signal a conceptual gap — something genuinely underdefined
+  — rather than a poor word choice. If so, the fix is a concept clarification,
+  not a name substitution.
+- After any fix that **moves or removes content**, compare the removed lines
+  against the replacement to confirm no substance was silently dropped. Do not
+  rely on a high-level read of the result — check line by line.
 
 ---
 
