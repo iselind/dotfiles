@@ -67,6 +67,8 @@ Read the plan file. Understand:
 Read the full diff and all changed files. Identify issues across these categories:
 - **Bug** — code that is incorrect or could fail
 - **Security** — credentials, injection risk, over-permissive access
+- **Gap** — an unspecified mechanism or missing prerequisite that would force an
+  undocumented design decision on the implementer
 - **Suggestion** — correct but improvable patterns or inconsistencies
 - **Verification** — things that must be confirmed before merge
 - **Cleanup** — dead code, stale comments, misleading names
@@ -98,6 +100,26 @@ When reviewing ADRs and OPENs specifically, apply two levels of scrutiny:
   been added?
 - Flag tensions or inconsistencies as review items. Do not propose rewriting
   existing settled documents — surface the issue and let the user decide.
+
+**Plan work items — implementability review:**
+- For each work item, ask: what would a developer need to know or decide before they
+  could implement it that is not currently documented or resolved? If the
+  implementation would force an undocumented design decision, that is a Gap.
+- Check each work item's dependencies on open questions. An unresolved OPEN that
+  affects how a work item is implemented should have that dependency stated in the
+  plan. If it doesn't, flag it — an implicit dependency is a Gap, because the
+  decision will be made under implementation pressure rather than deliberately.
+- Look for descriptions that name an outcome without specifying a mechanism: phrases
+  like "scoped by label selector", "X is injected", "configured with the correct Y",
+  "synced to Z". Ask whether the mechanism is actually defined somewhere in the plan
+  or its ADRs. If the how is unspecified and the implementer would have to invent it,
+  that is a Gap.
+- Distinguish plan-level contract from implementation detail. A plan should state
+  *what* contract must hold (e.g. "the tenant ID must be readable by the sync
+  operator") without prescribing *how* it is satisfied (label, field, annotation).
+  Flag items where the plan conflates the two — either over-specifying implementation
+  detail that belongs in the code, or under-specifying the contract to the point
+  where the implementer cannot know what is required.
 
 For each issue, check the existing plan items — skip anything already tracked
 (open or resolved).
