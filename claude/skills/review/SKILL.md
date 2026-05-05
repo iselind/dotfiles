@@ -233,7 +233,11 @@ used on this branch.
 
 - Never skip an item without explaining why it is not applicable.
 - If an item turns out to be a non-issue on closer inspection, update the plan
-  to `✅ Accepted — <reason>` rather than silently skipping it.
+  to `✅ Accepted — <reason>` rather than silently skipping it. Then ask: could
+  this same trigger recur in a future review pass? If a small, low-risk
+  clarification would make the correct interpretation obvious on first read —
+  without changing the substance — make it. An accepted item is resolved, but the
+  reason it was raised may still be worth removing.
 - Keep fixes minimal — this is a review pass, not a refactor.
 - If a fix has meaningful risk or side effects, flag it before proceeding.
 - When an item involves cross-document references, capture the full scope in
