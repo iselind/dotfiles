@@ -263,6 +263,14 @@ used on this branch.
   establish the correct conceptual framing before suggesting a substitution —
   ask what intent is being described, not just which term is imprecise.
   Replacing one imprecise term with another is not an improvement.
+- When two claims in the same document **contradict each other**, treat it as a
+  signal worth investigating before proposing a fix. A surface contradiction often
+  indicates a deeper design gap — the two claims may each be locally correct but
+  incompatible at a structural level. Ask what architectural assumption would need
+  to be true for both claims to hold simultaneously; if no such assumption exists,
+  the fix belongs at the design level, not the surface claim. Note that the deeper
+  issue may not be fully visible in the document — the author may hold relevant
+  context that hasn't reached the text yet.
 
 ---
 
