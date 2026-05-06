@@ -225,6 +225,24 @@ only safe when both conditions hold:
 If either condition fails, propose a new ADR that cross-references the related
 one instead.
 
+**Issues in branch-introduced ADRs**
+
+While reading branch-introduced ADRs you may find errors — wrong attributions,
+missing cases, factual mistakes. These are not extension candidates; fixing
+them is the review workflow's responsibility, not extract-adr's. When you find
+one:
+
+1. Find the review tracking file for this branch (typically `*-review.md`
+   alongside the plan in `docs/plans/`). If none exists, create one using the
+   naming pattern `<plan-name>-review.md`.
+2. Add each issue as an open item to the tracking file.
+3. Tell the user which file the issues were added to and wait for
+   acknowledgement before continuing.
+4. Do not fix the issues inline — continue with extract-adr's own work.
+
+If this skill was invoked by the review skill, open items in the tracking file
+will be picked up in Phase 4 and routed back through Phase 2.
+
 **Step 4 — Present the candidate lists**
 
 Before the lists, write a brief scan summary — one or two sentences covering:

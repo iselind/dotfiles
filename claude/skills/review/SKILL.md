@@ -220,12 +220,16 @@ the end of the review skill.
 ## Phase 4 — Delete the review tracking file
 
 After the ADR extraction commit(s), read the review tracking file. Check
-whether all items are resolved (no ⬜ Open rows remain). Report your
-assessment to the user — either "all items resolved, ready to delete" or a
-summary of what remains open — and ask for confirmation before deleting. Once
-confirmed, delete the file and commit the deletion in its own dedicated commit
-— do not bundle it with any other changes. Use a message in the style already
-used on this branch.
+whether all items are resolved (no ⬜ Open rows remain).
+
+If open items remain — extract-adr may have added new ones — return to Phase 2
+and work through them using the normal review workflow. There is no need to
+re-run extract-adr afterward. Once all items are resolved, return here.
+
+When all items are resolved, report "all items resolved, ready to delete" and
+ask for confirmation before deleting. Once confirmed, delete the file and
+commit the deletion in its own dedicated commit — do not bundle it with any
+other changes. Use a message in the style already used on this branch.
 
 ---
 
