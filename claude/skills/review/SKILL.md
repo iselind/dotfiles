@@ -163,7 +163,11 @@ Work through open (⬜) items in ascending order, one at a time.
    instances of the same pattern (e.g. if fixing one of four symmetric steps,
    verify the other three are correct too). When the fix involves terminology,
    naming, or references, search across all documents in scope — a symptom in
-   one file often has counterparts in others.
+   one file often has counterparts in others. When the fix involves writing new
+   content — new descriptions, new sentences, new sections — verify the new
+   content against the relevant ADRs and design documents. A fix that resolves
+   the tracked issue while re-introducing a different class of error in the new
+   text is not complete.
 
 4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>` in
    the status table row for that item.
