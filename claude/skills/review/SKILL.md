@@ -124,6 +124,31 @@ When reviewing ADRs and OPENs specifically, apply two levels of scrutiny:
 For each issue, check the existing plan items — skip anything already tracked
 (open or resolved).
 
+**Review scope — recognising when a finding exceeds the review**
+
+A review finds bounded quality issues within the scope of the branch as proposed.
+When a finding is architectural enough to undermine the branch's foundational
+decisions, it exceeds review scope. Signs:
+
+- It questions a core design decision the branch depends on, not just a
+  consequence of that decision
+- Resolving it would require changes significant enough to invalidate already-resolved
+  review items
+- It is iteration work on the architecture, not a bounded quality issue
+
+When this happens, stop accumulating review items. Present the finding to the user
+and ask how to proceed. The typical handling:
+
+- **Move the finding to the plan's Issues section** (create one if needed) — this
+  preserves it as tracked work without polluting the review file with iteration concerns
+- **Mark related review items as postponed** in the review file, pointing to the
+  Issues section
+- **Continue with independent review items** that do not depend on the scope-exceeding
+  issue being resolved first
+
+The review tracking file is for bounded quality findings. Iteration work that
+reshapes the architecture belongs in the plan.
+
 **Step 4 — Add new items to the plan**
 
 For each new issue, in one edit:
