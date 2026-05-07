@@ -8,5 +8,6 @@
 | [fix_the_trigger.md](fix_the_trigger.md) | feedback | After resolving any finding, consider whether the ambiguity triggering it is still present — if so, propose a clarifying change |
 | [inventory_before_removing.md](inventory_before_removing.md) | feedback | Before removing a mechanism, inventory the consumption side (manifests, callers, external repos) — the authoring side is never the full picture |
 | [write_before_review.md](write_before_review.md) | feedback | Write files immediately; user reviews via IDE diff — don't show drafts in chat first |
+| [home_no_nvidia_gpu.md](home_no_nvidia_gpu.md) | user | Home laptops lack NVIDIA GPUs; LLM inference uses Vulkan via llama.cpp on Windows host, aider in WSL2 connects over OpenAI-compat shim |
 | [no_test_plan_in_prs.md](no_test_plan_in_prs.md) | feedback | Do not include a test plan section in PR descriptions |
 | [promote_memory_to_highest_level.md](promote_memory_to_highest_level.md) | feedback | Save memories at the most general scope that applies — global unless genuinely repo-specific |
