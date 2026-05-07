@@ -273,6 +273,13 @@ other changes. Use a message in the style already used on this branch.
   reason it was raised may still be worth removing.
 - Keep fixes minimal — this is a review pass, not a refactor.
 - If a fix has meaningful risk or side effects, flag it before proceeding.
+- When assessing the severity of a finding that involves an **implicit architectural
+  assumption** — a design choice that silently constrains deployment topology,
+  integration model, or operational context — do not default to "nice-to-have
+  flexibility". Ask: for which deployment contexts does this assumption fail? If it
+  fails for an entire class of deployment (air-gapped, on-prem, data-sovereign), the
+  severity is high regardless of how natural the assumption feels in the current
+  context.
 - When an item involves cross-document references, capture the full scope in
   the item description — not just the visible symptom. Check both directions:
   that existing references are accurate AND that new content is reachable from
