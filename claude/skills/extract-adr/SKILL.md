@@ -48,6 +48,12 @@ Keep this factual and specific to what actually happened on this branch. When de
 failure modes, edge cases, or reasons something can occur, prefer a general statement over
 an enumerated list — enumeration implies the list is complete, which is rarely true.
 
+When the decision captures a general pattern motivated by a concrete first instance, state
+the problem at the generic level first, then introduce the concrete instance as an
+illustration — marked with "e.g." or "in the current implementation" to signal it is not
+exhaustive. Concrete-first framing makes a generic ADR read as system-specific, which ages
+badly as the pattern recurs elsewhere.
+
 ## Options considered
 
 For each option, present a pro/con analysis (table or list) so the reader can
@@ -294,9 +300,11 @@ commit-per-item approval loop still applies. Write every file first, then go
 through each one in order: present it, wait for approval, commit it, then move
 to the next. Do not batch commits.
 
-When drafting any document, verify that enumerated sets (like lists of cases, scenarios, or
-examples) are exhaustive before writing. An incomplete set implies the omitted cases do
-not exist.
+When drafting any document, verify that enumerated sets meant to be complete — options
+considered, failure modes, required steps — are exhaustive before writing. An incomplete
+set implies the omitted cases do not exist. This does not apply to illustrative examples
+in generic decisions: those are intentionally non-exhaustive and should be marked as such
+("e.g.", "in the current implementation") rather than expanded to a complete enumeration.
 
 **For each ADR candidate:**
 
