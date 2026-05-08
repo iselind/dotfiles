@@ -204,7 +204,13 @@ Work through open (⬜) items in ascending order, one at a time.
    content — new descriptions, new sentences, new sections — verify the new
    content against the relevant ADRs and design documents. A fix that resolves
    the tracked issue while re-introducing a different class of error in the new
-   text is not complete.
+   text is not complete. When fixing a **Premature design** item by replacing
+   removed content, this check matters most: the replacement text can silently
+   reintroduce the same class of error under a different surface form. Watch for
+   readiness claims about unimplemented work ("already designed to accommodate
+   this", "already stubs X"), pre-commitments to a specific approach, or
+   assumptions about interfaces that have not yet been defined. When in doubt,
+   drop the forward reference entirely rather than rephrase it.
 
 4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>` in
    the status table row for that item.
