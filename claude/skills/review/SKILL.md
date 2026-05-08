@@ -75,6 +75,13 @@ Read the full diff and all changed files. Identify issues across these categorie
 - **Overlap** — unwarranted duplication between plans, ADRs, and OPENs (e.g. a plan
   section restating rationale that an ADR now captures, or an OPEN repeating context
   already settled elsewhere)
+- **Premature design** — detailed design content for work that is explicitly deferred,
+  out of scope, or multiple stages removed from the current work. Such content adds noise
+  and distraction without benefiting immediate implementers; it will likely be stale by
+  the time it becomes relevant. Look for: design notes for components that are marked as
+  future or optional, detailed requirements or options for infrastructure that depends on
+  unresolved prerequisites, and work items that describe deferred steps at the same level
+  of detail as immediate ones.
 - **Minor** — low-impact observations worth recording
 
 When reviewing ADRs and OPENs specifically, apply two levels of scrutiny:
@@ -83,6 +90,11 @@ When reviewing ADRs and OPENs specifically, apply two levels of scrutiny:
 - *Classification*: Is it correctly an ADR or OPEN? An ADR whose rationale depends
   on an unresolved question is premature and should be an OPEN. An OPEN whose
   question is already answerable from context in the document should be promoted.
+- *Cross-reference discipline*: ADRs must not reference documents with a shorter
+  expected lifespan — this includes OPENs (ephemeral, deleted when resolved) and plans
+  (deleted when work completes). Such references become dangling when the shorter-lived
+  document is deleted. If an ADR's rationale depends on an unresolved OPEN or an
+  in-flight plan, the ADR itself is likely premature.
 - *Section discipline*: Context should not preview or argue for options; Options
   should be complete with no missing failure modes or language that pre-empts the
   decision; Rationale should not repeat Options content.
