@@ -285,6 +285,11 @@ No candidates found.  ← if neither list has entries
 
 Either or both lists may be empty. Present both regardless.
 
+When an OPEN candidate closely parallels a file that was intentionally deleted on
+the same branch, lead the candidate description with that tension — state it before
+the trade-off analysis, not after. The intentional deletion signals a preference to
+defer; the user needs to see that signal first to make an informed choice.
+
 If neither list has entries, say so and ask the user if there is anything they
 would like to add or capture before finishing. If there is anything that might
 need consideration, ask explicitly about those.
