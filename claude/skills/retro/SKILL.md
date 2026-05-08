@@ -37,6 +37,17 @@ Give your own honest assessment of the session that just ran:
   had to correct or re-explain, steps that took more iterations than expected,
   anything that should have been noticed independently
 
+For each "could have been better" item, diagnose the root cause before
+proposing a fix:
+
+- **Guidance was missing** → add it
+- **Guidance was present but not followed** → the skill file has a
+  presentation problem for its intended audience (an LLM); refactor it
+  so the relevant instructions are salient — well-placed, unambiguous, and
+  free of structural noise that competes for attention.
+- **Guidance was present and followed but produced the wrong outcome** →
+  the guidance itself needs revision
+
 If your own assessment surfaced "could have been better" items, propose
 concrete skill changes to address them — do not wait for the user to raise
 them. Then ask:
