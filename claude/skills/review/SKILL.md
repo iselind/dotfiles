@@ -333,6 +333,12 @@ other changes. Use a message in the style already used on this branch.
   the fix belongs at the design level, not the surface claim. Note that the deeper
   issue may not be fully visible in the document — the author may hold relevant
   context that hasn't reached the text yet.
+- When describing a finding that involves **plan language**, preserve the hedging
+  actually present in the text. Plans often use tentative language ("expected",
+  "likely", "would follow") — do not paraphrase this into stronger categorical
+  claims ("rules out", "permanently abandoned"). Overstating what a plan commits
+  to or rejects deflects the initial engagement before the user can confirm whether
+  the inference is even correct.
 
 ---
 
