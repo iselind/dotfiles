@@ -151,6 +151,12 @@ An OPEN is not a failed ADR — it is a different artifact. Something can clearl
 not merit an ADR (the decision is obvious) but still merit an OPEN (how to
 implement it has real unresolved trade-offs). Evaluate both independently.
 
+If a question is already tracked in the plan's Issues section with enough
+context and resolution guidance to drive a decision, a standalone OPEN duplicates
+that work without adding value. Defer it: the Issues resolution will naturally
+produce the ADR or OPEN. Only propose an OPEN when the question has no active
+home — it would otherwise be lost when the plan is deleted.
+
 ---
 
 ## Phase 1 — Identify candidates
