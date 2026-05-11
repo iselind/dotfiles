@@ -138,6 +138,11 @@ Before proposing an ADR, check whether the rationale depends on an unresolved qu
 If clearly yes, propose an OPEN instead — the ADR is premature. If uncertain whether the
 dependency is truly open, surface it to the user before classifying the candidate.
 
+Also check whether the decision is contingent on work that may never be built. If adopting
+the decision requires first building X, and X itself is optional or speculative, the ADR is
+premature — the right home for the rationale is alongside that future work, not as a
+standing ADR today.
+
 ## What makes a good OPEN
 
 Test every OPEN candidate against this question before drafting:
@@ -331,7 +336,10 @@ in generic decisions: those are intentionally non-exhaustive and should be marke
    - **Approval** ("yes", "looks good", no comment) → commit the file, then
      move to step 4
    - **Edit request** → revise the file in place, then wait for approval again
-   - **Rejection** ("skip", "no", "not this one") → delete the file and move on
+   - **Rejection** ("skip", "no", "not this one") → delete the file. Then check whether
+     the source content in the plan is in the right place: content that belongs to
+     optional or future work often fits better in a Future Directions section than in a
+     work item. Propose the move proactively rather than waiting for the user to suggest it.
 
 **For each OPEN candidate:**
 
@@ -356,7 +364,9 @@ in generic decisions: those are intentionally non-exhaustive and should be marke
 Use a commit message in the style already used on this branch.
 
 After the last candidate, report how many ADRs were written and their filenames.
-Then proceed to Phase 3 — the skill is not complete until the retrospective runs.
+Check that all plan edits made during this session (relocations, removals, reference
+additions) are committed before proceeding. Then proceed to Phase 3 — the skill is not
+complete until the retrospective runs.
 
 ---
 
