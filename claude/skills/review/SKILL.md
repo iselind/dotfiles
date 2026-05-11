@@ -200,9 +200,12 @@ Work through open (⬜) items in ascending order, one at a time.
    before proceeding.
 
 3. Fix the issue. Read the relevant files first. Make the minimal, focused
-   change that resolves the item. Before declaring the fix complete, check
-   whether the fix should apply consistently to all sibling or parallel
-   instances of the same pattern (e.g. if fixing one of four symmetric steps,
+   change that resolves the item. When the fix touches a sentence within a
+   larger paragraph, re-read the full paragraph afterward — a local edit
+   often reveals adjacent issues (wrong names, unclear pronouns, stale
+   phrasing) that were masked by the original problem. Before declaring the
+   fix complete, check whether the fix should apply consistently to all
+   sibling or parallel instances of the same pattern (e.g. if fixing one of four symmetric steps,
    verify the other three are correct too). When the fix involves terminology,
    naming, or references, search across all documents in scope — a symptom in
    one file often has counterparts in others. When the fix involves writing new
