@@ -97,7 +97,9 @@ When reviewing ADRs and OPENs specifically, apply two levels of scrutiny:
   in-flight plan, the ADR itself is likely premature.
 - *Section discipline*: Context should not preview or argue for options; Options
   should be complete with no missing failure modes or language that pre-empts the
-  decision; Rationale should not repeat Options content.
+  decision; Options describe approaches at the conceptual level — specific CRD names,
+  API names, and implementation artifacts belong in the Design section, not Options;
+  Rationale should not repeat Options content.
 - *Framing* (OPENs): Is the question well-posed? Is context factually accurate —
   no false implementation claims, no assertions about what "currently" exists unless
   verified? Are all options presented at comparable levels of depth? Are analogies
@@ -132,6 +134,9 @@ When reviewing ADRs and OPENs specifically, apply two levels of scrutiny:
   Flag items where the plan conflates the two — either over-specifying implementation
   detail that belongs in the code, or under-specifying the contract to the point
   where the implementer cannot know what is required.
+- Verify that work items are consistent with thematically relevant ADRs — both
+  pre-existing and branch-introduced. A work item that contradicts or is
+  incompatible with a settled ADR decision is a Bug, not a wording ambiguity.
 
 For each issue, check the existing plan items — skip anything already tracked
 (open or resolved).
