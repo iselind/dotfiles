@@ -151,9 +151,9 @@ An OPEN is not a failed ADR — it is a different artifact. Something can clearl
 not merit an ADR (the decision is obvious) but still merit an OPEN (how to
 implement it has real unresolved trade-offs). Evaluate both independently.
 
-If a question is already tracked in the plan's Issues section with enough
-context and resolution guidance to drive a decision, a standalone OPEN duplicates
-that work without adding value. Defer it: the Issues resolution will naturally
+If a question is already tracked anywhere in the plan — a work item, an Issues
+section, a design note — with enough context to drive a decision, a standalone
+OPEN duplicates that work without adding value. Defer it: the work will naturally
 produce the ADR or OPEN. Only propose an OPEN when the question has no active
 home — it would otherwise be lost when the plan is deleted.
 
@@ -200,6 +200,7 @@ List all files in `docs/adrs/` to identify the correct next number for both
 ADRs and OPENs. The next number is not always the highest existing number plus
 one — gaps can exist because:
 
+- An ADR or OPEN was drafted and then deleted before merging
 - An OPEN was promoted to an ADR on a different branch, freeing its OPEN slot
 - Another branch added ADRs or OPENs that are not yet merged, and the directory
   reflects the state of the default branch, not all in-flight work
