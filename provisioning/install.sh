@@ -144,7 +144,7 @@ install_from_file "packages/npm.txt" npm install -g
 # --------------------------------------------------------------
 # Go
 # --------------------------------------------------------------
-GO_VERSION=1.22.0
+GO_VERSION=1.26.3
 GOROOT="$HOME/go"
 GOPATH="$HOME/go-packages"
 
