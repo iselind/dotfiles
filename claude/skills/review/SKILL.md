@@ -263,28 +263,35 @@ If no new issues are found, proceed to Phase 3.
 Move directly into `/extract-adr`. Do not ask for permission — this is a
 natural continuation of the review.
 
-**Important:** Phase 3 runs before Phase 4 deliberately. The review tracking
-file may contain resolutions that are architectural decisions worth capturing
-as ADRs (e.g., a bug fix that required choosing between approaches). The
-extract-adr skill needs access to this file before it is deleted.
+**Important:** Phase 3 runs before Phase 4 deliberately. Both the review
+tracking file and the plan may contain material worth preserving as ADRs —
+the review file for its resolutions, the plan for its design rationale and
+work items. Do not delete either before extract-adr runs.
 
 extract-adr runs its own mandatory retrospective before returning. When it
 does, proceed directly to Phase 4 — do not treat extract-adr's completion as
 the end of the review skill.
 
-## Phase 4 — Delete the review tracking file
+## Phase 4 — Delete completed documents
 
-After the ADR extraction commit(s), read the review tracking file. Check
-whether all items are resolved (no ⬜ Open rows remain).
+After the ADR extraction commit(s), check both the review tracking file and
+the plan for deletion readiness.
 
-If open items remain — extract-adr may have added new ones — return to Phase 2
-and work through them using the normal review workflow. There is no need to
-re-run extract-adr afterward. Once all items are resolved, return here.
+**Review tracking file:** Check whether all items are resolved (no ⬜ Open
+rows remain). If open items remain — extract-adr may have added new ones —
+return to Phase 2 and work through them using the normal review workflow.
+There is no need to re-run extract-adr afterward. Once all items are resolved,
+return here.
 
-When all items are resolved, report "all items resolved, ready to delete" and
-ask for confirmation before deleting. Once confirmed, delete the file and
-commit the deletion in its own dedicated commit — do not bundle it with any
-other changes. Use a message in the style already used on this branch.
+**Plan file:** Check whether all work items in the plan are complete. If the
+plan is fully done — all tasks implemented, no open questions — it is ready to
+delete. Any "plan ready for deletion" cleanup item identified during Phase 1
+belongs here, not in Phase 2; if it was deferred, handle it now.
+
+When both checks are done, report what is ready to delete and ask for
+confirmation. Once confirmed, delete the ready files and commit the deletions
+in a single dedicated commit — do not bundle with any other changes. Use a
+message in the style already used on this branch.
 
 ---
 
