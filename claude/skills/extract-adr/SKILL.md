@@ -141,6 +141,12 @@ is genuinely undocumented (the plan will be deleted). But if the same reasoning 
 in durable form elsewhere, an ADR adds nothing. The plan documenting something does not
 automatically mean an ADR is needed.
 
+When reasoning is present in durable documentation but poorly placed — buried in a long
+header comment, for example — the right fix is to improve the placement, not write an
+ADR. An ADR that restates a well-placed comment adds nothing; the goal is
+discoverability, and that can be achieved by moving the comment. Route the placement
+improvement to the review tracking file (see below) and do not count it as an ADR gap.
+
 Before proposing an ADR, check whether the rationale depends on an unresolved question.
 If clearly yes, propose an OPEN instead — the ADR is premature. If uncertain whether the
 dependency is truly open, surface it to the user before classifying the candidate.
@@ -250,18 +256,18 @@ only safe when both conditions hold:
 If either condition fails, propose a new ADR that cross-references the related
 one instead.
 
-**Issues in branch-introduced ADRs**
+**Non-ADR work surfaced during this skill**
 
-While reading branch-introduced ADRs you may find errors — wrong attributions,
-missing cases, factual mistakes. These are not extension candidates; fixing
-them is the review workflow's responsibility, not extract-adr's. When you find
-one:
+While reading ADRs or discussing candidates, you may surface work that is not an ADR
+or OPEN — errors in branch-introduced ADRs (wrong attributions, missing cases, factual
+mistakes), documentation placement improvements, or other follow-up changes. None of
+these are extract-adr's job to fix. When any such work surfaces:
 
 1. Find the review tracking file for this branch (typically `*-review.md`
    alongside the plan in `docs/plans/`). If none exists, create one using the
    naming pattern `<plan-name>-review.md`.
-2. Add each issue as an open item to the tracking file.
-3. Tell the user which file the issues were added to and wait for
+2. Add each item as an open item to the tracking file.
+3. Tell the user which file the items were added to and wait for
    acknowledgement before continuing.
 4. Do not fix the issues inline — continue with extract-adr's own work.
 
