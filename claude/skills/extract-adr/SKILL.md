@@ -134,6 +134,13 @@ Test every ADR candidate against this question before drafting:
 If the answer is "they'd figure it out from the code", skip it.
 If the answer is "they'd wonder why we did it this way", write it.
 
+Before treating a candidate as undocumented, verify that the reasoning is not already
+captured in durable documentation — integration guides, workflow head comments, other
+ADRs — and derivable from the code. A candidate whose rationale lives only in the plan
+is genuinely undocumented (the plan will be deleted). But if the same reasoning exists
+in durable form elsewhere, an ADR adds nothing. The plan documenting something does not
+automatically mean an ADR is needed.
+
 Before proposing an ADR, check whether the rationale depends on an unresolved question.
 If clearly yes, propose an OPEN instead — the ADR is premature. If uncertain whether the
 dependency is truly open, surface it to the user before classifying the candidate.
