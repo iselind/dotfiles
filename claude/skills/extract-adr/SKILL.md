@@ -276,7 +276,9 @@ these are extract-adr's job to fix. When any such work surfaces:
    naming pattern `<plan-name>-review.md`.
 2. Add each item as an open item to the tracking file.
 3. Tell the user which file the items were added to and wait for
-   acknowledgement before continuing.
+   acknowledgement before continuing. This acknowledgement is the STOP for
+   the no-candidates path — do not proceed to Phase 3 until the user responds,
+   even if the candidate lists are both empty.
 4. Do not fix the issues inline — continue with extract-adr's own work.
 
 If this skill was invoked by the review skill, open items in the tracking file
