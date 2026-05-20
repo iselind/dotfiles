@@ -288,10 +288,10 @@ plan is fully done — all tasks implemented, no open questions — it is ready 
 delete. Any "plan ready for deletion" cleanup item identified during Phase 1
 belongs here, not in Phase 2; if it was deferred, handle it now.
 
-When both checks are done, report what is ready to delete and ask for
-confirmation. Once confirmed, delete the ready files and commit the deletions
-in a single dedicated commit — do not bundle with any other changes. Use a
-message in the style already used on this branch.
+The two checks are independent. The review tracking file can be deleted while
+the plan remains, and vice versa. Report each file's readiness separately —
+do not treat the result as binary. Ask for confirmation on each file that is
+ready, then delete and commit. Do not bundle deletions of unrelated files.
 
 ---
 
