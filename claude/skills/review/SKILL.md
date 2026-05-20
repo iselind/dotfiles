@@ -336,6 +336,10 @@ ready, then delete and commit. Do not bundle deletions of unrelated files.
 - After any fix that **moves or removes content**, compare the removed lines
   against the replacement to confirm no substance was silently dropped. Do not
   rely on a high-level read of the result — check line by line.
+- When fixing a **partial description** — removing a count, a name, or a
+  qualifier from a larger phrase — verify that the remaining text is still
+  accurate for the current state. The removed element may not have been the
+  only thing wrong; what's left can be just as misleading as what was taken out.
 - When proposing a wording fix for a **data-flow or behavioral description**,
   establish the correct conceptual framing before suggesting a substitution —
   ask what intent is being described, not just which term is imprecise.
