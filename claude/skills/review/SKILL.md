@@ -354,6 +354,12 @@ ready, then delete and commit. Do not bundle deletions of unrelated files.
   claims ("rules out", "permanently abandoned"). Overstating what a plan commits
   to or rejects deflects the initial engagement before the user can confirm whether
   the inference is even correct.
+- Before logging code behavior as a **Bug**, check whether a code comment
+  acknowledges or explains that behavior. A comment citing a future work item
+  ("X replaces this", "transitional until Y is implemented") signals intent, not
+  oversight. In that case, the real finding is typically a documentation gap — does
+  the plan explain the transitional design clearly enough? Redirect to a Cleanup
+  finding if it does not.
 
 ---
 
