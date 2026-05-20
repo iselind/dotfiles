@@ -65,11 +65,19 @@ follow the reasoning that led to the decision. Name the options clearly
 What was decided. One or two paragraphs, stated directly.
 If the decision has multiple parts, use sub-headings or a list.
 
+Do not include transitional or migration choices that are explicitly temporary
+and expected to be removed — those are implementation details, not the decision
+itself. If it will be gone before the ADR is a year old, it does not belong here.
+
 ## Rationale
 
 Why this decision is correct given the context above. Focus on the reasoning
 that a future reader could not reconstruct from the code alone. If an
 alternative was rejected, explain why here rather than in Context.
+
+Verify every factual claim before writing it. "Already used elsewhere for X" and
+"consistent with the established pattern of Y" are common failure modes — only
+include them if a specific, verifiable instance exists in the codebase.
 ```
 
 **Format rules:**
