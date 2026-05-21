@@ -254,7 +254,9 @@ answers.
   `⏭ Skipped — <reason>` so they are visible to later phases and not silently
   lost, then proceed to Phase 3.
 
-If no new issues are found, proceed to Phase 3.
+If no new issues are found, tell the user: "Second pass complete — no new issues. Ready to move to Phase 3 (extract-adr)?" and wait for confirmation before proceeding.
+
+> **STOP — do not enter Phase 3 until the user confirms the second pass is done.**
 
 ---
 
