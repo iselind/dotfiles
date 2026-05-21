@@ -125,10 +125,11 @@ asked to skip in Phase 1.
 
    If the user requests changes, apply them and repeat this step.
 
-5. **Once the user approves**, commit the fix. Use a commit message in the
-   style already used on this branch (check `git log --oneline -10`). The
-   message should indicate what was changed; a reference to the comment is
-   optional but useful (e.g. `fix: <what changed>, per review comment`).
+5. **Once the user approves**, commit the fix in its own commit — do not
+   batch multiple comment fixes together. Use a commit message in the style
+   already used on this branch (check `git log --oneline -10`). The message
+   should indicate what was changed; a reference to the comment is optional
+   but useful (e.g. `fix: <what changed>, per review comment`).
 
 6. **Optionally reply on GitHub.** Ask: "Reply to the comment on GitHub?
    (Enter to skip.)"
