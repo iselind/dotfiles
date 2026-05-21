@@ -12,19 +12,25 @@ user-invocable: true
 
 Current branch: !`git branch --show-current`
 
-PR for this branch: !`git branch --show-current | xargs -I BRANCH gh pr list --head BRANCH --json number,title,url --jq '.[0] // "No PR found"' 2>/dev/null || echo "gh not available or no PR found"`
-
 ## Your job
 
-Fetch open review comments on this branch's PR, then work through them one at a
-time: read the comment, understand the surrounding code, implement the fix,
-review with the user, then commit.
+Work through PR review comments one at a time. For each comment: read it,
+understand the surrounding code, implement the fix, stop for the user to review,
+commit that fix, then move to the next. Do not batch fixes or commit before the
+user has reviewed.
 
 ---
 
-## Phase 1 — Find the PR and identify the scope
+## Phase 1 — Identify the comments to work through
 
-**Step 1 — Parse arguments**
+**Step 1 — Check what's already in context**
+
+If review comments are already present in the conversation (the user pasted
+them, or they arrived via a notification), use those directly — skip the
+remaining steps and go straight to presenting the list. There is no need to
+fetch from GitHub when the comments are already here.
+
+**Step 2 — Parse arguments** (only if comments are not already in context)
 
 If `$ARGUMENTS` is a GitHub comment URL (contains `#discussion_r` or
 `#issuecomment-`), extract from it:
@@ -32,20 +38,22 @@ If `$ARGUMENTS` is a GitHub comment URL (contains `#discussion_r` or
 - The PR number
 - The comment ID (the numeric suffix after `_r` or `-`)
 
-Treat the skill as targeting that single comment only — skip Steps 3–4 and
-go directly to Phase 2 with just that one comment.
+Treat the skill as targeting that single comment only — go directly to
+presenting that one comment.
 
-If `$ARGUMENTS` is a bare PR number, use it. Otherwise use the PR number from
-the context above.
+If `$ARGUMENTS` is a bare PR number, use it and proceed to Step 4.
 
-If no PR could be determined, tell the user and ask:
+**Step 3 — Resolve the PR number** (only if not yet known)
 
-> "Should I work through all open comments on this PR, or do you have a link
-> to a specific comment?"
+Run `gh pr list --head <current-branch> --json number,url` to find the open PR.
+If that returns nothing, ask the user:
+
+> "I couldn't find an open PR for this branch. Can you give me the PR number
+> or a link to a specific comment?"
 
 Wait for the response before proceeding.
 
-**Step 2 — Fetch the repo slug** (if not already extracted from a URL)
+**Step 4 — Fetch the repo slug**
 
 Run:
 
@@ -55,31 +63,26 @@ gh repo view --json nameWithOwner --jq '.nameWithOwner'
 
 You will use this as `{owner}/{repo}` in subsequent API calls.
 
-**Step 3 — Fetch inline review comments**
+**Step 5 — Fetch comments from GitHub**
 
-Run:
+Fetch inline review comments (top-level only — replies are part of an existing
+thread, not new work items):
 
 ```
 gh api repos/{owner}/{repo}/pulls/{number}/comments \
   --jq '[.[] | select(.in_reply_to_id == null) | {id, path, line, original_line, body, user: .user.login}]'
 ```
 
-This returns top-level inline comments (file/line annotations). Replies are
-excluded because they are part of an existing discussion thread, not new work
-items.
-
-**Step 4 — Fetch general (non-inline) PR comments**
-
-Run:
+Fetch general (non-inline) PR comments:
 
 ```
 gh api repos/{owner}/{repo}/issues/{number}/comments \
   --jq '[.[] | {id, body, user: .user.login}]'
 ```
 
-**Step 5 — Present the comment list**
+**Step 6 — Present the comment list**
 
-Show a numbered list combining both sets:
+Show a numbered list of all comments:
 
 ```
 Open comments (N total):
