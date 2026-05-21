@@ -134,18 +134,7 @@ asked to skip in Phase 1.
    should indicate what was changed; a reference to the comment is optional
    but useful (e.g. `fix: <what changed>, per review comment`).
 
-6. **Optionally reply on GitHub.** Ask: "Reply to the comment on GitHub?
-   (Enter to skip.)"
-
-   If the user provides reply text, post it:
-   - For inline comments:
-     `gh api repos/{owner}/{repo}/pulls/{number}/comments -X POST -f body="<reply>" -f in_reply_to_id=<comment-id>`
-   - For general comments:
-     `gh api repos/{owner}/{repo}/issues/{number}/comments -X POST -f body="<reply>"`
-
-   If the user presses Enter or says nothing actionable, skip without posting.
-
-7. **Move to the next.** Ask: "Done — ready for comment N+1?" — then wait for
+6. **Move to the next.** Ask: "Done — ready for comment N+1?" — then wait for
    confirmation.
 
 **Do not move to the next comment until the user confirms the current one.**
