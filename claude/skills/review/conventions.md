@@ -36,6 +36,8 @@ Apply these throughout Phase 2.
 
 - **Partial descriptions:** When removing a count, name, or qualifier from a larger phrase, verify the remaining text is still accurate. The removed element may not have been the only thing wrong.
 
+- **Numbers in prose:** When writing a number that characterises adjacent code or a list ("three inputs", "the following four variables"), count the items in the adjacent content directly before writing it. Numbers in prose drift invisibly from the code they describe.
+
 - **Ambiguous terms:** Before proposing a substitution, investigate what the term actually refers to across the full document set. An ambiguous term may signal a conceptual gap — something genuinely underdefined — not a poor word choice. If so, the fix is a concept clarification, not a name substitution.
 
 - **Data-flow or behavioral descriptions:** Establish the correct conceptual framing before suggesting a substitution — ask what intent is being described, not just which term is imprecise. Replacing one imprecise term with another is not an improvement.
