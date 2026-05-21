@@ -77,4 +77,5 @@ change → assess → review → commit → next flow:
 3. When committing, resolve the symlink `~/.claude/skills` to find the dotfiles
    repo and commit from there.
 
-Changes take effect on the next invocation of the skill.
+After the last change is committed, end the retro. Do not ask for further
+additions — that was already covered in Phase 2.
