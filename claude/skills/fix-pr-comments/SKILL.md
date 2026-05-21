@@ -143,6 +143,11 @@ asked to skip in Phase 1.
 other changes, or applies to code that no longer exists) — say so, describe
 why, and ask the user whether to skip it or reply to it before moving on.
 
+**After the last comment is committed**, ask: "All comments addressed — anything
+else before I push?" Wait for the user to confirm before running `git push`.
+Do not push earlier — premature pushes trigger CI and may draw reviewer attention
+before all intended changes are in place.
+
 ---
 
 ## Phase 3 — Retrospective
