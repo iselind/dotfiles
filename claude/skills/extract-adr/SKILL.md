@@ -85,9 +85,9 @@ If this skill was invoked by the review skill, open items added here will be pic
 
 **Step 4 — Present the candidate lists**
 
-Write a brief scan summary — one or two sentences covering what files were read, how many commits were on the branch, and how many existing ADRs are topically related. Example:
+Write a brief scan summary — one or two sentences covering what files were read, how many commits were on the branch, how many existing ADRs are topically related, and whether the review tracking file was checked (note how many items it contained and how many had architectural dimension). Example:
 
-> "Scanned 12 commits, 4 changed files, and read ADR-007 and ADR-011 in full (the topically relevant ones). No new decisions surfaced that aren't already captured."
+> "Scanned 12 commits, 4 changed files, and read ADR-007 and ADR-011 in full (the topically relevant ones). Review tracking file had 3 items, none with architectural dimension. No new decisions surfaced that aren't already captured."
 
 Then output two lists — ADR candidates and OPEN candidates — one line each:
 
