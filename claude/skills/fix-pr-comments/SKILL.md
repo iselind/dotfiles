@@ -112,12 +112,16 @@ asked to skip in Phase 1.
    - For inline comments: the code at that location — read the file and show
      ±5 lines around the referenced line so the context is clear
 
-   Do not propose a fix yet — let the user engage with the comment first. Wait
-   for the user to respond.
+   If the fix is unambiguous and small (a single-line or purely mechanical
+   change), include the proposed fix in the same message and ask for
+   confirmation. If the user confirms, skip step 2 and go straight to step 3.
+
+   If the fix is ambiguous or has real alternatives, present the problem only
+   and wait for the user to engage before proposing anything.
 
 2. **Once the user has engaged**, propose a concrete fix. If multiple
-   approaches exist, present them briefly with pros and cons and ask the user to confirm which one
-   to implement before proceeding.
+   approaches exist, present them briefly with pros and cons and ask the user
+   to confirm which one to implement before proceeding.
 
 3. **Implement the fix.** Read the relevant file(s) first if not already done.
    Make the minimal, focused change that addresses the comment — no unrelated
