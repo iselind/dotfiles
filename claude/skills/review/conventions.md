@@ -26,7 +26,7 @@ Apply these throughout Phase 2.
 
 - **Before marking a fix complete**, check whether it should apply consistently to all sibling or parallel instances (e.g. if fixing one of four symmetric steps, verify the other three).
 
-- **For terminology, naming, or reference fixes**, search across all documents in scope — a symptom in one file often has counterparts in others. Check both directions: existing references are accurate AND new content is reachable from the relevant context.
+- **For any content pattern fix** — a phrase, a framing, a section structure, terminology, naming, or references — search across all documents in scope before marking the fix complete. A symptom in one section often has counterparts in others. Check both directions: existing references are accurate AND new content is reachable from the relevant context.
 
 - **When writing new content** (descriptions, sentences, sections), verify it against relevant ADRs and design documents. A fix that resolves the tracked issue while re-introducing a different class of error is not complete.
 
