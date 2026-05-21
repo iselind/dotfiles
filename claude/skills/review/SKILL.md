@@ -118,7 +118,7 @@ Work through open (⬜) items in ascending order, one at a time.
 
 5. Stop for review: "Ready for review — let me know when you're ready to commit." Wait.
 
-6. When the user's response clearly signals intent to commit — not just closes a side discussion — commit in the branch's style (look at recent commits for the pattern). If the response raises a new concern, addresses wording, or asks a question, treat it as continued review, not confirmation. Then ask: "Ready for item N+1?" and wait.
+6. When the user's response clearly signals intent to commit — not just closes a side discussion — commit in the branch's style (look at recent commits for the pattern). If the response raises a new concern, addresses wording, or asks a question, treat it as continued review, not confirmation. **An affirmation that confirms a wording proposal ("yes", "looks good", "do that") is not a commit signal — it means implement the change. The step 5 review checkpoint must still be held after implementing it.** Then ask: "Ready for item N+1?" and wait.
 
 **Do not work on the next item until the user confirms the current one.**
 
