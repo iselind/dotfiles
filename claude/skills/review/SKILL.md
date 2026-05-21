@@ -143,7 +143,7 @@ Move directly into `/extract-adr`. Do not ask for permission — this is a natur
 
 **Important:** Phase 3 runs before Phase 4 deliberately. Both the review tracking file and the plan may contain ADR-worthy material — the review file for its resolutions, the plan for its design rationale and work items. Do not delete either before extract-adr runs.
 
-extract-adr runs its own mandatory retrospective before returning. When it does, proceed directly to Phase 4.
+extract-adr runs its own mandatory retrospective before returning. When it does, proceed directly to Phase 4 — do not pause or ask for confirmation before starting it.
 
 ---
 
