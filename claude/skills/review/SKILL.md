@@ -171,6 +171,8 @@ Using the finding counts noted in Phase 4, assess whether another review round i
 
 Present the heavyweight findings (Bug, Security, Gap) by number and one-line description. State your preliminary assessment: whether those findings were substantial enough — affecting correctness, requiring an undocumented design decision, or exposing a security issue — to warrant another round, or whether they were isolated and contained. If this is the second or later round and findings were markedly less substantial than the previous round, note that.
 
+The more useful framing is not just "were findings substantial?" but "do these findings suggest there is another meaningful layer to discover — something a fresh context would likely find?" Iterative discovery, structural churn, and fixes that touched many locations are indicators that more may remain. Contained, well-bounded fixes with systematic coverage are indicators that the layer is clean.
+
 Wait for the user to confirm, correct, or add context.
 
 After the user responds, state the verdict:
