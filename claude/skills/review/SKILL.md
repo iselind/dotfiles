@@ -149,6 +149,8 @@ extract-adr runs its own mandatory retrospective before returning. When it does,
 
 ## Phase 4 — Delete completed documents
 
+**Before deleting the tracking file**, read it and note internally how many findings fall into each category: Bug, Security, Gap (heavyweight) vs Suggestion, Cleanup, Overlap, Premature design, Minor, Verification (lightweight). You will need these counts in Phase 6.
+
 **Review tracking file:** If open items remain (extract-adr may have added new ones), return to Phase 2 and work through them using the normal review workflow. There is no need to re-run extract-adr afterward. Once all items are resolved, check for deletion.
 
 **Plan file:** If all work items are complete and no open questions remain, the plan is ready to delete. Any "plan ready for deletion" cleanup item identified in Phase 1 belongs here; if it was deferred, handle it now.
@@ -160,3 +162,18 @@ The two checks are independent. Report each file's readiness separately. Ask for
 ## Phase 5 — Retrospective
 
 Move directly into `/retro review`. Do not ask for permission — this is a natural continuation of the review.
+
+---
+
+## Phase 6 — Round assessment
+
+Using the finding counts noted in Phase 4, assess whether another review round is warranted.
+
+Present the heavyweight findings (Bug, Security, Gap) by number and one-line description. State your preliminary assessment: whether those findings were substantial enough — affecting correctness, requiring an undocumented design decision, or exposing a security issue — to warrant another round, or whether they were isolated and contained. If this is the second or later round and findings were markedly less substantial than the previous round, note that.
+
+Wait for the user to confirm, correct, or add context.
+
+After the user responds, state the verdict:
+
+- **Warranted:** "Another round is warranted — [one sentence on what drove it]. Run `/clear` to reset context, then `/review` to start the next round."
+- **Not warranted:** "No further rounds needed — [one sentence on why]."
