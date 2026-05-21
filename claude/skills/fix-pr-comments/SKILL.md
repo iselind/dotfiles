@@ -12,7 +12,7 @@ user-invocable: true
 
 Current branch: !`git branch --show-current`
 
-PR for this branch: !`gh pr list --head $(git branch --show-current) --json number,title,url --jq '.[0] // "No PR found"' 2>/dev/null || echo "gh not available or no PR found"`
+PR for this branch: !`git branch --show-current | xargs -I BRANCH gh pr list --head BRANCH --json number,title,url --jq '.[0] // "No PR found"' 2>/dev/null || echo "gh not available or no PR found"`
 
 ## Your job
 
