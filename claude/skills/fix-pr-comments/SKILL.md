@@ -26,9 +26,9 @@ user has reviewed.
 **Step 1 — Check what's already in context**
 
 If review comments are already present in the conversation (the user pasted
-them, or they arrived via a notification), use those directly — skip the
-remaining steps and go straight to presenting the list. There is no need to
-fetch from GitHub when the comments are already here.
+them, or they arrived via a notification), use those directly — skip ahead to
+Phase 2. There is no need to fetch from GitHub when the comments are already
+here.
 
 **Step 2 — Parse arguments** (only if comments are not already in context)
 
