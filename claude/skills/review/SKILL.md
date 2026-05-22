@@ -17,8 +17,8 @@ Current branch: !`git branch --show-current`
      equivalent to using an explicit merge-base with `..`. git diff origin/main...HEAD
      (three dots) diffs from the merge-base to HEAD, equivalent to the two-dot form with
      an explicit merge-base. Both avoid command substitution which is blocked by the
-     permission system. The fetch ensures origin/main is current. -->
-Branch commits (vs main): !`git fetch origin main -q 2>/dev/null; git log origin/main..HEAD --oneline`
+     permission system. -->
+Branch commits (vs main): !`git log origin/main..HEAD --oneline`
 
 Changed files: !`git diff origin/main...HEAD --stat`
 
