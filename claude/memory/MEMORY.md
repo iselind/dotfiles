@@ -11,4 +11,4 @@
 | [home_no_nvidia_gpu.md](home_no_nvidia_gpu.md) | user | Home laptops lack NVIDIA GPUs; LLM inference uses Vulkan via llama.cpp on Windows host, aider in WSL2 connects over OpenAI-compat shim |
 | [no_test_plan_in_prs.md](no_test_plan_in_prs.md) | feedback | Do not include a test plan section in PR descriptions |
 | [promote_memory_to_highest_level.md](promote_memory_to_highest_level.md) | feedback | Save memories at the most general scope that applies — global unless genuinely repo-specific |
-| [skill_launch_failure.md](skill_launch_failure.md) | feedback | When a skill fails to launch, say so clearly and stop — never continue with inline fallback work |
+| [skill_launch_failure.md](skill_launch_failure.md) | feedback | When a skill fails to launch, stop and say so — never substitute inline work or misrepresent a skill as having run |
