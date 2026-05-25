@@ -33,7 +33,7 @@ Identify architectural decisions made on this branch that are worth preserving a
 
 **Step 1 — Read the branch**
 
-Read the full diff and all changed files. Also check for a review tracking file (typically `*-review.md` alongside the branch's plan). Review resolutions often contain architectural decisions — a bug fix that required choosing between approaches, or a verification item whose resolution established a convention. These are easy to miss in the diff alone.
+Read the full diff and all changed files. Also read the review tracking file if one exists (typically `*-review.md` alongside the branch's plan in `docs/plans/`) — use a Read tool call, not ambient context from a calling skill. Review resolutions often contain architectural decisions — a bug fix that required choosing between approaches, or a verification item whose resolution established a convention. These are easy to miss in the diff alone.
 
 You are looking for decisions, not bugs or improvements — things that required a deliberate choice between real alternatives.
 
