@@ -12,6 +12,8 @@ Apply these throughout Phase 2.
 
 - **Code behavior classified as Bug:** Before logging, check whether a code comment acknowledges or explains that behavior. A comment citing future work ("X replaces this", "transitional until Y") signals intent, not oversight. The real finding is typically a documentation gap — redirect to Cleanup if the plan doesn't explain the transitional design clearly.
 
+- **Analysis and testimony conflict on a Bug:** If code analysis clearly indicates a bug but the user says tests pass, do not resolve the conflict by accepting either side without evidence — the analysis may have a flaw, or the tests may not exercise the specific path. Propose an isolating test that directly exercises the suspected behavior. Accept or reject the finding only once the test produces a definitive result. Do not speculate about runtime explanations to reconcile the conflict.
+
 - **Implicit architectural assumptions:** When assessing severity, do not default to "nice-to-have flexibility". Ask: for which deployment contexts does this assumption fail? If it fails for an entire class (air-gapped, on-prem, data-sovereign), severity is high regardless of how natural the assumption feels.
 
 - **Contradicting claims:** When two claims in the same document contradict each other, investigate before proposing a fix. Ask what architectural assumption would need to be true for both to hold; if none exists, the fix belongs at the design level. The author may hold relevant context not yet in the text.
