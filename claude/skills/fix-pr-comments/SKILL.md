@@ -121,11 +121,16 @@ asked to skip in Phase 1.
 
 2. **Once the user has engaged**, propose a concrete fix. If multiple
    approaches exist, present them briefly with pros and cons and ask the user
-   to confirm which one to implement before proceeding.
+   to confirm which one to implement before proceeding. If proposing an
+   alternative API or stdlib function, verify its documented behaviour before
+   recommending it — or flag the uncertainty explicitly rather than presenting
+   it as a known-good improvement.
 
 3. **Implement the fix.** Read the relevant file(s) first if not already done.
    Make the minimal, focused change that addresses the comment — no unrelated
-   cleanup.
+   cleanup. Before writing code, check the project's CLAUDE.md for invariants
+   that apply to the change — in particular constraints on early returns,
+   NotFound handling, and logging requirements.
 
 4. **Stop for review.** End with: "Ready for review — let me know when you're
    ready to commit." Then wait.
