@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CORE_PLATFORM_DIR="$HOME/code/core-platform"
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: afk <prd-path>" >&2
+    exit 1
+fi
+
+prd_path="$1"
+repo_root=$(git rev-parse --show-toplevel)
+
+cd "$CORE_PLATFORM_DIR"
+exec uv run --with pyyaml --with pytest \
+    python -m orchestrator.orchestrate \
+    --prd "$prd_path" \
+    --repo "$repo_root"
