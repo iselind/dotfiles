@@ -1,7 +1,7 @@
 ---
 id: ISS-003
 title: Create afk script and PATH setup
-status: in-progress
+status: done
 prd-slug: agentic-skills
 branch: ""
 failure-reason: ""
