@@ -42,7 +42,7 @@ export LESS=dMQifRF
 export LESSCHARSET=utf-8
 export GOPATH="$HOME/go-packages"
 export GOROOT="$HOME/go"
-export PATH=$YARN_PATH:$HOME/.pipinstall/bin:$GOROOT/bin:$GOPATH/bin:/usr/local/go/bin:$HOME/.local/bin:$PATH
+export PATH=$YARN_PATH:$HOME/.pipinstall/bin:$GOROOT/bin:$GOPATH/bin:/usr/local/go/bin:$HOME/.local/bin:$HOME/code/dotfiles/shell/bin:$PATH
 
 # Notices
 [ -f /var/run/reboot-required ] && echo "System needs to reboot!"
