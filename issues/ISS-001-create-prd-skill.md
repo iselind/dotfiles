@@ -1,7 +1,7 @@
 ---
 id: ISS-001
 title: Create /create-prd skill
-status: not-started
+status: done
 prd-slug: agentic-skills
 branch: ""
 failure-reason: ""
