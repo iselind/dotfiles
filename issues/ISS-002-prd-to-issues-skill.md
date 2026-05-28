@@ -1,7 +1,7 @@
 ---
 id: ISS-002
 title: Create /prd-to-issues skill
-status: not-started
+status: in-progress
 prd-slug: agentic-skills
 branch: ""
 failure-reason: ""
