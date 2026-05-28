@@ -45,6 +45,11 @@ The skill file goes in `claude/skills/create-prd.md` (picked up via the `~/.clau
 symlink). Skill files are markdown with YAML frontmatter (`name` and `description` fields)
 followed by the instruction body.
 
-The interview style is based on the grill-me pattern: relentless one-question-at-a-time
-questioning that walks down the decision tree. Each question should include a recommended
-answer so the interviewee can accept or redirect rather than starting from scratch.
+The interview follows the grill-me pattern:
+- Interview relentlessly about every aspect of the idea until shared understanding is reached
+- Walk down each branch of the decision tree, resolving dependencies between decisions
+  one at a time
+- Ask one question at a time — never bundle multiple questions
+- For each question, provide a recommended answer so the user can accept or redirect
+  rather than starting from scratch
+- If a question can be answered by exploring the codebase, explore it instead of asking
