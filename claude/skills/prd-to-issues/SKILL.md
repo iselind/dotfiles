@@ -17,9 +17,8 @@ Existing issues: !`ls issues/ISS-*.md 2>/dev/null | sort`
 
 ## Authoritative reference
 
-All issue format conventions, DAG rules, and TDD mandate come from `docs/agentic-workflow.md`.
-Read that document before generating issues. The issue format and phase behaviour described
-there are authoritative; this skill operationalises them.
+All issue format conventions, DAG rules, and TDD mandate are in `issue-format.md`
+(companion file in this skill directory). Read it before generating issues.
 
 ## Your job
 
@@ -35,9 +34,9 @@ Find the PRD for the current branch. Convention: the branch name encodes the PRD
 the PRD lives at `docs/prds/<slug>.md`. Read the file list printed above and pick the one
 that matches the branch. If multiple candidates exist, ask the user which to use.
 
-**Step 2 — Read docs/agentic-workflow.md**
+**Step 2 — Read issue-format.md**
 
-Read `docs/agentic-workflow.md` in full. Understand:
+Read `issue-format.md` in full. Understand:
 - The issue file format (YAML frontmatter fields and their meanings)
 - The blocked-by structure (list of objects with `id` and `reason` keys)
 - The DAG rules (no cycles; blocked-by forms a directed acyclic graph)

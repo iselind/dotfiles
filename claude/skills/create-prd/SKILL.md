@@ -11,8 +11,8 @@ user-invocable: true
 
 # Create-PRD skill
 
-This skill follows the conventions in `docs/agentic-workflow.md` — the authoritative
-guide for PRD format, branch naming, and human checkpoint expectations.
+PRD format, branch naming, and workflow conventions are in `prd-format.md` (companion
+file in this skill directory). Read it before writing any PRD.
 
 ---
 
@@ -72,7 +72,7 @@ Do not create the branch or write the PRD until the user confirms.
 **Step 1 — Branch naming**
 
 Branch names follow the pattern `prd/<slug>` where `<slug>` matches the PRD's `slug`
-frontmatter field (see `docs/agentic-workflow.md` for the full convention).
+frontmatter field (see `prd-format.md` for the full convention).
 
 Create and switch to the branch:
 
