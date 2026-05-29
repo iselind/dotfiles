@@ -11,7 +11,7 @@ handle_main_wt_branch() {
     local branch upstream
     branch=$(git branch --show-current)
     upstream=$(git for-each-ref --format='%(upstream:track)' "refs/heads/$branch")
-    [[ "$upstream" != "[gone]" ]] && return 0
+    if [[ "$upstream" != "[gone]" ]]; then return 0; fi
 
     local main_linked_wt
     main_linked_wt=$(git for-each-ref --format='%(worktreepath)' refs/heads/main)
@@ -29,7 +29,7 @@ prune_gone_branches() {
     local main_wt="$1"
     git for-each-ref --format='%(refname:short)|%(upstream:track)|%(worktreepath)' refs/heads/ | \
         while IFS='|' read -r branch upstream worktree; do
-            [[ "$upstream" != "[gone]" ]] && continue
+            if [[ "$upstream" != "[gone]" ]]; then continue; fi
             if [[ -n "$worktree" && "$worktree" != "$main_wt" ]]; then
                 echo "Removing worktree $worktree (branch $branch upstream is gone)."
                 if git worktree remove "$worktree"; then
