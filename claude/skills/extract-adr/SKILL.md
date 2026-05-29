@@ -55,6 +55,7 @@ Weak signals — do not propose for these alone:
 - Routine additions that follow an already-documented pattern
 - Config changes whose rationale is self-evident from the values
 - Questions with an obvious answer that just hasn't been written down
+- Conventions or patterns that are clearly better than not having them — where there was no real trade-off between alternatives. These belong in README or CLAUDE.md, not an ADR. The test: would a reasonable person have chosen differently? If not, there was no decision worth preserving.
 
 **Step 2 — Read existing ADRs**
 
