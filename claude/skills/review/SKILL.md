@@ -46,10 +46,10 @@ Understand: the status table format (columns, emoji conventions, item numbering)
 
 Read the full diff and all changed files. Identify issues in these categories:
 
-- **Bug** — code that is incorrect or could fail
+- **Bug** — code that is incorrect or could fail; for CI and test scripts specifically, check for fixed paths used as temporary state (two concurrent runs on the same runner will collide)
 - **Security** — credentials, injection risk, over-permissive access
 - **Gap** — unspecified mechanism or missing prerequisite that forces an undocumented design decision on the implementer
-- **Suggestion** — correct but improvable patterns or inconsistencies
+- **Suggestion** — correct but improvable patterns or inconsistencies; for CI and test scripts specifically, flag package installs into global environments (prefer isolated venvs or temp dirs to avoid runner pollution and ensure reproducibility)
 - **Verification** — things that must be confirmed before merge
 - **Cleanup** — dead code, stale comments, misleading names
 - **Overlap** — unwarranted duplication between plans, ADRs, and OPENs (e.g. a plan section restating rationale that an ADR now captures, or an OPEN repeating context already settled elsewhere)
