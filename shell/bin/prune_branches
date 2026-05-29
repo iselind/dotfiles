@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+get_main_worktree() {
+    git worktree list --porcelain | head -1 | cut -d' ' -f2-
+}
+
+# If the main worktree's branch upstream is gone, switch to main so it can be deleted below.
+# Skips with a message if main is already checked out in a linked worktree.
+handle_main_wt_branch() {
+    local branch upstream
+    branch=$(git branch --show-current)
+    upstream=$(git for-each-ref --format='%(upstream:track)' "refs/heads/$branch")
+    [[ "$upstream" != "[gone]" ]] && return 0
+
+    local main_linked_wt
+    main_linked_wt=$(git for-each-ref --format='%(worktreepath)' refs/heads/main)
+    if [[ -n "$main_linked_wt" ]]; then
+        echo "Main worktree branch '$branch' upstream is gone but main is checked out at $main_linked_wt — cannot switch; '$branch' will not be deleted."
+    else
+        echo "Main worktree branch '$branch' upstream is gone; switching to main."
+        git checkout main && git pull
+    fi
+}
+
+# Delete all local branches whose upstream is gone.
+# For linked worktrees, remove the worktree first then delete the branch.
+prune_gone_branches() {
+    local main_wt="$1"
+    git for-each-ref --format='%(refname:short)|%(upstream:track)|%(worktreepath)' refs/heads/ | \
+        while IFS='|' read -r branch upstream worktree; do
+            [[ "$upstream" != "[gone]" ]] && continue
+            if [[ -n "$worktree" && "$worktree" != "$main_wt" ]]; then
+                echo "Removing worktree $worktree (branch $branch upstream is gone)."
+                if git worktree remove "$worktree"; then
+                    git branch -D "$branch"
+                else
+                    echo "Could not remove $worktree — skipping (may have uncommitted changes)."
+                fi
+            elif [[ -z "$worktree" ]]; then
+                git branch -D "$branch"
+            fi
+        done
+}
+
+original_dir=$(pwd)
+main_wt=$(get_main_worktree)
+
+cd "$main_wt"
+git fetch --prune
+handle_main_wt_branch
+prune_gone_branches "$main_wt"
+
+if [[ ! -d "$original_dir" ]]; then
+    echo "Warning: your current worktree $original_dir was removed."
+    echo "Run: cd $main_wt"
+fi
