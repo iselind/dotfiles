@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CORE_PLATFORM_DIR="$HOME/code/core-platform"
+DOTFILES_DIR="$(cd "$(dirname "$(readlink -f "$0")")/../.." && pwd)"
 
 if [[ $# -eq 0 ]]; then
     echo "Usage: afk <prd-path>" >&2
@@ -11,7 +11,7 @@ fi
 prd_path="$1"
 repo_root=$(git rev-parse --show-toplevel)
 
-cd "$CORE_PLATFORM_DIR"
+cd "$DOTFILES_DIR"
 exec uv run --with pyyaml --with pytest \
     python -m orchestrator.orchestrate \
     --prd "$prd_path" \
