@@ -83,25 +83,58 @@ ffv() {
 prune_branches() {
     # We assume that this function is executed within a git repo.
 
-    # Fetch and prune first so upstream tracking status is accurate.
+    local original_dir main_wt
+    original_dir=$(pwd)
+    main_wt=$(git worktree list --porcelain | head -1 | cut -d' ' -f2-)
+
+    # Operate from the main worktree so we can remove any linked worktree freely.
+    cd "$main_wt" || return 1
+
+    # Fetch and prune so upstream tracking status is accurate.
     git fetch --prune
 
-    # Is the current branch's upstream gone?
-    local upstream_status
-    upstream_status=$(git for-each-ref --format='%(upstream:track)' "refs/heads/$(git branch --show-current)")
-    if [[ "$upstream_status" == "[gone]" ]]; then
-        # If so, switch to main so we can delete this branch below.
-        echo "Moving to main branch since the current branch's upstream is gone."
-        git checkout main
-        git pull
+    # If the main worktree's branch has a gone upstream, switch to main so we can delete it below.
+    local mwt_branch mwt_upstream
+    mwt_branch=$(git branch --show-current)
+    mwt_upstream=$(git for-each-ref --format='%(upstream:track)' "refs/heads/$mwt_branch")
+    if [[ "$mwt_upstream" == "[gone]" ]]; then
+        local main_linked_wt
+        main_linked_wt=$(git for-each-ref --format='%(worktreepath)' refs/heads/main)
+        if [[ -n "$main_linked_wt" ]]; then
+            echo "Main worktree branch '$mwt_branch' upstream is gone but main is checked out at $main_linked_wt — cannot switch; $mwt_branch will not be deleted."
+        else
+            echo "Main worktree branch '$mwt_branch' upstream is gone; switching to main."
+            git checkout main && git pull
+        fi
     fi
 
-    # Prune all local branches whose upstream is gone.
-    git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads/ | while read -r branch upstream; do
-        if [[ "$upstream" == "[gone]" ]]; then
-            git branch -D "$branch"
-        fi
-    done
+    # Prune local branches whose upstream is gone.
+    # For linked worktrees, remove the worktree then delete the branch.
+    # For regular (non-checked-out) branches, just delete.
+    # Use | as delimiter so empty %(upstream:track) doesn't shift %(worktreepath) into the wrong field.
+    git for-each-ref --format='%(refname:short)|%(upstream:track)|%(worktreepath)' refs/heads/ | \
+        while IFS='|' read -r branch upstream worktree; do
+            if [[ "$upstream" != "[gone]" ]]; then
+                continue
+            fi
+            if [[ -n "$worktree" && "$worktree" != "$main_wt" ]]; then
+                echo "Removing worktree $worktree (branch $branch upstream is gone)."
+                if git worktree remove "$worktree"; then
+                    git branch -D "$branch"
+                else
+                    echo "Could not remove $worktree — skipping (may have uncommitted changes)."
+                fi
+            elif [[ -z "$worktree" ]]; then
+                git branch -D "$branch"
+            fi
+        done
+
+    # Return to the original directory if it still exists; otherwise stay in the main worktree.
+    if [[ -d "$original_dir" ]]; then
+        cd "$original_dir"
+    else
+        echo "Original worktree $original_dir was removed; staying in $main_wt."
+    fi
 }
 
 #######################
