@@ -132,6 +132,17 @@ asked to skip in Phase 1.
    that apply to the change — in particular constraints on early returns,
    NotFound handling, and logging requirements.
 
+   **If the fix involves documenting an accepted trade-off** (rather than
+   addressing the root cause), first verify that no tighter alternative exists
+   — check whether the platform supports a more constrained option, whether a
+   relevant condition key or list form is available, etc. Do not document a
+   limitation as accepted until you have actively ruled out better options. The
+   user should not have to ask.
+
+   **If the fix involves writing prose** (comments, explanations), verify every
+   factual claim against the code before writing. Do not write from assumption
+   — an inaccurate comment is worse than no comment.
+
 4. **Stop for review.** End with: "Ready for review — let me know when you're
    ready to commit." Then wait.
 
