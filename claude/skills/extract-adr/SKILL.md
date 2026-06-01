@@ -119,9 +119,11 @@ Otherwise ask: "Shall I draft all of these, or pick specific numbers?" — then 
 
 **Before drafting, read `~/.claude/skills/extract-adr/adr-format.md` and `~/.claude/skills/extract-adr/open-format.md` — do not skip this step.**
 
-Work through approved candidates one at a time. If the user said "draft all", write all files first, then go through each for approval and commit — the commit-per-item approval loop still applies. Do not batch commits.
+Work through approved candidates one at a time. If the user said "draft all", write all files first, then present them to the user. Then go through each for approval and commit **one at a time** — ask "ADR-NNN looks good?" for each, wait for the response, commit that one, then move to the next. Do not batch commits. A single "ready" signal after seeing multiple ADRs is approval for review, not a commit signal for all of them.
 
 When drafting, verify that enumerated sets meant to be complete (options considered, failure modes, required steps) are exhaustive. Illustrative examples in generic decisions should be marked with "e.g." or "in the current implementation" rather than expanded to a complete enumeration.
+
+Before writing the Rationale, check each failure mode attributed to a rejected option: does the chosen option also exhibit that failure mode, even partially? If so, acknowledge it in the Rationale rather than stating the chosen option avoids the problem entirely.
 
 **For each ADR candidate:**
 
