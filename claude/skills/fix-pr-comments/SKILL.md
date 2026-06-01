@@ -154,7 +154,22 @@ asked to skip in Phase 1.
    should indicate what was changed; a reference to the comment is optional
    but useful (e.g. `fix: <what changed>, per review comment`).
 
-6. **Move to the next.** Ask: "Done — ready for comment N+1?" — then wait for
+6. **Reflect: would `/review` have caught this?** After committing, consider
+   whether the `/review` skill would have surfaced this issue. Present a
+   verdict and your reasoning:
+   - **Yes** — it would have caught it; explain why it should have (and note
+     if the review was actually run but missed it anyway).
+   - **No — gap identified** — it would not have caught it; name the gap
+     (e.g. wrong scope, missing heuristic, project-specific invariant, prose
+     or comment quality, etc.).
+   - **Out of scope** — the comment is about style, preference, or context
+     that `/review` is not designed to catch; briefly say so.
+
+   Invite the user to respond — they may want to discuss the gap, correct
+   your reasoning, or note that the review skill should be updated. Wait for
+   the user to confirm they have nothing more to add before moving on.
+
+7. **Move to the next.** Ask: "Done — ready for comment N+1?" — then wait for
    confirmation.
 
 **Do not move to the next comment until the user confirms the current one.**
