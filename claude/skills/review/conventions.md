@@ -24,6 +24,8 @@ Apply these throughout Phase 2.
 
 - **Keep fixes minimal** — this is a review pass, not a refactor. Flag any fix with meaningful risk or side effects before proceeding.
 
+- **When implementing a comparison or lookup**, verify the matching key uniquely identifies each item within the relevant scope before writing the implementation. Ask: could two different items have the same key value? If so, the key is incomplete — extend it before proceeding.
+
 - **After editing a sentence**, re-read the full paragraph — a local edit often reveals adjacent issues (wrong names, unclear pronouns, stale phrasing) that were masked by the original problem.
 
 - **Before marking a fix complete**, check whether it should apply consistently to all sibling or parallel instances (e.g. if fixing one of four symmetric steps, verify the other three).
