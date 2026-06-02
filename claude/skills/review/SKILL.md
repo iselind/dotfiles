@@ -151,7 +151,11 @@ extract-adr runs its own mandatory retrospective before returning. When it does,
 
 ## Phase 4 — Delete completed documents
 
-**Before deleting the tracking file**, read it and note internally how many findings fall into each category: Bug, Security, Gap (heavyweight) vs Suggestion, Cleanup, Overlap, Premature design, Minor, Verification (lightweight). You will need these counts in Phase 6.
+**Before deleting the tracking file**, read it and note internally:
+- How many findings fall into each category: Bug, Security, Gap (heavyweight) vs Suggestion, Cleanup, Overlap, Premature design, Minor, Verification (lightweight).
+- For each heavyweight finding, whether its fix was self-contained or disturbed shared infrastructure, a convention, or a load-bearing abstraction.
+
+You will need both in Phase 6.
 
 **Review tracking file:** If open items remain (extract-adr may have added new ones), return to Phase 2 and work through them using the normal review workflow. There is no need to re-run extract-adr afterward. Once all items are resolved, check for deletion.
 
