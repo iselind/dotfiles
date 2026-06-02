@@ -123,6 +123,8 @@ Work through approved candidates one at a time. If the user said "draft all", wr
 
 When drafting, verify that enumerated sets meant to be complete (options considered, failure modes, required steps) are exhaustive. Illustrative examples in generic decisions should be marked with "e.g." or "in the current implementation" rather than expanded to a complete enumeration.
 
+Before writing the Options section, verify each option is executable within the actual deployment model. Confirm the artifacts each option claims to act on exist at the point it claims to act — e.g., in a GitOps pipeline, distinguish between what is present in the source tree at packaging time vs what is rendered by controllers at runtime. An option that cannot act on what it claims to act on is not a real option; describe what it would actually require instead.
+
 Before writing the Rationale, check each failure mode attributed to a rejected option: does the chosen option also exhibit that failure mode, even partially? If so, acknowledge it in the Rationale rather than stating the chosen option avoids the problem entirely.
 
 **For each ADR candidate:**
