@@ -40,7 +40,7 @@ If no plan exists, create a review tracking file. Preferred pattern: `<plan-name
 
 **Step 2 — Read the plan**
 
-Understand: the status table format (columns, emoji conventions, item numbering), the format of detailed sections (how each item is written below the table), and the highest existing item number. Note which items are open (⬜) vs resolved (✅).
+Understand: the status table format (columns, emoji conventions, item numbering), the format of detailed sections (how each item is written below the table), and all existing work items and their content.
 
 **Step 3 — Review the branch**
 
@@ -74,7 +74,6 @@ Topically related ADRs/OPENs not on the branch — coherence check:
 - Distinguish plan-level contract from implementation detail. A plan should state *what* contract must hold (e.g. "the tenant ID must be readable by the sync operator") without prescribing *how* it is satisfied (label, field, annotation). Flag items that over-specify implementation detail or under-specify the contract to the point the implementer cannot know what is required.
 - Verify work items are consistent with relevant ADRs — both pre-existing and branch-introduced. A contradiction is a Bug, not a wording issue.
 
-For each issue, check the existing plan items — skip anything already tracked (open or resolved).
 
 **Review scope:**
 
