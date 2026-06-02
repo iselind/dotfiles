@@ -175,6 +175,8 @@ Present the heavyweight findings (Bug, Security, Gap) by number and one-line des
 
 The more useful framing is not just "were findings substantial?" but "do these findings suggest there is another meaningful layer to discover — something a fresh context would likely find?" Iterative discovery, structural churn, and fixes that touched many locations are indicators that more may remain. Contained, well-bounded fixes with systematic coverage are indicators that the layer is clean.
 
+A useful test: did any fix disturb shared infrastructure, a convention, or a load-bearing abstraction in a way that could propagate to adjacent code? If yes, that's a ripple-effect signal. If every fix was local and self-contained, that's a clean-convergence signal regardless of severity.
+
 Wait for the user to confirm, correct, or add context.
 
 After the user responds, state the verdict:
