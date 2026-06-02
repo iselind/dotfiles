@@ -12,3 +12,5 @@
 | [no_test_plan_in_prs.md](no_test_plan_in_prs.md) | feedback | Do not include a test plan section in PR descriptions |
 | [promote_memory_to_highest_level.md](promote_memory_to_highest_level.md) | feedback | Save memories at the most general scope that applies — global unless genuinely repo-specific |
 | [skill_launch_failure.md](skill_launch_failure.md) | feedback | When a skill fails to launch, stop and say so — never substitute inline work or misrepresent a skill as having run |
+| [jira_core_project.md](jira_core_project.md) | reference | CORE Jira project = primary work source; shared across many teams; always scope to currentUser() by default |
+| [git_branch_from_origin_main.md](git_branch_from_origin_main.md) | feedback | New branches must be created from origin/main; branch tracks itself, not origin/main |
