@@ -112,6 +112,8 @@ Work through open (⬜) items in ascending order, one at a time.
 
 2. Once the user has engaged, propose a fix (and alternatives if they exist). Prefer structural fixes over scattered per-instance changes — if a single change point (e.g. a shared function, a global redirect, a convention) can replace many individual changes, propose that first. If there are alternatives, confirm which to implement before proceeding.
 
+For collision or uniqueness bugs (two items competing for the same key, filename, or slot), consider both the disambiguation approach (make the key more specific) and the consolidation approach (merge into a shared container with a separator or composite) before proposing. One is not always better than the other.
+
 3. Fix the issue. Read the relevant files first. Make the minimal, focused change. Apply the guidance in `conventions.md` throughout.
 
 4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>`.
