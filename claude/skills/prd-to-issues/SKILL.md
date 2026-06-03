@@ -54,23 +54,24 @@ set to exactly this value.
 
 **Step 1 — Identify the work units**
 
-Break the PRD into discrete, independently workable units. Each unit becomes one issue.
-Aim for issues that can be completed by a single autonomous agent in one session.
+Break the PRD into issues. Each issue is a phased plan — a self-contained arc of work
+an agent completes in one session by working through its phases in order.
 
 Guidelines:
-- Each issue should have a single, clear deliverable
+- Each issue covers a meaningful chunk of work, not a single small deliverable
+- Work that is naturally sequential within an issue becomes phases within that issue
+- Work that is genuinely independent belongs in separate issues so it can run in parallel
 - Issues that depend on other issues must declare `blocked-by` relationships
 - The full set of issues must cover the PRD's definition of done
-- Avoid issues that are too broad to implement in one pass
 
 **Step 2 — Assign IDs**
 
 Assign sequential IDs starting from ISS-001 within this PRD's set. Check existing issues
 in `issues/ISS-*.md` to find the highest existing ID and continue from there.
 
-**Step 3 — Build the DAG**
+**Step 3 — Build the DAGs**
 
-For every issue, decide which other issues it depends on. Record each dependency as:
+**Inter-issue DAG (`blocked-by`):** for every issue, decide which other issues it depends on.
 
 ```yaml
 blocked-by:
@@ -78,51 +79,39 @@ blocked-by:
     reason: "why this issue cannot start before ISS-00N is complete"
 ```
 
-Rules:
 - `blocked-by` is a list of objects with `id` and `reason` keys
-- An issue with no dependencies uses `blocked-by: []`
-- The DAG must have no cycles — verify by tracing all dependency chains
-- Every `id` in a `blocked-by` list must refer to another issue in this set
+- An issue with no inter-issue dependencies uses `blocked-by: []`
+- No cycles — verify by tracing all dependency chains
+- Every `id` must refer to another issue in this set
+
+**Intra-issue phase ordering (`phases[].after`):** for every issue, decide the ordering
+of its phases.
+
+```yaml
+phases:
+  - id: 1
+    status: not-started
+    after: []
+  - id: 2
+    status: not-started
+    after: [1]
+```
+
+- A phase with `after: []` can start as soon as the issue starts
+- Multiple phases with satisfied dependencies can run in any order relative to each other
+- No cycles within a single issue's phase graph
 
 **Step 4 — Draft each issue**
 
-Draft each issue file in the format from `docs/agentic-workflow.md`:
+Draft each issue file following the format in `issue-format.md`. Each issue must have:
 
-```markdown
----
-id: ISS-00N
-title: Short descriptive title
-status: not-started
-prd-slug: <prd-slug>
-branch: ""
-failure-reason: ""
-blocked-by:
-  - id: ISS-00M
-    reason: "dependency reason"
----
-
-## Story
-
-As a [actor]
-I want [goal]
-So that [benefit]
-
-## Acceptance Criteria
-
-**Scenario: [name]**
-Given [context]
-When [action]
-Then [outcome]
-```
-
-Each issue must have:
-- YAML frontmatter with all fields: id, title, status, prd-slug, branch, failure-reason, blocked-by
-- `status: not-started`
-- `branch: ""`
-- `failure-reason: ""`
-- A user story (As a / I want / So that)
-- At least one Given/When/Then scenario per acceptance criterion
-- A `## Context` section if there are implementation notes, constraints, or hints
+- YAML frontmatter with all fields: id, title, status, prd-slug, branch, failure-reason, blocked-by, phases
+- `status: not-started`, `branch: ""`, `failure-reason: ""`
+- `phases` list with at least one phase; each phase has `id`, `status: not-started`, and `after`
+- A `## Phase N: [name]` section in the body for every phase declared in the frontmatter
+- Each phase body contains: one-line deliverable, user story (As a / I want / So that), at least one Given/When/Then scenario
+- `## Invariants` section if constraints apply across all phases
+- `## Context` section if there is background the agent needs
 
 ---
 
@@ -161,9 +150,12 @@ spaces replaced by hyphens and non-alphanumeric characters removed
 **Step 2 — Verify the files**
 
 After writing, re-read each file and confirm:
-- All YAML frontmatter fields are present: id, title, status, prd-slug, branch, failure-reason, blocked-by
+- All YAML frontmatter fields are present: id, title, status, prd-slug, branch, failure-reason, blocked-by, phases
 - `prd-slug` matches the PRD's `slug` field exactly
 - `blocked-by` contains only ids that refer to other issues in this set
+- `phases` list is non-empty; every phase has `id`, `status: not-started`, and `after`
+- Every id in any `after` list refers to another phase within the same issue
+- A `## Phase N` body section exists for every phase declared in the frontmatter
 - The file is parseable YAML (no syntax errors)
 
 **Step 3 — Commit and push**
