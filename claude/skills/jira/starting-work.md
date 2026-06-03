@@ -22,6 +22,17 @@ When the user says they'll be working on a ticket (e.g. "we'll be working on COR
 Do not create the branch before scope and name are confirmed.
 Do not write code before step 6 is resolved.
 
+## Direct implementation path
+
+**If the direct implementation path is chosen**, follow this sequence:
+
+1. **Implement the work** — make the changes on the branch and commit.
+2. **Review the branch** — invoke `/review`. Repeat rounds until Phase 6's
+   verdict is "no further rounds needed". Act on Phase 6's verdict — do not
+   make your own assessment of whether another round is warranted.
+3. **Open the PR** — create the pull request once the review clears.
+4. **Transition the Jira ticket to In Review.**
+
 ## PRD path
 
 **If the PRD path is chosen**, follow this sequence:
