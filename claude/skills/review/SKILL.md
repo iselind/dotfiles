@@ -46,7 +46,7 @@ Understand: the status table format (columns, emoji conventions, item numbering)
 
 Read the full diff and all changed files. Identify issues in these categories:
 
-- **Bug** — code that is incorrect or could fail; for CI and test scripts specifically, check for fixed paths used as temporary state (two concurrent runs on the same runner will collide)
+- **Bug** — code that is incorrect or could fail; for CI and test scripts specifically, check for fixed paths used as temporary state (two concurrent runs on the same runner will collide); for PromQL expressions, check that both sides of a vector join using `on(...)` are aggregated to the same label set as the join key — extra labels on either side not named in `on()` cause silent fan-out (left) or silently dropped series (right)
 - **Security** — credentials, injection risk, over-permissive access
 - **Gap** — unspecified mechanism or missing prerequisite that forces an undocumented design decision on the implementer
 - **Suggestion** — correct but improvable patterns or inconsistencies; for CI and test scripts specifically, flag package installs into global environments (prefer isolated venvs or temp dirs to avoid runner pollution and ensure reproducibility)
