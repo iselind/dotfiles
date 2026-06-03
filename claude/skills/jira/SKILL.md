@@ -21,6 +21,7 @@ Jira instance: `https://corero-cns.atlassian.net`
 - Parse responses with `jq` for readability.
 - When querying for the user's own tickets, always use `assignee = currentUser()` — never hardcode an email address.
 - Never show a bare ticket ID (e.g. CORE-631). Always accompany it with the summary and current status — e.g. "CORE-631 — Create a means to spread rules and notification configs *(Complete)*". Fetch summaries and status if not already known.
+- When presenting any ticket, also fetch and display any linked FEATURE tickets (key, summary, status). Retrieve them from the `issuelinks` field — `GET /rest/api/3/issue/<KEY>?fields=issuelinks` — and filter for links where the other issue's key starts with `FEATURE-`.
 - Unless explicitly asked, exclude completed tickets from results by adding `AND statusCategory != Done` to the JQL.
 - When a removed or deprecated API endpoint is encountered, update the **Known API changes** section in this skill file before continuing.
 
