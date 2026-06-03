@@ -319,6 +319,29 @@ When the user says they'll be working on a ticket (e.g. "we'll be working on COR
    - State your assessment in one sentence and propose either invoking `/create-prd` or proceeding directly.
    - Wait for the user to confirm or redirect. Do not start implementing until they do.
 
+**If the direct path is chosen:** proceed with implementation.
+
+**If the PRD path is chosen**, follow this sequence:
+
+1. **Create the PRD** — invoke `/create-prd`. The PRD is committed and pushed to the branch.
+
+2. **Review the PRD** — invoke `/review` on the PRD. Repeat rounds until the review skill's Phase 6 verdict is "no further rounds needed". Act on Phase 6's verdict — do not make your own assessment of whether another round is warranted.
+
+3. **Comment on the Jira ticket:**
+   > PRD approved — `<repo>/<branch>`
+
+4. **Create issues** — invoke `/prd-to-issues`. Issues are committed and pushed to the branch.
+
+5. **Comment on the Jira ticket:**
+   > Issues created — `<repo>/<branch>`: ISS-001, ISS-002, … *(list all issue IDs)*
+
+6. **Review each issue** — invoke `/review` on each issue. Repeat rounds per issue until Phase 6 clears it. When an issue clears, comment on the Jira ticket:
+   > ISS-NNN cleared for implementation — `<repo>/<branch>`
+
+7. **Implementation begins** — per the agent contract defined in the prd-to-issues skill's `issue-format.md`.
+
+**Resuming after interruption:** read the Jira ticket comments to determine which phase completed last, then check git on `<repo>/<branch>` for current file state. Pick up from the last incomplete phase.
+
 Do not create the branch before scope and name are confirmed.
 Do not write code before step 6 is resolved.
 
