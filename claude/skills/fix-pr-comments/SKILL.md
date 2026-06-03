@@ -197,6 +197,12 @@ are in place.
 
 ## Phase 3 — Close review skill gaps
 
+First, check whether `/review` was actually run on this branch before the PR
+was created. If it was not, surface that as a process gap in the invoking
+workflow (e.g. the Jira starting-work path) rather than proposing review skill
+heuristic changes — the issue is that the gate was skipped, not that the gate
+has a missing heuristic.
+
 Collect all step-6 gap findings from this session — every comment where the
 verdict was **"No — gap identified"** (including any discussion that refined
 or expanded the gap). If none were identified, skip directly to Phase 4.
