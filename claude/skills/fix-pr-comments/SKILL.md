@@ -188,6 +188,12 @@ This artifact check is a hard gate before `git push` — even if the user
 combined commit and push authorization in one message (e.g. "commit and push"),
 always complete the artifact check between the commit and the push.
 
+**Invoke `/review`** on the branch after the artifact check and before pushing.
+PR comment fixes can introduce new issues — the review is the gate that catches
+them. Repeat rounds until Phase 6's verdict is "no further rounds needed". Act
+on Phase 6's verdict — do not make your own assessment of whether another round
+is warranted.
+
 Then ask: "All comments addressed — anything else before I push?" Wait for the
 user to confirm before running `git push`. Do not push earlier — premature
 pushes trigger CI and may draw reviewer attention before all intended changes
