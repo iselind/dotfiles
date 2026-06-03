@@ -230,6 +230,13 @@ Standalone (no FEATURE parent — legitimate, not a gap):
 
 Epics are not containers — they are stories that got too large to deliver in one branch. Split them into child stories.
 
+**Linking implementation work to FEATURE tickets** — use "1 - Delivers" and apply this rule uniformly:
+
+- Link a **Story** to the FEATURE ticket when the work is contained enough to fit in a Story.
+- Link an **Epic** to the FEATURE ticket when the work is large enough to warrant one — the Epic then owns the child Stories.
+
+In multi-project scenarios (e.g. CORE and SWO both contributing to a FEATURE), each project independently links whichever is appropriate for its slice. A FEATURE ticket may end up with a mix of Epics and Stories from different projects — that is expected and correct.
+
 ### FEATURE tickets
 
 Two questions drive the description:
