@@ -3,7 +3,9 @@ name: fix-pr-comments
 description: >
   Fetch open review comments on the current branch's PR and work through them
   one at a time: understand the comment, implement the fix, review, then commit.
-  Use when the user has PR review comments to address.
+  Use when the user mentions PR review comments, review feedback, or comments to
+  address — e.g. "we got PR comments", "there are review comments to fix",
+  "address the feedback", "fix the comments", "reviewer left some notes".
 argument-hint: "[pr-number | comment-url]"
 user-invocable: true
 ---
@@ -181,6 +183,10 @@ why, and ask the user whether to skip it or reply to it before moving on.
 **After the last comment is committed**, re-read every file altered during this
 session. Check for artifacts introduced by the fixes — extra blank lines, stale
 imports, formatting inconsistencies. Fix any found before moving on.
+
+This artifact check is a hard gate before `git push` — even if the user
+combined commit and push authorization in one message (e.g. "commit and push"),
+always complete the artifact check between the commit and the push.
 
 Then ask: "All comments addressed — anything else before I push?" Wait for the
 user to confirm before running `git push`. Do not push earlier — premature
