@@ -53,6 +53,35 @@ curl -s --netrc \
   | jq '{key: .key, summary: .fields.summary, status: .fields.status.name, assignee: .fields.assignee.displayName}'
 ```
 
+### Get current state of a ticket (branches, PRs, comments)
+
+Branches, pull requests, and comments are important signals of a ticket's current state — they show where active work is happening, what's been proposed or merged, and any discussion or blockers.
+
+**Branches and PRs** come from the GitHub integration via the dev-status API. Fetch the numeric issue ID first, then query:
+
+```bash
+ISSUE_ID=$(curl -s --netrc -H 'Accept: application/json' \
+  "<base-url>/rest/api/3/issue/<KEY>" | jq -r '.id')
+
+curl -s --netrc \
+     -H "Accept: application/json" \
+     "<base-url>/rest/dev-status/latest/issue/detail?issueId=${ISSUE_ID}&applicationType=GitHub&dataType=branch" \
+  | jq '.detail[0] | {branches: [.branches[] | {name: .name, lastCommit: .lastCommit.message, url: .url}], pullRequests: [.pullRequests[] | {id: .id, name: .name, status: .status, url: .url}]}'
+```
+
+Note: `dataType=branch` returns both branches and pull requests in a single response.
+
+**Comments** are fetched separately:
+
+```bash
+curl -s --netrc \
+     -H "Accept: application/json" \
+     "<base-url>/rest/api/3/issue/<KEY>/comment?orderBy=created" \
+  | jq '.comments[] | {author: .author.displayName, created: .created, body: (.body.content[0].content[0].text // "<rich content>")}'
+```
+
+When assessing the current state of a ticket, always fetch all three: issue fields, dev-status, and comments.
+
 ### Create an issue
 ```bash
 curl -s --netrc \
@@ -155,8 +184,14 @@ run them, and present the results clearly. For destructive or irreversible
 operations (closing, deleting, bulk updates), confirm with the user before
 executing.
 
-When the job is complete, run:
+When the **entire skill session** is complete, run exactly once:
 
 ```bash
 skill-stack pop
 ```
+
+**The session is complete when:**
+- The user's questions are fully resolved and they have moved on to a different topic, OR
+- You are returning control to a calling skill after completing its requested sub-task.
+
+**The session is NOT complete after each individual task** in a multi-turn conversation. If the user continues asking Jira questions after one task finishes, hold the pop — do not call it until all Jira work in the session is done. Phase 0 pushes exactly once; this pop must fire exactly once to match it.

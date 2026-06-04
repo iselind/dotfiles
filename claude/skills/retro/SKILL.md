@@ -96,6 +96,8 @@ additions — that was already covered in Phase 2.
 
 ## Final step — Pop skill stack
 
+Phase 0 pushed exactly once; this pop fires exactly once to match it. Do not pop earlier in the skill — even if a phase feels "complete" mid-session.
+
 ```bash
 skill-stack pop
 ```

@@ -256,6 +256,8 @@ is a natural continuation of the fix.
 
 ## Final step — Pop skill stack
 
+Phase 0 pushed exactly once; this pop fires exactly once to match it. Do not pop after fixing individual comments — this step runs once, after all comments are resolved and the session is complete.
+
 ```bash
 skill-stack pop
 ```

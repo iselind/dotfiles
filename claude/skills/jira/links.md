@@ -33,16 +33,20 @@ Use "blocks" / "is blocked by" for **technical dependencies only** — work that
 
 Direction: if B cannot start until A is done, then A **blocks** B (B **is blocked by** A).
 
+There are two blocking link types with mirrored inward/outward labels — use `5 - Blocks` and put the **blocker as inward, blocked as outward**:
+
 ```bash
 curl -s --netrc \
      -H "Content-Type: application/json" \
      -X POST \
      "<base-url>/rest/api/3/issueLink" \
      -d '{
-       "type": {"name": "Blocks"},
-       "inwardIssue": {"key": "<BLOCKED-TICKET>"},
-       "outwardIssue": {"key": "<BLOCKING-TICKET>"}
+       "type": {"name": "5 - Blocks"},
+       "inwardIssue": {"key": "<BLOCKING-TICKET>"},
+       "outwardIssue": {"key": "<BLOCKED-TICKET>"}
      }'
 ```
+
+**How Jira renders links:** the inward issue sees the outward text ("blocks"), the outward issue sees the inward text ("is blocked by"). So the blocked ticket (outward) correctly shows "is blocked by [blocker]".
 
 When surfacing or creating blocking relationships, state the technical reason — not just that one ticket precedes another.

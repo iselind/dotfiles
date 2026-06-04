@@ -169,7 +169,7 @@ This phase must always run — even when no candidates were found, even when inv
 
 Move directly into `/retro extract-adr`. Do not ask for permission.
 
-After the retrospective completes, run:
+After the retrospective completes, run exactly once — Phase 0 pushed once; this pop matches it:
 
 ```bash
 skill-stack pop
