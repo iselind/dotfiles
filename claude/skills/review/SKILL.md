@@ -30,13 +30,13 @@ Complete the phases below in order.
 
 ## Phase 0 — Register on skill stack
 
-Look ahead in the phases below and identify where this skill resumes after invoking a sub-skill. Then run:
+Determine the resume from the calling context visible in the conversation — identify where the calling skill continues after this skill completes. Then run:
 
 ```bash
 skill-stack push review "<resume>"
 ```
 
-Set `<resume>` to the single address — a phase name, step label, or other marker — where this skill picks up after the sub-skill returns. If nothing remains after the sub-skill returns, omit the resume argument.
+Set `<resume>` to the single address — a phase name, step label, or other marker — where the calling skill should pick up once this skill completes. Derive this from the calling context visible in the conversation; if context is thin, read ahead in the calling skill's file as a fallback. If invoked standalone with no calling skill, omit the resume argument.
 
 ---
 

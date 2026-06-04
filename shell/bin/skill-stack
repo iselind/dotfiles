@@ -65,13 +65,18 @@ case "$cmd" in
             echo "skill-stack: stack is empty" >&2
             exit 1
         fi
+        # Read the resume from the frame being popped — set by the callee's Phase 0
+        popped_resume="$(jq -r 'last.resume' "$file")"
         jq 'if length <= 1 then [] else .[:-1] end' "$file" > "${file}.tmp"
         mv "${file}.tmp" "$file"
-        # Announce return to caller if stack is still non-empty
+        # Announce return to caller using caller's skill name + popped frame's resume
         if [[ "$(cat "$file")" != "[]" ]]; then
             caller_skill="$(jq -r 'last.skill' "$file")"
-            caller_resume="$(jq -r 'last.resume' "$file")"
-            echo "Returning to ${caller_skill} — ${caller_resume}"
+            if [[ -n "$popped_resume" ]]; then
+                echo "Returning to ${caller_skill} — ${popped_resume}"
+            else
+                echo "Returning to ${caller_skill}"
+            fi
         fi
         # Clean up empty stack
         if [[ "$(cat "$file")" == "[]" ]]; then
