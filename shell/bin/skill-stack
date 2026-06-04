@@ -4,16 +4,28 @@ set -euo pipefail
 # skill-stack — manage the Claude skill invocation stack
 #
 # Usage:
-#   skill-stack push <skill> <resume>   Push a frame onto the stack
-#   skill-stack pop                     Pop the top frame and print it
-#   skill-stack peek                    Print the top frame without removing it
-#   skill-stack show                    Print the full stack (bottom to top)
-#   skill-stack clear                   Delete the stack file
+#   skill-stack push <skill> [resume]   Push a frame onto the stack.
+#                                       <resume> is a single address describing
+#                                       exactly where to pick up work in <skill>
+#                                       once the invoked sub-skill returns — a
+#                                       phase name, step label, or any marker that
+#                                       unambiguously identifies the resumption
+#                                       point. It need not be a phase boundary.
+#                                       Omit for terminal skills with no remaining
+#                                       work after the sub-skill returns.
+#   skill-stack pop                     Pop the top frame. If the stack is still
+#                                       non-empty, prints the caller frame's resume
+#                                       as a "Returning to <skill> — <resume>" line.
+#                                       Silent when the last frame is popped.
+#                                       Deletes the stack file when empty.
+#   skill-stack peek                    Print the top frame without removing it.
+#   skill-stack show                    Print the full stack (bottom to top).
+#   skill-stack clear                   Delete the stack file.
 #
 # The stack is scoped to the current working directory + git branch, stored as:
 #   ~/.cache/claude/skill-stack/<slugified-pwd>/<slugified-branch>.json
 #
-# Frame format: {"skill": "<name>", "resume": "<description of remaining work>"}
+# Frame format: {"skill": "<name>", "resume": "<single resumption address>"}
 # Top of stack = last element in the JSON array.
 
 slugify() {
@@ -39,8 +51,8 @@ ensure_file() {
 cmd="${1:-}"
 case "$cmd" in
     push)
-        skill="${2:?Usage: skill-stack push <skill> <resume>}"
-        resume="${3:?Usage: skill-stack push <skill> <resume>}"
+        skill="${2:?Usage: skill-stack push <skill> [resume]}"
+        resume="${3:-}"
         file="$(stack_file)"
         ensure_file "$file"
         jq --arg skill "$skill" --arg resume "$resume" \
@@ -49,13 +61,18 @@ case "$cmd" in
         ;;
     pop)
         file="$(stack_file)"
-        if [[ ! -f "$file" ]]; then
+        if [[ ! -f "$file" ]] || [[ "$(cat "$file")" == "[]" ]]; then
             echo "skill-stack: stack is empty" >&2
             exit 1
         fi
-        jq -e 'last' "$file"
         jq 'if length <= 1 then [] else .[:-1] end' "$file" > "${file}.tmp"
         mv "${file}.tmp" "$file"
+        # Announce return to caller if stack is still non-empty
+        if [[ "$(cat "$file")" != "[]" ]]; then
+            caller_skill="$(jq -r 'last.skill' "$file")"
+            caller_resume="$(jq -r 'last.resume' "$file")"
+            echo "Returning to ${caller_skill} — ${caller_resume}"
+        fi
         # Clean up empty stack
         if [[ "$(cat "$file")" == "[]" ]]; then
             rm "$file"
