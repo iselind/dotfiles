@@ -32,6 +32,16 @@ Jira status should reflect the actual state of work. Apply transitions at these 
 
 - **Branch created** → transition ticket to `In Progress`
 - **PR opened** → transition ticket to `In Review`
-- **PR merged** → do not automatically transition. Ask: "Is CORE-NNN fully done, or is there more work remaining?" If done → transition to `Complete`. If more to do → leave in `In Progress` (or transition back if currently `In Review`).
+- **PR merged** → do not automatically transition. First assess whether the
+  change contains deployable artifacts (GitOps manifests, Terraform config,
+  service configuration). If it does, ask: "Has this been deployed all the
+  way to production?" — wait for confirmation before transitioning to
+  `Complete`. If it has not yet been deployed, leave the ticket in `In Review`
+  and revisit when deployment is confirmed.
+
+  If the change is workflow/CI, documentation, or tooling only (nothing
+  promoted through tiers), ask: "Is CORE-NNN fully done, or is there more
+  work remaining?" If done → transition to `Complete` immediately. If more
+  to do → leave in `In Progress`.
 
 To apply a transition, first fetch available transitions for the ticket, match by name, then POST the transition ID. See the Transition operation in `SKILL.md`.
