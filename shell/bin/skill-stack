@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# skill-stack — manage the Claude skill invocation stack
+#
+# Usage:
+#   skill-stack push <skill> <resume>   Push a frame onto the stack
+#   skill-stack pop                     Pop the top frame and print it
+#   skill-stack peek                    Print the top frame without removing it
+#   skill-stack show                    Print the full stack (bottom to top)
+#   skill-stack clear                   Delete the stack file
+#
+# The stack is scoped to the current working directory + git branch, stored as:
+#   ~/.cache/claude/skill-stack/<slugified-pwd>/<slugified-branch>.json
+#
+# Frame format: {"skill": "<name>", "resume": "<description of remaining work>"}
+# Top of stack = last element in the JSON array.
+
+slugify() {
+    echo "$1" | sed 's|^/||; s|/|-|g; s|[^a-zA-Z0-9._-]|-|g'
+}
+
+stack_file() {
+    local pwd_slug branch branch_slug
+    pwd_slug="$(slugify "$(pwd)")"
+    branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "no-branch")"
+    branch_slug="$(slugify "$branch")"
+    echo "${HOME}/.cache/claude/skill-stack/${pwd_slug}/${branch_slug}.json"
+}
+
+ensure_file() {
+    local file="$1"
+    if [[ ! -f "$file" ]]; then
+        mkdir -p "$(dirname "$file")"
+        echo "[]" > "$file"
+    fi
+}
+
+cmd="${1:-}"
+case "$cmd" in
+    push)
+        skill="${2:?Usage: skill-stack push <skill> <resume>}"
+        resume="${3:?Usage: skill-stack push <skill> <resume>}"
+        file="$(stack_file)"
+        ensure_file "$file"
+        jq --arg skill "$skill" --arg resume "$resume" \
+            '. += [{"skill": $skill, "resume": $resume}]' "$file" > "${file}.tmp"
+        mv "${file}.tmp" "$file"
+        ;;
+    pop)
+        file="$(stack_file)"
+        if [[ ! -f "$file" ]]; then
+            echo "skill-stack: stack is empty" >&2
+            exit 1
+        fi
+        jq -e 'last' "$file"
+        jq 'if length <= 1 then [] else .[:-1] end' "$file" > "${file}.tmp"
+        mv "${file}.tmp" "$file"
+        # Clean up empty stack
+        if [[ "$(cat "$file")" == "[]" ]]; then
+            rm "$file"
+            rmdir --ignore-fail-on-non-empty "$(dirname "$file")"
+        fi
+        ;;
+    peek)
+        file="$(stack_file)"
+        if [[ ! -f "$file" ]] || [[ "$(cat "$file")" == "[]" ]]; then
+            echo "skill-stack: stack is empty" >&2
+            exit 1
+        fi
+        jq -e 'last' "$file"
+        ;;
+    show)
+        file="$(stack_file)"
+        if [[ ! -f "$file" ]]; then
+            echo "[]"
+        else
+            jq '.' "$file"
+        fi
+        ;;
+    clear)
+        file="$(stack_file)"
+        if [[ -f "$file" ]]; then
+            rm "$file"
+            rmdir --ignore-fail-on-non-empty "$(dirname "$file")"
+        fi
+        ;;
+    *)
+        echo "Usage: skill-stack push <skill> <resume>" >&2
+        echo "       skill-stack pop" >&2
+        echo "       skill-stack peek" >&2
+        echo "       skill-stack show" >&2
+        echo "       skill-stack clear" >&2
+        exit 1
+        ;;
+esac
