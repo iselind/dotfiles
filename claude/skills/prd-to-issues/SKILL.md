@@ -26,6 +26,14 @@ Complete the phases below in order.
 
 ---
 
+## Phase 0 — Register on skill stack
+
+```bash
+skill-stack push prd-to-issues
+```
+
+---
+
 ## Phase 1 — Read the PRD
 
 **Step 1 — Identify the PRD**
@@ -176,3 +184,11 @@ Report the commit hash and confirm the push succeeded.
 
 Move directly into `/retro prd-to-issues`. Do not ask for permission — this is a
 natural continuation of the skill.
+
+---
+
+## Final step — Pop skill stack
+
+```bash
+skill-stack pop
+```

@@ -28,6 +28,14 @@ Complete the phases below in order.
 
 ---
 
+## Phase 0 — Register on skill stack
+
+```bash
+skill-stack push review "Phase 4 — delete completed documents"
+```
+
+---
+
 ## Phase 1 — Review & populate the plan
 
 **Step 1 — Find the plan**
@@ -186,3 +194,11 @@ After the user responds, state the verdict:
 
 - **Warranted:** "Another round is warranted — [one sentence on what drove it]. Run `/clear` to reset context, then `/review` to start the next round."
 - **Not warranted:** "No further rounds needed — [one sentence on why]."
+
+---
+
+## Final step — Pop skill stack
+
+```bash
+skill-stack pop
+```

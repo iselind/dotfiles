@@ -23,6 +23,14 @@ user has reviewed.
 
 ---
 
+## Phase 0 — Register on skill stack
+
+```bash
+skill-stack push fix-pr-comments "Phase 3 — close review skill gaps"
+```
+
+---
+
 ## Phase 1 — Identify the comments to work through
 
 **Step 1 — Check what's already in context**
@@ -239,3 +247,11 @@ After all gaps are addressed, move directly to Phase 4.
 
 Move directly into `/retro fix-pr-comments`. Do not ask for permission — this
 is a natural continuation of the fix.
+
+---
+
+## Final step — Pop skill stack
+
+```bash
+skill-stack pop
+```

@@ -16,6 +16,14 @@ file in this skill directory). Read it before writing any PRD.
 
 ---
 
+## Phase 0 — Register on skill stack
+
+```bash
+skill-stack push create-prd
+```
+
+---
+
 ## Phase 1 — Capture the idea
 
 **Ask for the idea before doing anything else.**
@@ -122,3 +130,11 @@ git push -u origin prd/<slug>
 ```
 
 Then report the branch name and file path to the user.
+
+---
+
+## Final step — Pop skill stack
+
+```bash
+skill-stack pop
+```

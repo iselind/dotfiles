@@ -17,6 +17,14 @@ honestly, surface improvements, and apply them to the skill file.
 
 ---
 
+## Phase 0 — Register on skill stack
+
+```bash
+skill-stack push retro
+```
+
+---
+
 ## Phase 1 — Identify the skill
 
 If `$ARGUMENTS` is provided, use it as the skill name. Otherwise ask:
@@ -79,3 +87,11 @@ change → assess → review → commit → next flow:
 
 After the last change is committed, end the retro. Do not ask for further
 additions — that was already covered in Phase 2.
+
+---
+
+## Final step — Pop skill stack
+
+```bash
+skill-stack pop
+```

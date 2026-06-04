@@ -29,6 +29,14 @@ Identify architectural decisions made on this branch that are worth preserving a
 
 ---
 
+## Phase 0 — Register on skill stack
+
+```bash
+skill-stack push extract-adr
+```
+
+---
+
 ## Phase 1 — Identify candidates
 
 **Step 1 — Read the branch**
@@ -157,4 +165,10 @@ This phase must always run — even when no candidates were found, even when inv
 
 Move directly into `/retro extract-adr`. Do not ask for permission.
 
-After the retrospective completes, if this skill was invoked by another skill with remaining phases, explicitly tell the user which skill invoked it and that control is returning. Do not assume the invoking skill continues automatically — make the handoff visible so remaining phases are not silently skipped.
+After the retrospective completes, run:
+
+```bash
+skill-stack pop
+```
+
+This announces the return to the invoking skill automatically.

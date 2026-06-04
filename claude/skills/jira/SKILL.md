@@ -138,9 +138,21 @@ Load these when the relevant topic comes up — do not load them preemptively.
 | `starting-work.md` | User says they are starting work on or will be working on a ticket |
 | `conventions.md` | Project-specific creation defaults, GitHub integration, branch derivation, or state transitions |
 
+## Phase 0 — Register on skill stack
+
+```bash
+skill-stack push jira
+```
+
 ## Your job
 
 Understand what the user wants to do, construct the appropriate API call(s),
 run them, and present the results clearly. For destructive or irreversible
 operations (closing, deleting, bulk updates), confirm with the user before
 executing.
+
+When the job is complete, run:
+
+```bash
+skill-stack pop
+```
