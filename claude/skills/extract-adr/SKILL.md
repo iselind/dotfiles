@@ -71,6 +71,8 @@ For each candidate, check whether it is already covered by an existing ADR. Plan
 
 For candidates closely related to an existing ADR, extending is only safe when both conditions hold: (1) the addition is purely additive — nothing in existing text is modified, qualified, or contradicted; (2) existing references are unaffected — scan plans, other ADRs, and docs for references to the target ADR; if any reference describes the ADR's scope in a way the extension would undermine, or sits near content the extension touches, a new ADR is safer. If either condition fails, propose a new ADR that cross-references the related one.
 
+When both conditions hold, prefer extension over a new ADR if the candidate is a direct consequence of the existing ADR's chosen mechanism — a decision that only makes sense in the context of that mechanism. A satellite ADR whose rationale begins "because ADR-NNN chose X…" is a weaker home for the reasoning than the parent document itself.
+
 **Non-ADR work surfaced during this skill**
 
 While reading ADRs or discussing candidates, you may surface work that is not an ADR or OPEN — errors in branch-introduced ADRs (wrong attributions, missing cases, factual mistakes), documentation placement improvements, other follow-up. None of these are extract-adr's job to fix. When any such work surfaces:
