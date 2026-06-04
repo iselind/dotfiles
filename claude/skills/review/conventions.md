@@ -20,6 +20,8 @@ Apply these throughout Phase 2.
 
 - **Plan language:** Preserve the hedging actually present in the text. Plans use tentative language ("expected", "likely", "would follow") — do not paraphrase into categorical claims. Overstating what a plan commits to or rejects deflects the initial engagement before the user can confirm the inference.
 
+- **Cleanup items with same-named survivors:** When a cleanup item removes one thing but a similarly-named or related thing is intentionally kept, make the distinction explicit in the first sentence of the item description — not buried in the detail. A reader skimming "Dead `foo` output" who then sees "the variable itself is still needed" will experience a contradiction. Lead with the precise scope: "The `foo` *output* in `outputs.tf` is dead — no caller reads it. The `foo` *variable* is kept; it is still used by X."
+
 ## Fixing issues
 
 - **Keep fixes minimal** — this is a review pass, not a refactor. Flag any fix with meaningful risk or side effects before proceeding.
