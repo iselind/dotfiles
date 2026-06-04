@@ -25,9 +25,13 @@ user has reviewed.
 
 ## Phase 0 — Register on skill stack
 
+Look ahead in the phases below and identify where this skill resumes after invoking a sub-skill. Then run:
+
 ```bash
-skill-stack push fix-pr-comments "Phase 3 — close review skill gaps"
+skill-stack push fix-pr-comments "<resume>"
 ```
+
+Set `<resume>` to the single address — a phase name, step label, or other marker — where this skill picks up after the sub-skill returns. If nothing remains after the sub-skill returns, omit the resume argument.
 
 ---
 

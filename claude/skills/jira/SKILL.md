@@ -140,9 +140,13 @@ Load these when the relevant topic comes up — do not load them preemptively.
 
 ## Phase 0 — Register on skill stack
 
+Look ahead in the phases below and identify where this skill resumes after invoking a sub-skill. Then run:
+
 ```bash
-skill-stack push jira
+skill-stack push jira "<resume>"
 ```
+
+Set `<resume>` to the single address — a phase name, step label, or other marker — where this skill picks up after the sub-skill returns. If nothing remains after the sub-skill returns, omit the resume argument.
 
 ## Your job
 
