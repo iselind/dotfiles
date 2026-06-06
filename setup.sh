@@ -54,3 +54,4 @@ done
 
 # Make sure the binaries we expect are in place
 ./provisioning/install.sh
+

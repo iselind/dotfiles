@@ -8,3 +8,4 @@ pyright
 mypy
 debugpy
 flake8
+aider-chat
