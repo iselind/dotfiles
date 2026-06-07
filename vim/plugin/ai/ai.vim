@@ -174,6 +174,9 @@ function! s:BuildAiderCmd(prompt, extra_files) abort
     endfor
   endif
 
+  " Add the message to send to the LLM
+  let cmd += ['--message', a:prompt]
+
   return cmd
 endfunction
 
