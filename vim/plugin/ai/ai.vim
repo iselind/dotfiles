@@ -11,7 +11,7 @@
 "   - If buffer has no file -> fall back to stdin text mode
 "   - Long questions use a git-commit–style editor buffer
 "   - Auto-reload file after AI makes changes
-"   - Verification mode: focus on testing, not watching LLM think
+"   - Verification mode: run tests, check for errors, not watching LLM think
 " ============================================================
 
 if exists('g:loaded_ai_helpers')
@@ -72,6 +72,63 @@ function! s:ReloadFile() abort
     silent execute 'edit ' . fnameescape(s:CurrentFile())
   endif
 endfunction
+
+" Run tests or check for errors after AI makes changes
+function! s:RunVerification() abort
+  let tests = []
+  let errors = []
+
+  " Check for common test commands
+  if filereadable('Makefile')
+    let tests += ['make test']
+  elseif filereadable('pytest.ini') || filereadable('pyproject.toml')
+    let tests += ['pytest']
+  elseif filereadable('package.json')
+    let tests += ['npm test']
+  elseif filereadable('go.mod')
+    let tests += ['go test ./...']
+  elseif filereadable('Cargo.toml')
+    let tests += ['cargo test']
+  endif
+
+  " Check for compilation errors
+  if filereadable('Makefile')
+    let errors += ['make']
+  elseif filereadable('package.json')
+    let errors += ['npm run build']
+  elseif filereadable('go.mod')
+    let errors += ['go build ./...']
+  elseif filereadable('Cargo.toml')
+    let errors += ['cargo build']
+  endif
+
+  " Run tests if any are found
+  if !empty(tests)
+    for test in tests
+      echomsg 'Running: ' . test
+      let out = system(test)
+      if v:shell_error != 0
+        echomsg 'Test failed:' . out
+      else
+        echomsg 'Tests passed'
+      endif
+    endfor
+  endif
+
+  " Run build check if any are found
+  if !empty(errors)
+    for error in errors
+      echomsg 'Checking: ' . error
+      let out = system(error)
+      if v:shell_error != 0
+        echomsg 'Build failed:' . out
+      else
+        echomsg 'Build succeeded'
+      endif
+    endfor
+  endif
+endfunction
+
 
 " ---------------- Diagnostics
 
@@ -254,10 +311,11 @@ function! AIExplain(...) range abort
   call s:ExecuteCmd(context)
 endfunction
 
-" Verify mode: focus on testing, not watching LLM think
+" Verify mode: run tests and check for errors after AI makes changes
 function! AIVerify(...) range abort
   let context = s:CollectContext('Verify', a:firstline, a:lastline)
-  call s:ExecuteCmd(context, 0) " Don't show output, just run
+  call s:ExecuteCmd(context, 0) " Don't show AI output
+  call s:RunVerification() " Run tests and checks
 endfunction
 
 " ============================================================
