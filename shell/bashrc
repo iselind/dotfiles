@@ -44,7 +44,7 @@ export GOPATH="$HOME/go-packages"
 export GOROOT="$HOME/go"
 export PATH=$YARN_PATH:$HOME/.pipinstall/bin:$GOROOT/bin:$GOPATH/bin:/usr/local/go/bin:$HOME/.local/bin:$HOME/code/dotfiles/shell/bin:$PATH
 
-export OLLAMA_API_URL=http://$ASUS:11434
+export OLLAMA_API_BASE=http://$ASUS:11434
 export OLLAMA_MODEL='ollama_chat/qwen3.5:9b'
 
 # Notices
