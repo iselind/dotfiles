@@ -1,11 +1,11 @@
 " ============================================================
 " ai.vim
 " Lightweight AI helpers for plain Vim
-" Supports Claude CLI, Copilot CLI, and Aider with fallback
+" Supports Claude CLI and Aider
 " Plain Vim only, CoC-friendly, deterministic
 " ------------------------------------------------------------
 " Design principles
-"   - Backend detection: Aider → Claude → Copilot → unavailable
+"   - Backend detection: Aider → Claude → unavailable
 "   - Always non-interactive
 "   - Save file before disk-based operations
 "   - If buffer has no file -> fall back to stdin text mode
@@ -31,24 +31,18 @@ function! s:ClaudeAvailable() abort
   return executable('claude')
 endfunction
 
-function! s:CopilotAvailable() abort
-  return executable('copilot')
-endfunction
-
 function! s:GetAvailableBackend() abort
   if s:AiderAvailable()
     return 'aider'
   elseif s:ClaudeAvailable()
     return 'claude'
-  elseif s:CopilotAvailable()
-    return 'copilot'
   else
     return ''
   endif
 endfunction
 
 function! s:EchoMissing() abort
-  echo "No AI backend available (install aider, claude, or copilot)"
+  echo "No AI backend available (install aider or claude)"
 endfunction
 
 
@@ -160,7 +154,6 @@ endfunction
 
 function! s:BuildAiderCmd(prompt, extra_files) abort
   let model=getenv('OLLAMA_MODEL')
-  "let model = get(g:, 'aider_model', get(g:, 'ollama_model', get(g:, 'OLLAMA_MODEL', 'llama2')))
   let cmd = ['aider', '--model', model]
 
   " Always include current file via --file
@@ -199,10 +192,6 @@ function! s:BuildClaudeCmd(prompt, extra_files) abort
   return cmd
 endfunction
 
-function! s:BuildCopilotCmd(prompt) abort
-  return ['copilot', '-s', '-p', a:prompt]
-endfunction
-
 function! s:ExecuteCmd(context, showoutput=v:true, extra_files=[]) abort
   let backend = s:GetAvailableBackend()
   if empty(backend)
@@ -215,8 +204,6 @@ function! s:ExecuteCmd(context, showoutput=v:true, extra_files=[]) abort
     let cmd = s:BuildAiderCmd(prompt, a:extra_files)
   elseif backend ==# 'claude'
     let cmd = s:BuildClaudeCmd(prompt, a:extra_files)
-  else
-    let cmd = s:BuildCopilotCmd(prompt)
   endif
   let cmd = map(cmd, 'shellescape(v:val)')
   let cmd = join(cmd, ' ')
