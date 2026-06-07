@@ -3,3 +3,4 @@ vim/plugged
 __pycache__/
 *.pyc
 .pytest_cache/
+.aider*
