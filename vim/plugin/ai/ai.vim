@@ -161,37 +161,37 @@ endfunction
 function! s:BuildAiderCmd(prompt, extra_files) abort
   let model = get(g:, 'aider_model', get(g:, 'ollama_model', 'llama2'))
   let cmd = ['aider', '-m', model, '-y', '-p', a:prompt]
-  
+
   " Always include current file via --file
   if s:HasFile()
     let cmd += ['--file', s:CurrentFile()]
   endif
-  
+
   " Add any extra files passed as arguments
   if !empty(a:extra_files)
     for f in a:extra_files
       let cmd += ['--file', f]
     endfor
   endif
-  
+
   return cmd
 endfunction
 
 function! s:BuildClaudeCmd(prompt, extra_files) abort
   let cmd = ['claude', '-p', a:prompt]
-  
+
   " Add --file for each file if aider-style file passing is supported
   " Note: Claude CLI may not support --file, but we try
   if s:HasFile()
     let cmd += ['--file', s:CurrentFile()]
   endif
-  
+
   if !empty(a:extra_files)
     for f in a:extra_files
       let cmd += ['--file', f]
     endfor
   endif
-  
+
   return cmd
 endfunction
 
@@ -222,7 +222,7 @@ function! s:ExecuteCmd(context, showoutput=v:true, extra_files=[]) abort
   if a:showoutput
      call s:Scratch('[AI Output]', out)
   endif
-  
+
   " Auto-reload the file after AI makes changes
   call s:ReloadFile()
 endfunction
