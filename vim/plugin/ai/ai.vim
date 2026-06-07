@@ -1,11 +1,11 @@
 " ============================================================
 " ai.vim
 " Lightweight AI helpers for plain Vim
-" Supports Claude CLI and Copilot CLI with fallback
+" Supports Claude CLI, Copilot CLI, and Aider with fallback
 " Plain Vim only, CoC-friendly, deterministic
 " ------------------------------------------------------------
 " Design principles
-"   - Backend detection: Claude → Copilot → unavailable
+"   - Backend detection: Aider → Claude → Copilot → unavailable
 "   - Always non-interactive
 "   - Save file before disk-based operations
 "   - If buffer has no file -> fall back to stdin text mode
@@ -22,6 +22,10 @@ let g:loaded_ai_helpers = 1
 " Capability detection
 " ============================================================
 
+function! s:AiderAvailable() abort
+  return executable('aider')
+endfunction
+
 function! s:ClaudeAvailable() abort
   return executable('claude')
 endfunction
@@ -31,7 +35,9 @@ function! s:CopilotAvailable() abort
 endfunction
 
 function! s:GetAvailableBackend() abort
-  if s:ClaudeAvailable()
+  if s:AiderAvailable()
+    return 'aider'
+  elseif s:ClaudeAvailable()
     return 'claude'
   elseif s:CopilotAvailable()
     return 'copilot'
@@ -41,7 +47,7 @@ function! s:GetAvailableBackend() abort
 endfunction
 
 function! s:EchoMissing() abort
-  echo "No AI CLI available (install claude or copilot)"
+  echo "No AI CLI available (install aider, claude, or copilot)"
 endfunction
 
 
@@ -144,6 +150,12 @@ function! s:BuildPrompt(context) abort
   return prompt
 endfunction
 
+function! s:BuildAiderCmd(prompt) abort
+  let model = get(g:, 'aider_model', get(g:, 'ollama_model', 'llama2'))
+  let cmd = ['aider', '-m', model, '-y', '-p', a:prompt]
+  return cmd
+endfunction
+
 function! s:BuildClaudeCmd(prompt) abort
    return ['claude', '-p', a:prompt]
 endfunction
@@ -160,7 +172,9 @@ function! s:ExecuteCmd(context, showoutput=v:true) abort
   endif
 
   let prompt = s:BuildPrompt(a:context)
-  if backend ==# 'claude'
+  if backend ==# 'aider'
+    let cmd = s:BuildAiderCmd(prompt)
+  elseif backend ==# 'claude'
     let cmd = s:BuildClaudeCmd(prompt)
   else
     let cmd = s:BuildCopilotCmd(prompt)
@@ -181,7 +195,7 @@ endfunction
 " ============================================================
 
 " ============================================================
-" FIX  (file-aware, diagnostics-aware)
+" FIX (file-aware, diagnostics-aware)
 " ============================================================
 
 function! AIFix(...) range abort
