@@ -160,7 +160,7 @@ endfunction
 
 function! s:BuildAiderCmd(prompt, extra_files) abort
   let model = get(g:, 'aider_model', get(g:, 'ollama_model', 'llama2'))
-  let cmd = ['aider', '-m', model, '-y', '-p', a:prompt]
+  let cmd = ['aider', '-m', model]
 
   " Always include current file via --file
   if s:HasFile()
