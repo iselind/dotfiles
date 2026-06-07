@@ -11,6 +11,7 @@
 "   - If buffer has no file -> fall back to stdin text mode
 "   - Long questions use a git-commit–style editor buffer
 "   - Auto-reload file after AI makes changes
+"   - Verification mode: focus on testing, not watching LLM think
 " ============================================================
 
 if exists('g:loaded_ai_helpers')
@@ -253,9 +254,11 @@ function! AIExplain(...) range abort
   call s:ExecuteCmd(context)
 endfunction
 
-" Future extensions:
-" - Review produce a loclist with line-specific feedback instead of a prose
-"   summary
+" Verify mode: focus on testing, not watching LLM think
+function! AIVerify(...) range abort
+  let context = s:CollectContext('Verify', a:firstline, a:lastline)
+  call s:ExecuteCmd(context, 0) " Don't show output, just run
+endfunction
 
 " ============================================================
 " Commands
@@ -268,6 +271,7 @@ command! -range=% AIFix     <line1>,<line2>call AIFix()
 command! -range=% AIAsk     <line1>,<line2>call AIAsk()
 command! -range=% AIExplain <line1>,<line2>call AIExplain()
 command! -range=% AIReview  <line1>,<line2>call AIReview()
+command! -range=% AIVerify  <line1>,<line2>call AIVerify()
 
 " ============================================================
 " Keymaps
@@ -283,6 +287,7 @@ nnoremap <leader>cf :AIFix<CR>
 nnoremap <leader>ca :AIAsk<CR>
 nnoremap <leader>ce :AIExplain<CR>
 nnoremap <leader>cr :AIReview<CR>
+nnoremap <leader>cv :AIVerify<CR>
 
 " ---------- Visual (explicit selection)
 
@@ -290,6 +295,7 @@ vnoremap <leader>cf :AIFix<CR>
 vnoremap <leader>ca :AIAsk<CR>
 vnoremap <leader>ce :AIExplain<CR>
 vnoremap <leader>cr :AIReview<CR>
+vnoremap <leader>cv :AIVerify<CR>
 
 " ============================================================
 " Operator support (motion/text-object)
@@ -319,10 +325,15 @@ function! s:AIReviewOp(type) abort
   '[,']call AIReview()
 endfunction
 
+function! s:AIVerifyOp(type) abort
+  '[,']call AIVerify()
+endfunction
+
 nnoremap <silent> <leader>cf :set opfunc=<SID>AIFixOp<CR>g@
 nnoremap <silent> <leader>ca :set opfunc=<SID>AIAskOp<CR>g@
 nnoremap <silent> <leader>ce :set opfunc=<SID>AIExplainOp<CR>g@
 nnoremap <silent> <leader>cr :set opfunc=<SID>AIReviewOp<CR>g@
+nnoremap <silent> <leader>cv :set opfunc=<SID>AIVerifyOp<CR>g@
 
 " ============================================================
 " Reload helpers
