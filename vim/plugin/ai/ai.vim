@@ -159,8 +159,8 @@ function! s:BuildPrompt(context) abort
 endfunction
 
 function! s:BuildAiderCmd(prompt, extra_files) abort
-  let model = get(g:, 'aider_model', get(g:, 'ollama_model', 'llama2'))
-  let cmd = ['aider', '-m', model]
+  let model = get(g:, 'aider_model', get(g:, 'ollama_model', get(g:, 'OLLAMA_MODEL', 'llama2')))
+  let cmd = ['aider', '--model', model]
 
   " Always include current file via --file
   if s:HasFile()
@@ -175,7 +175,7 @@ function! s:BuildAiderCmd(prompt, extra_files) abort
   endif
 
   " Add the message to send to the LLM
-  let cmd += ['--message', a:prompt]
+  let cmd += ['-m', a:prompt]
 
   return cmd
 endfunction
