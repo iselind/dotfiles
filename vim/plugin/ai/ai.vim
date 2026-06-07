@@ -10,6 +10,7 @@
 "   - Save file before disk-based operations
 "   - If buffer has no file -> fall back to stdin text mode
 "   - Long questions use a git-commit–style editor buffer
+"   - Auto-reload file after AI makes changes
 " ============================================================
 
 if exists('g:loaded_ai_helpers')
@@ -47,7 +48,7 @@ function! s:GetAvailableBackend() abort
 endfunction
 
 function! s:EchoMissing() abort
-  echo "No AI CLI available (install aider, claude, or copilot)"
+  echo "No AI backend available (install aider, claude, or copilot)"
 endfunction
 
 
@@ -67,6 +68,13 @@ endfunction
 function! s:EnsureSaved() abort
   if s:HasFile() && &modified
     silent write
+  endif
+endfunction
+
+" Reload the current file after AI makes changes
+function! s:ReloadFile() abort
+  if s:HasFile()
+    silent execute 'edit ' . fnameescape(s:CurrentFile())
   endif
 endfunction
 
@@ -214,6 +222,9 @@ function! s:ExecuteCmd(context, showoutput=v:true, extra_files=[]) abort
   if a:showoutput
      call s:Scratch('[AI Output]', out)
   endif
+  
+  " Auto-reload the file after AI makes changes
+  call s:ReloadFile()
 endfunction
 
 
