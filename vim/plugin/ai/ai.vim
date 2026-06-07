@@ -11,7 +11,7 @@
 "   - If buffer has no file -> fall back to stdin text mode
 "   - Long questions use a git-commit–style editor buffer
 "   - Auto-reload file after AI makes changes
-"   - Verification mode: run tests, check for errors, not watching LLM think
+"   - Verification mode: run tests, check for errors, feed failures back to LLM
 " ============================================================
 
 if exists('g:loaded_ai_helpers')
@@ -74,6 +74,7 @@ function! s:ReloadFile() abort
 endfunction
 
 " Run tests or check for errors after AI makes changes
+" Returns: {'tests': [], 'errors': []}
 function! s:RunVerification() abort
   let tests = []
   let errors = []
@@ -109,6 +110,7 @@ function! s:RunVerification() abort
       let out = system(test)
       if v:shell_error != 0
         echomsg 'Test failed:' . out
+        let errors += ['test:' . out]
       else
         echomsg 'Tests passed'
       endif
@@ -122,11 +124,14 @@ function! s:RunVerification() abort
       let out = system(error)
       if v:shell_error != 0
         echomsg 'Build failed:' . out
+        let errors += ['build:' . out]
       else
         echomsg 'Build succeeded'
       endif
     endfor
   endif
+
+  return {'tests': tests, 'errors': errors}
 endfunction
 
 
@@ -312,10 +317,21 @@ function! AIExplain(...) range abort
 endfunction
 
 " Verify mode: run tests and check for errors after AI makes changes
+" If verification fails, feed failures back to LLM for fixing
 function! AIVerify(...) range abort
   let context = s:CollectContext('Verify', a:firstline, a:lastline)
   call s:ExecuteCmd(context, 0) " Don't show AI output
-  call s:RunVerification() " Run tests and checks
+  let verification = s:RunVerification()
+  
+  " If verification failed, feed failures back to LLM
+  if !empty(verification.errors)
+    let error_prompt = 'Verification failed. Please fix these errors:'
+    for err in verification.errors
+      let error_prompt .= "\n" . err
+    endfor
+    let context.prompt = error_prompt
+    call s:ExecuteCmd(context, 1) " Show output this time
+  endif
 endfunction
 
 " ============================================================
