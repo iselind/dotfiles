@@ -321,3 +321,10 @@ nnoremap <silent> <leader>cf :set opfunc=<SID>AIFixOp<CR>g@
 nnoremap <silent> <leader>ca :set opfunc=<SID>AIAskOp<CR>g@
 nnoremap <silent> <leader>ce :set opfunc=<SID>AIExplainOp<CR>g@
 nnoremap <silent> <leader>cr :set opfunc=<SID>AIReviewOp<CR>g@
+
+" ============================================================
+" Reload helpers
+" ============================================================
+
+" Helper to reload AI helpers after editing the plugin file
+command! -nargs=0 ReloadAI source ~/code/dotfiles/vim/plugin/ai/ai.vim
