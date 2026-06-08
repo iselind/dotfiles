@@ -107,6 +107,8 @@ In one edit: append a table row `| N | Short description | Type | ⬜ Open |` an
 
 If no new issues were found, say so. If there are existing open items, skip to Phase 2. If there are no open items at all, skip to Phase 3.
 
+Commit the tracking file (or the updated plan) before waiting for the user's confirmation. This ensures findings survive a context reset between Phase 1 and Phase 2.
+
 Tell the user: "Added items N–M to the plan. Ready to start with the next open issue?" — then wait for confirmation.
 
 ---
@@ -132,6 +134,8 @@ For collision or uniqueness bugs (two items competing for the same key, filename
 5. Stop for review: "Ready for review — let me know when you're ready to commit." Wait.
 
 6. When the user's response clearly signals intent to commit — not just closes a side discussion — commit in the branch's style (look at recent commits for the pattern). If the response raises a new concern, addresses wording, or asks a question, treat it as continued review, not confirmation. **An affirmation that confirms a wording proposal ("yes", "looks good", "do that") is not a commit signal — it means implement the change. The step 5 review checkpoint must still be held after implementing it.** Then ask: "Ready for item N+1?" and wait.
+
+   Do not add a "would `/review` have caught this?" reflection after each item — you are already running the review skill; the question is circular.
 
 **Do not work on the next item until the user confirms the current one.**
 
