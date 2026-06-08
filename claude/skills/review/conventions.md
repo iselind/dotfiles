@@ -32,6 +32,8 @@ Apply these throughout Phase 2.
 
 - **Before marking a fix complete**, check whether it should apply consistently to all sibling or parallel instances (e.g. if fixing one of four symmetric steps, verify the other three).
 
+- **When a fix involves asserting what an external function or API sets**, follow any links to authoritative documentation referenced in the surrounding project docs (CLAUDE.md, architecture docs) before concluding the assertion is complete. What those docs enumerate may be a subset of the authoritative source — don't stop at the enumeration.
+
 - **For any content pattern fix** — a phrase, a framing, a section structure, terminology, naming, or references — search across all documents in scope before marking the fix complete. A symptom in one section often has counterparts in others. Check both directions: existing references are accurate AND new content is reachable from the relevant context.
 
 - **When writing new content** (descriptions, sentences, sections), verify it against relevant ADRs and design documents. A fix that resolves the tracked issue while re-introducing a different class of error is not complete.
