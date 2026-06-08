@@ -111,7 +111,8 @@ Then output two lists — ADR candidates and OPEN candidates — one line each:
 ```
 ADR candidates:
 1. <Short description of settled decision>
-2. Extend ADR-NNN: <short description of the addendum>
+2. (borderline) <Short description — real trade-off exists, but a lighter-weight form may be a better home>
+3. Extend ADR-NNN: <short description of the addendum>
 
 OPEN candidates:
 1. <Short description of unresolved question>
@@ -120,6 +121,8 @@ No candidates found.  ← if neither list has entries
 ```
 
 Either or both lists may be empty. Present both regardless.
+
+Mark a candidate `(borderline)` when there is a real trade-off — a reasonable person could have chosen differently — but the decision is narrow enough that a lighter-weight documentation form may serve just as well. Present both options to the user rather than defaulting to the ADR. If the user chooses a lighter-weight alternative, add the documentation work as an item to the review tracking file so it is not dropped.
 
 For OPEN candidates that closely parallel a file intentionally deleted on the same branch, lead the description with that tension — state it before the trade-off analysis.
 
