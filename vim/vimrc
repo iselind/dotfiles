@@ -60,6 +60,11 @@ set modeline
 
 " Make Vim automatically refresh any files that haven't been edited by Vim
 set autoread
+" Trigger autoread when files change on disk
+autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
+" Notification after a file is automatically reloaded
+autocmd FileChangedShellPost * echohl WarningMsg | echo "File changed on disk. Reloaded." | echohl None
+
 
 " Highlight space error
 :highlight ExtraWhitespace term=inverse gui=inverse cterm=inverse
