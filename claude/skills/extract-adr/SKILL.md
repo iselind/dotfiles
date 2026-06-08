@@ -81,6 +81,8 @@ If there are no existing ADRs, the next number is 001.
 
 For each candidate, check whether it is already covered by an existing ADR. Plans are ephemeral — if a candidate's rationale is documented only in the plan, treat it as undocumented.
 
+Also check whether the rationale is already captured in durable project documentation other than ADRs — e.g. CLAUDE.md files, architecture docs, or similar long-lived references. If it is, the candidate does not need an ADR: the information is already where it needs to be. Drop it from the candidate list rather than proposing a duplicate.
+
 For candidates closely related to an existing ADR, extending is only safe when both conditions hold: (1) the addition is purely additive — nothing in existing text is modified, qualified, or contradicted; (2) existing references are unaffected — scan plans, other ADRs, and docs for references to the target ADR; if any reference describes the ADR's scope in a way the extension would undermine, or sits near content the extension touches, a new ADR is safer. If either condition fails, propose a new ADR that cross-references the related one.
 
 When both conditions hold, prefer extension over a new ADR if the candidate is a direct consequence of the existing ADR's chosen mechanism — a decision that only makes sense in the context of that mechanism. A satellite ADR whose rationale begins "because ADR-NNN chose X…" is a weaker home for the reasoning than the parent document itself.
