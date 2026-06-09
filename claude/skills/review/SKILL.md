@@ -54,9 +54,18 @@ If no plan exists, create a review tracking file. Preferred pattern: `<plan-name
 
 Understand: the status table format (columns, emoji conventions, item numbering), the format of detailed sections (how each item is written below the table), and all existing work items and their content.
 
-**Step 3 — Review the branch**
+**Step 3a — Unbiased parallel pass**
 
-Read the full diff and all changed files. Identify issues in these categories:
+Spawn an agent in parallel using the Agent tool. The agent has no session context — it reads the diff cold and applies a generic, unbiased pass. Use this prompt:
+
+> You are reviewing a branch. Run `git diff origin/main...HEAD` to read the diff, then read the changed files in full.
+> Report ONLY issues that need attention — do not comment on code that is working correctly.
+> Focus on: code quality issues, bugs, or anti-patterns; security vulnerabilities or risks; performance problems or inefficiencies; missing or inadequate tests; documentation gaps or inaccuracies.
+> Return a plain list of findings. For each: one-line description, file and approximate location, and why it matters.
+
+**Step 3b — Structured review**
+
+Read the full diff and all changed files yourself. Identify issues in these categories:
 
 - **Bug** — code that is incorrect or could fail; for CI and test scripts specifically, check for fixed paths used as temporary state (two concurrent runs on the same runner will collide); for PromQL expressions, check that both sides of a vector join using `on(...)` are aggregated to the same label set as the join key — extra labels on either side not named in `on()` cause silent fan-out (left) or silently dropped series (right); when code collects items from a non-deterministic source (any unordered collection) and serializes or compares the result for idempotency, verify the items are sorted or otherwise canonicalized before serialization — without this, the same logical state can produce different bytes across calls; when a branch replaces X with Y (migrating frameworks, converting tests, swapping libraries, rewriting a component), read the deleted content alongside the additions and verify every behaviour or capability of X is covered by Y — migration gaps are silent by definition
 - **Security** — credentials, injection risk, over-permissive access
@@ -102,6 +111,8 @@ Present the finding to the user and ask how to proceed. Typical handling:
 - Continue with independent items that do not depend on the scope-exceeding issue
 
 **Step 4 — Add new items to the plan**
+
+Wait for the Step 3a agent to complete. Combine its findings with your Step 3b findings — deduplicate where they overlap, and classify each into the tracking file categories above.
 
 In one edit: append a table row `| N | Short description | Type | ⬜ Open |` and append a detailed section following the exact heading, paragraph, and code-block style already used in the document.
 
