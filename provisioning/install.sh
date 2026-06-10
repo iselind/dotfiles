@@ -116,11 +116,9 @@ ensure_line 'export PATH="$HOME/.local/share/fnm:$PATH"' "$PROFILE"
 ensure_line 'eval "$(fnm env)"' "$PROFILE"
 eval "$(fnm env)"
 
-if ! command -v node >/dev/null 2>&1; then
-  echo "==> Installing Node LTS"
-  fnm install --lts
-  fnm use --lts
-fi
+echo "==> Installing Node LTS"
+fnm install --lts
+# fnm use --lts
 
 # Enable corepack if available (fnm-managed Node typically has it)
 # For system Node without corepack, yarn will be installed via npm packages
