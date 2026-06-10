@@ -158,7 +158,6 @@ if [ ! -x "$(command -v go)" ] || [ "$(go version | awk '{print $3}')" != "go${G
   rm "go${GO_VERSION}.linux-amd64.tar.gz"
 else
   echo "==> Go $GO_VERSION already installed"
-  exit 0
 fi
 
 mkdir -p "$GOPATH"
