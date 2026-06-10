@@ -67,6 +67,13 @@ Spawn an agent in parallel using the Agent tool. The agent has no session contex
 
 Read the full diff and all changed files yourself. Identify issues in these categories:
 
+- **Missing test-cases** — untested edge cases, missing assertions, or
+  insufficient coverage. When a branch adds a new code path, check that it is
+  covered by tests — not just exercised, but actually asserted against. When a
+  branch adds a new test file, check that it covers edge cases and failure
+  modes, not just the happy path. When a branch adds a new test assertion, check
+  that it is not redundant with existing assertions and that it meaningfully
+  tightens the test's verification of the target behaviour.
 - **Bug** — code that is incorrect or could fail; for CI and test scripts specifically, check for fixed paths used as temporary state (two concurrent runs on the same runner will collide); for PromQL expressions, check that both sides of a vector join using `on(...)` are aggregated to the same label set as the join key — extra labels on either side not named in `on()` cause silent fan-out (left) or silently dropped series (right); when code collects items from a non-deterministic source (any unordered collection) and serializes or compares the result for idempotency, verify the items are sorted or otherwise canonicalized before serialization — without this, the same logical state can produce different bytes across calls; when a branch replaces X with Y (migrating frameworks, converting tests, swapping libraries, rewriting a component), read the deleted content alongside the additions and verify every behaviour or capability of X is covered by Y — migration gaps are silent by definition
 - **Security** — credentials, injection risk, over-permissive access
 - **Gap** — unspecified mechanism or missing prerequisite that forces an undocumented design decision on the implementer
@@ -94,7 +101,6 @@ Topically related ADRs/OPENs not on the branch — coherence check:
 - Flag descriptions that name an outcome without a mechanism ("scoped by label selector", "X is injected", "configured with the correct Y"). If the how is unspecified and the implementer would have to invent it, that is a Gap.
 - Distinguish plan-level contract from implementation detail. A plan should state *what* contract must hold (e.g. "the tenant ID must be readable by the sync operator") without prescribing *how* it is satisfied (label, field, annotation). Flag items that over-specify implementation detail or under-specify the contract to the point the implementer cannot know what is required.
 - Verify work items are consistent with relevant ADRs — both pre-existing and branch-introduced. A contradiction is a Bug, not a wording issue.
-
 
 **Review scope:**
 
