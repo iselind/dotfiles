@@ -148,12 +148,17 @@ GO_VERSION=1.26.3
 GOROOT="$HOME/go"
 GOPATH="$HOME/go-packages"
 
-if [ ! -d "$GOROOT" ]; then
+if [ ! -x "$(command -v go)" ] || [ "$(go version | awk '{print $3}')" != "go${GO_VERSION}" ]; then
+  echo "==> Go $GO_VERSION not found or version mismatch (found: $(go version 2>/dev/null || echo 'none'))"
+  rm -rf "$GOROOT"
   echo "==> Installing Go $GO_VERSION"
   curl -LO "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
   tar -xzf "go${GO_VERSION}.linux-amd64.tar.gz"
   mv go "$GOROOT"
   rm "go${GO_VERSION}.linux-amd64.tar.gz"
+else
+  echo "==> Go $GO_VERSION already installed"
+  exit 0
 fi
 
 mkdir -p "$GOPATH"
