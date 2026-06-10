@@ -1,203 +1,36 @@
 {
-    "coc": {
-        "preferences": {
-            "diagnostic": {
-                "enable": true
-            },
-            "formatOnSaveFiletypes": [
-                "json",
-                "java",
-                "xml",
-                "terraform",
-                "docbk"
-            ]
-        },
-        "filetypemap": {
-            "docbk": "xml"
-        },
-        "filetypes": {
-            "xml": [
-                "xml",
-                "docbk"
-            ]
-        }
-    },
-    "diagnostic": {
-        "floatEnabled": true,
-        "errorSign": "✖",
-        "warningSign": "⚠",
-        "infoSign": "ℹ",
-        "hintSign": "💡",
-        "logLevel": "debug"
-    },
-    "java": {
-        "compile": {
-            "nullAnalysis": {
-                "mode": "automatic"
-            }
-        },
-        "import": {
-            "generatesMetadataFilesAtProjectRoot": false
-        },
-        "configuration": {
-            "checkProjectSettingsExclusions": false
-        }
-    },
-    "go": {
-        "goplsOptions": {
-            "completeUnimported": true,
-            "usePlaceholders": true
-        }
-    },
-    "languageserver": {
-        "dls": {
-            "trace": {
-                "server": "verbose"
-            },
-            "command": "diagnostic-languageserver",
-            "args": [
-                "--stdio",
-                "--log-level=trace"
-            ],
-            "filetypes": [
-                "sh",
-                "python",
-                "cs",
-                "java",
-                "json",
-                "go"
-            ],
-            "initializationOptions": {
-                "mergeConfig": true,
-                "linters": {
-                    "mypy": {
-                        "sourceName": "mypy",
-                        "command": "mypy",
-                        "args": [
-                            "--no-color-output",
-                            "--no-error-summary",
-                            "--show-column-numbers",
-                            "--follow-imports=silent",
-                            "%file"
-                        ],
-                        "formatPattern": [
-                            "^.*:(\\d+?):(\\d+?): ([a-z]+?): (.*)$",
-                            {
-                                "line": 1,
-                                "column": 2,
-                                "security": 3,
-                                "message": 4
-                            }
-                        ],
-                        "securities": {
-                            "error": "error"
-                        }
-                    },
-                    "golangci-lint": {
-                        "command": "golangci-lint",
-                        "rootPatterns": [
-                            ".git",
-                            "go.mod"
-                        ],
-                        "debounce": 100,
-                        "args": [
-                            "run",
-                            "--out-format",
-                            "json"
-                        ],
-                        "sourceName": "golangci-lint",
-                        "parseJson": {
-                            "sourceName": "Pos.Filename",
-                            "sourceNameFilter": true,
-                            "errorsRoot": "Issues",
-                            "line": "Pos.Line",
-                            "column": "Pos.Column",
-                            "message": "${Text} [${FromLinter}]"
-                        }
-                    },
-                    "flake8": {
-                        "command": "flake8",
-                        "debounce": 100,
-                        "args": [
-                            "--format=%(row)d:%(col)d:%(code).1s:%(code)s:%(text)s",
-                            "-"
-                        ],
-                        "offsetLine": 0,
-                        "offsetColumn": 0,
-                        "sourceName": "flake8",
-                        "formatLines": 1,
-                        "formatPattern": [
-                            "(\\d+):(\\d+):([A-Z]):(.*)(\\r|\\n)*$",
-                            {
-                                "line": 1,
-                                "column": 2,
-                                "security": 3,
-                                "message": 4
-                            }
-                        ],
-                        "securities": {
-                            "W": "warning",
-                            "E": "error",
-                            "F": "error",
-                            "C": "error",
-                            "N": "error"
-                        }
-                    },
-                    "shellcheck": {
-                        "command": "shellcheck",
-                        "debounce": 100,
-                        "args": [
-                            "--format=gcc",
-                            "-"
-                        ],
-                        "offsetLine": 0,
-                        "offsetColumn": 0,
-                        "sourceName": "shellcheck",
-                        "formatLines": 1,
-                        "formatPattern": [
-                            "^[^:]+:(\\d+):(\\d+):\\s+([^:]+):\\s+(.*)$",
-                            {
-                                "line": 1,
-                                "column": 2,
-                                "message": 4
-                            }
-                        ],
-                        "securities": {
-                            "error": "error",
-                            "warning": "warning",
-                            "note": "info"
-                        }
-                    }
-                },
-                "filetypes": {
-                    "sh": "shellcheck",
-                    "go": "golangci-lint",
-                    "python": [
-                        "flake8",
-                        "mypy"
-                    ]
-                },
-                "formatters": {
-                    "goimports": {
-                        "command": "goimports"
-                    },
-                    "terraform-fmt": {
-                        "command": "terraform",
-                        "args": ["fmt", "-"]
-                    }
-                },
-                "formatFiletypes": {
-                    "go": "goimports",
-                    "terraform": "terraform-fmt"
-                }
-            }
-        },
-        "terraform": {
-            "command": "terraform-ls",
-            "args": ["serve"],
-            "filetypes": ["terraform", "tf"],
-            "initializationOptions": {},
-            "settings": {}
-        }
+  "coc.preferences.formatOnSaveFiletypes": [
+    "go",
+    "python",
+    "sh",
+    "terraform"
+  ],
+  "diagnostic": {
+    "floatEnabled": true,
+    "errorSign": "✖",
+    "warningSign": "⚠",
+    "infoSign": "ℹ",
+    "hintSign": "💡",
+    "logLevel": "debug"
+  },
+  "go": {
+    "goplsOptions": {
+      "completeUnimported": true,
+      "usePlaceholders": true
     }
+  },
+  "languageserver": {
+    "terraform": {
+      "command": "terraform-ls",
+      "args": [
+        "serve"
+      ],
+      "filetypes": [
+        "terraform",
+        "tf"
+      ],
+      "initializationOptions": {},
+      "settings": {}
+    }
+  }
 }

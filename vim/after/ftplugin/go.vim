@@ -13,5 +13,5 @@ augroup filetype_go_settings
   autocmd FileType go nmap gty :CocCommand go.tags.add yaml<cr>
   autocmd FileType go nmap gtx :CocCommand go.tags.clear<cr>
 
-  autocmd BufWritePre *.go :silent call CocAction("format")
+  autocmd BufWritePre *.go silent! call CocAction('organizeImport')
 augroup END
