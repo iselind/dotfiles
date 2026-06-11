@@ -122,7 +122,7 @@ Wait for the Step 3a agent to complete. Combine its findings with your Step 3b f
 
 In one edit: append a table row `| N | Short description | Type | ⬜ Open |` and append a detailed section following the exact heading, paragraph, and code-block style already used in the document.
 
-If no new issues were found, say so. If there are existing open items, skip to Phase 2. If there are no open items at all, skip to Phase 3.
+If no new issues were found, run a secondary pass: explicitly identify the top 3 worst findings you can locate (even if minor — test gaps, brittleness, usability concerns, design inflexibilities). Present them ranked by severity with context about why they're not blocking. This gives the user visibility into what's present even in a clean review, and demonstrates the review actually looked critically. If there are existing open items, skip to Phase 2. If there are no open items at all, skip to Phase 3.
 
 Commit the tracking file (or the updated plan) before waiting for the user's confirmation. This ensures findings survive a context reset between Phase 1 and Phase 2.
 
