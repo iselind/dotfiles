@@ -75,7 +75,9 @@ Read the full diff and all changed files yourself. Identify issues in these cate
   that it is not redundant with existing assertions and that it meaningfully
   tightens the test's verification of the target behaviour.
 - **Comment quality** - inaccurate, misleading, or stale comments. Comment
-  should avoid reiterating the "what" and instead focus on the "why".
+  should avoid reiterating the "what" and instead focus on the "why". Fixing a
+  "what" comment is done in one of two ways: remove it or replace it with a
+  proper "why" comment. The latter is for cases when the why is less obvious.
 - **Bug** — code that is incorrect or could fail; for CI and test scripts specifically, check for fixed paths used as temporary state (two concurrent runs on the same runner will collide); for PromQL expressions, check that both sides of a vector join using `on(...)` are aggregated to the same label set as the join key — extra labels on either side not named in `on()` cause silent fan-out (left) or silently dropped series (right); when code collects items from a non-deterministic source (any unordered collection) and serializes or compares the result for idempotency, verify the items are sorted or otherwise canonicalized before serialization — without this, the same logical state can produce different bytes across calls; when a branch replaces X with Y (migrating frameworks, converting tests, swapping libraries, rewriting a component), read the deleted content alongside the additions and verify every behaviour or capability of X is covered by Y — migration gaps are silent by definition
 - **Security** — credentials, injection risk, over-permissive access
 - **Gap** — unspecified mechanism or missing prerequisite that forces an undocumented design decision on the implementer
