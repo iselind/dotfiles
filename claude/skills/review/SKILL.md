@@ -56,7 +56,7 @@ Understand: the status table format (columns, emoji conventions, item numbering)
 
 **Step 3a — Unbiased parallel pass**
 
-Spawn an agent in parallel using the Agent tool. The agent has no session context — it reads the diff cold and applies a generic, unbiased pass. Use this prompt:
+Spawn an agent in parallel using the Agent tool. The agent has no session context — it reads the diff cold. Use this prompt:
 
 > You are reviewing a branch. Run `git diff origin/main...HEAD` to read the diff, then read the changed files in full.
 > 
@@ -64,52 +64,15 @@ Spawn an agent in parallel using the Agent tool. The agent has no session contex
 > 
 > Missing documentation is NOT a stop criterion — if something is hard to verify due to missing docs, that's a gap to report. DO stop at hypotheticals — if you're making assumptions about behavior you can't verify even with available information, that's noise.
 > 
-> Report ONLY issues that need attention — do not comment on code that is working correctly.
-> Focus on: code quality issues, bugs, or anti-patterns; security vulnerabilities or risks; performance problems or inefficiencies; missing or inadequate tests; documentation gaps or inaccuracies.
-> Return a plain list of findings. For each: one-line description, file and approximate location, and why it matters.
+> Also verify: Are conventions documented at the appropriate level in the directory hierarchy? A convention buried too deep or too high won't be discoverable when it matters.
+> 
+> Report ONLY issues that need attention — do not comment on code that is working correctly. Return a plain list of findings. For each: one-line description, file and approximate location, and why it matters.
 
-**Step 3b — Structured review**
+**Step 3b — Convention verification**
 
-Read the full diff and all changed files yourself. Identify issues in these categories:
+Load `conventions.md` from the repo root and any directory-specific `conventions.md` files that apply to the changed code. Read the full diff and all changed files yourself. Verify the changed code against the patterns documented in those files.
 
-- **Missing test-cases** — untested edge cases, missing assertions, or
-  insufficient coverage. When a branch adds a new code path, check that it is
-  covered by tests — not just exercised, but actually asserted against. When a
-  branch adds a new test file, check that it covers edge cases and failure
-  modes, not just the happy path. When a branch adds a new test assertion, check
-  that it is not redundant with existing assertions and that it meaningfully
-  tightens the test's verification of the target behaviour.
-- **Comment quality** - inaccurate, misleading, or stale comments. Comment
-  should avoid reiterating the "what" and instead focus on the "why". Fixing a
-  "what" comment is done in one of two ways: remove it or replace it with a
-  proper "why" comment. The latter is for cases when the why is less obvious.
-- **Bug** — code that is incorrect or could fail; for CI and test scripts specifically, check for fixed paths used as temporary state (two concurrent runs on the same runner will collide); for PromQL expressions, check that both sides of a vector join using `on(...)` are aggregated to the same label set as the join key — extra labels on either side not named in `on()` cause silent fan-out (left) or silently dropped series (right); when code collects items from a non-deterministic source (any unordered collection) and serializes or compares the result for idempotency, verify the items are sorted or otherwise canonicalized before serialization — without this, the same logical state can produce different bytes across calls; when a branch replaces X with Y (migrating frameworks, converting tests, swapping libraries, rewriting a component), read the deleted content alongside the additions and verify every behaviour or capability of X is covered by Y — migration gaps are silent by definition
-- **Security** — credentials, injection risk, over-permissive access
-- **Gap** — unspecified mechanism or missing prerequisite that forces an undocumented design decision on the implementer
-- **Suggestion** — correct but improvable patterns or inconsistencies; for CI and test scripts specifically, flag package installs into global environments (prefer isolated venvs or temp dirs to avoid runner pollution and ensure reproducibility). When a filter, label selector, or guard is present on some items in a file, read the **full file** and verify it is applied to all analogous items — not just those in the diff. This applies equally to new files and modified files. When the same component is described in more than one place (different config profiles, deployment paths, packaging formats), verify that identity and configuration fields are consistent across all representations — not just the one touched by the diff. When a test assertion is tightened or a guard is added, scan the full test file for other assertions of the same form and apply the same tightening consistently — don't stop at the diff boundary. When a branch moves code or tests from one directory to another, check whether CLAUDE.md guidance co-located with the source location is still relevant there — it may belong at a higher level or closer to the new location.
-- **Verification** — things that must be confirmed before merge
-- **Cleanup** — dead code, stale comments, misleading names. When a diff changes the default value or activation condition of an input (e.g. empty string → real value, opt-in → always-active), check that the input's description doesn't use conditional framing that has become stale — phrases like "when provided", "if set", "callers adopting X", or "callers on the Y path" that imply the feature is optional when it is no longer so.
-- **Overlap** — unwarranted duplication between plans, ADRs, and OPENs (e.g. a plan section restating rationale that an ADR now captures, or an OPEN repeating context already settled elsewhere)
-- **Premature design** — detailed design content for work that is explicitly deferred, out of scope, or multiple stages removed from the current work. Look for: design notes for components marked as future or optional, detailed requirements or options for infrastructure that depends on unresolved prerequisites, work items that describe deferred steps at the same level of detail as immediate ones
-- **Minor** — low-impact observations worth recording
-
-**ADR and OPEN scrutiny:**
-
-Branch-introduced ADRs/OPENs — full quality review:
-- *Classification*: An ADR whose rationale depends on an unresolved question is premature — propose an OPEN instead. An OPEN whose question is already answerable from context should be promoted.
-- *Cross-reference discipline*: ADRs must not reference documents with shorter expected lifespans (OPENs, plans). Such references become dangling when the shorter-lived document is deleted. If an ADR's rationale depends on an unresolved OPEN or an in-flight plan, the ADR itself is likely premature.
-- *Section discipline*: Context must not preview or argue for options; Options must be complete with no missing failure modes or language that pre-empts the decision, and must describe approaches at the conceptual level (CRD names, API names, implementation artifacts belong in Design, not Options); Rationale must not repeat Options content.
-- *Framing* (OPENs): Is the question well-posed? Is context factually accurate — no false implementation claims, no assertions about what "currently" exists unless verified? Are all options at comparable depth? Are analogies grounded by properties established in the document? An analogy that imports an assumption never stated in the document should be flagged regardless of whether it seems plausible.
-
-Topically related ADRs/OPENs not on the branch — coherence check:
-- Do new additions conflict with, duplicate, or leave gaps relative to existing documents? Does the whole set tell a coherent story now that new documents have been added? Flag tensions and inconsistencies. Do not propose rewriting settled documents — surface the issue and let the user decide.
-
-**Plan work items:**
-- For each work item: what would a developer need to know or decide that is not documented? If implementation would force an undocumented design decision, that is a Gap.
-- Check dependencies on open questions. An unresolved OPEN affecting a work item without a stated dependency is a Gap — implicit dependencies are decided under implementation pressure, not deliberately.
-- Flag descriptions that name an outcome without a mechanism ("scoped by label selector", "X is injected", "configured with the correct Y"). If the how is unspecified and the implementer would have to invent it, that is a Gap.
-- Distinguish plan-level contract from implementation detail. A plan should state *what* contract must hold (e.g. "the tenant ID must be readable by the sync operator") without prescribing *how* it is satisfied (label, field, annotation). Flag items that over-specify implementation detail or under-specify the contract to the point the implementer cannot know what is required.
-- Verify work items are consistent with relevant ADRs — both pre-existing and branch-introduced. A contradiction is a Bug, not a wording issue.
+Classify each finding into the categories in `conventions.md` (Bug, Security, Gap, Suggestion, Cleanup, etc.). If you find an issue pattern that is *not* covered by any convention in the repo, flag it as a potential convention: this pattern should potentially become one.
 
 **Review scope:**
 
@@ -206,9 +169,20 @@ The two checks are independent. Report each file's readiness separately. Ask for
 
 ---
 
-## Phase 5 — Retrospective
+## Phase 5 — Retrospective and conventions audit
 
-Move directly into `/retro review`. Do not ask for permission — this is a natural continuation of the review.
+Before moving to `/retro review`, audit the conventions:
+
+**Conventions audit:**
+- Did 3a discover patterns in the codebase (beyond the actual branch changes) that should become conventions?
+- Were there cases in 3b where you verified against a convention that works well? Note that — it's working.
+- Were there cases in Phase 2 fixes where the pattern wasn't yet documented in conventions? Those are candidates for adding.
+- Did any convention fail you — did you verify against it, but the code still had problems? That convention may need refinement.
+- Are conventions at the right level in the directory hierarchy, or should any be moved?
+
+Update `conventions.md` (and any directory-specific ones) based on what you learned. Commit those changes before moving to retro.
+
+Then move directly into `/retro review`. Do not ask for permission — this is a natural continuation of the review.
 
 ---
 

@@ -1,8 +1,24 @@
 # Review conventions
 
-Apply these throughout Phase 2.
+This file guides code review. Apply these patterns when reviewing a branch.
 
-## Finding issues
+---
+
+## Phase 1–3a: Environmental anchoring
+
+When reading the diff cold, traverse outward through the codebase graph: start from the branch changes, understand context by examining related patterns/resources, and stop when signal-to-noise drops (typically within 2–3 steps).
+
+**Missing documentation is NOT a stop criterion** — if something is hard to verify due to missing docs, that's a gap to report. **DO stop at hypotheticals** — if you're making assumptions about behavior you can't verify even with available information, that's noise.
+
+**Also verify:** Are conventions documented at the appropriate level in the directory hierarchy? A convention buried too deep or too high won't be discoverable when it matters.
+
+---
+
+## Phase 2: Pattern verification
+
+Review against these patterns when examining changed code, tests, comments, and documentation.
+
+### Finding issues
 
 - **Never skip an item without explaining why.** If an item turns out to be a non-issue on closer inspection, update the plan to `✅ Accepted — <reason>` rather than silently skipping it. Then ask: could this same trigger recur? If a small, low-risk clarification would make the correct interpretation obvious without changing the substance, make it.
 
@@ -49,3 +65,112 @@ Apply these throughout Phase 2.
 - **Ambiguous terms:** Before proposing a substitution, investigate what the term actually refers to across the full document set. An ambiguous term may signal a conceptual gap — something genuinely underdefined — not a poor word choice. If so, the fix is a concept clarification, not a name substitution.
 
 - **Data-flow or behavioral descriptions:** Establish the correct conceptual framing before suggesting a substitution — ask what intent is being described, not just which term is imprecise. Replacing one imprecise term with another is not an improvement.
+
+---
+
+## Phase 3b: Pattern categories
+
+When reviewing changed files, look for these patterns:
+
+### Missing test-cases
+
+Untested edge cases, missing assertions, or insufficient coverage:
+- When a branch adds a new code path, check that it is covered by tests — not just exercised, but actually asserted against.
+- When a branch adds a new test file, check that it covers edge cases and failure modes, not just the happy path.
+- When a branch adds a new test assertion, check that it is not redundant with existing assertions and that it meaningfully tightens the test's verification of the target behaviour.
+
+### Comment quality
+
+Inaccurate, misleading, or stale comments:
+- Comments should avoid reiterating the "what" and instead focus on the "why".
+- Fixing a "what" comment is done in one of two ways: remove it or replace it with a proper "why" comment. The latter is for cases when the why is less obvious.
+
+### Bug
+
+Code that is incorrect or could fail:
+- **CI and test scripts:** Check for fixed paths used as temporary state. Two concurrent runs on the same runner will collide.
+- **PromQL expressions:** Verify that both sides of a vector join using `on(...)` are aggregated to the same label set as the join key — extra labels on either side not named in `on()` cause silent fan-out (left) or silently dropped series (right).
+- **Non-deterministic sources:** When code collects items from a non-deterministic source (any unordered collection) and serializes or compares the result for idempotency, verify the items are sorted or otherwise canonicalized before serialization — without this, the same logical state can produce different bytes across calls.
+- **Migration/replacement:** When a branch replaces X with Y (migrating frameworks, converting tests, swapping libraries, rewriting a component), read the deleted content alongside the additions and verify every behaviour or capability of X is covered by Y — migration gaps are silent by definition.
+
+### Security
+
+Credentials, injection risk, over-permissive access.
+
+### Gap
+
+Unspecified mechanism or missing prerequisite that forces an undocumented design decision on the implementer.
+
+### Suggestion
+
+Correct but improvable patterns or inconsistencies:
+- **CI and test scripts:** Flag package installs into global environments (prefer isolated venvs or temp dirs to avoid runner pollution and ensure reproducibility).
+- **Guards and filters:** When a filter, label selector, or guard is present on some items in a file, read the **full file** and verify it is applied to all analogous items — not just those in the diff. This applies equally to new files and modified files.
+- **Consistency across representations:** When the same component is described in more than one place (different config profiles, deployment paths, packaging formats), verify that identity and configuration fields are consistent across all representations — not just the one touched by the diff.
+- **Test assertion consistency:** When a test assertion is tightened or a guard is added, scan the full test file for other assertions of the same form and apply the same tightening consistently — don't stop at the diff boundary.
+- **Relocation guidance:** When a branch moves code or tests from one directory to another, check whether CLAUDE.md guidance co-located with the source location is still relevant there — it may belong at a higher level or closer to the new location.
+
+### Verification
+
+Things that must be confirmed before merge.
+
+### Cleanup
+
+Dead code, stale comments, misleading names:
+- When a diff changes the default value or activation condition of an input (e.g. empty string → real value, opt-in → always-active), check that the input's description doesn't use conditional framing that has become stale — phrases like "when provided", "if set", "callers adopting X", or "callers on the Y path" that imply the feature is optional when it is no longer so.
+
+### Overlap
+
+Unwarranted duplication between plans, ADRs, and OPENs (e.g. a plan section restating rationale that an ADR now captures, or an OPEN repeating context already settled elsewhere).
+
+### Premature design
+
+Detailed design content for work that is explicitly deferred, out of scope, or multiple stages removed from the current work:
+- Look for: design notes for components marked as future or optional, detailed requirements or options for infrastructure that depends on unresolved prerequisites, work items that describe deferred steps at the same level of detail as immediate ones.
+
+### Minor
+
+Low-impact observations worth recording.
+
+---
+
+## ADR and OPEN scrutiny
+
+**Branch-introduced ADRs/OPENs — full quality review:**
+
+*Classification:*
+- An ADR whose rationale depends on an unresolved question is premature — propose an OPEN instead.
+- An OPEN whose question is already answerable from context should be promoted.
+
+*Cross-reference discipline:*
+- ADRs must not reference documents with shorter expected lifespans (OPENs, plans).
+- Such references become dangling when the shorter-lived document is deleted.
+- If an ADR's rationale depends on an unresolved OPEN or an in-flight plan, the ADR itself is likely premature.
+
+*Section discipline:*
+- **Context** must not preview or argue for options.
+- **Options** must be complete with no missing failure modes or language that pre-empts the decision, and must describe approaches at the conceptual level (CRD names, API names, implementation artifacts belong in Design, not Options).
+- **Rationale** must not repeat Options content.
+
+*Framing (OPENs):*
+- Is the question well-posed?
+- Is context factually accurate — no false implementation claims, no assertions about what "currently" exists unless verified?
+- Are all options at comparable depth?
+- Are analogies grounded by properties established in the document? An analogy that imports an assumption never stated in the document should be flagged regardless of whether it seems plausible.
+
+**Topically related ADRs/OPENs not on the branch — coherence check:**
+- Do new additions conflict with, duplicate, or leave gaps relative to existing documents?
+- Does the whole set tell a coherent story now that new documents have been added?
+- Flag tensions and inconsistencies.
+- Do not propose rewriting settled documents — surface the issue and let the user decide.
+
+---
+
+## Plan work items scrutiny
+
+For each work item:
+- **What would a developer need to know or decide** that is not documented? If implementation would force an undocumented design decision, that is a Gap.
+- **Check dependencies on open questions.** An unresolved OPEN affecting a work item without a stated dependency is a Gap — implicit dependencies are decided under implementation pressure, not deliberately.
+- **Flag descriptions that name an outcome without a mechanism** ("scoped by label selector", "X is injected", "configured with the correct Y"). If the how is unspecified and the implementer would have to invent it, that is a Gap.
+- **Distinguish plan-level contract from implementation detail.** A plan should state *what* contract must hold (e.g. "the tenant ID must be readable by the sync operator") without prescribing *how* it is satisfied (label, field, annotation). Flag items that over-specify implementation detail or under-specify the contract to the point the implementer cannot know what is required.
+- **Verify work items are consistent with relevant ADRs** — both pre-existing and branch-introduced. A contradiction is a Bug, not a wording issue.
