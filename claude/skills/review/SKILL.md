@@ -24,6 +24,8 @@ Changed files: !`git diff origin/main...HEAD --stat`
 
 ## Your job
 
+Review the branch, find issues, and fix them. Fixes go everywhere: code, comments, tests, documentation, CLAUDE.md, conventions.md, or plan files. The skill also maintains a learning loop through conventions: patterns discovered during review may become conventions, and conventions are audited to stay accurate.
+
 Complete the phases below in order.
 
 ---
@@ -54,17 +56,17 @@ If no plan exists, create a review tracking file. Preferred pattern: `<plan-name
 
 Understand: the status table format (columns, emoji conventions, item numbering), the format of detailed sections (how each item is written below the table), and all existing work items and their content.
 
-**Step 3a — Unbiased parallel pass**
+**Step 3a — Unbiased environmental anchoring**
 
 Spawn an agent in parallel using the Agent tool. The agent has no session context — it reads the diff cold. Use this prompt:
 
 > You are reviewing a branch. Run `git diff origin/main...HEAD` to read the diff, then read the changed files in full.
 > 
-> Review by traversing outward through the codebase graph: start from the branch changes, understand context by examining related patterns/resources, and stop when signal-to-noise drops (typically within 2-3 steps).
+> **Environmental anchoring:** Review by traversing outward through the codebase graph: start from the branch changes, understand context by examining related patterns/resources, and stop when signal-to-noise drops (typically within 2-3 steps). Do the changes make sense in the context of the codebase? Are they anchored in existing patterns and infrastructure?
+> 
+> **Convention placement:** As you traverse, also verify: Are conventions documented at the appropriate level in the directory hierarchy? A convention buried too deep or too high won't be discoverable when it matters.
 > 
 > Missing documentation is NOT a stop criterion — if something is hard to verify due to missing docs, that's a gap to report. DO stop at hypotheticals — if you're making assumptions about behavior you can't verify even with available information, that's noise.
-> 
-> Also verify: Are conventions documented at the appropriate level in the directory hierarchy? A convention buried too deep or too high won't be discoverable when it matters.
 > 
 > Report ONLY issues that need attention — do not comment on code that is working correctly. Return a plain list of findings. For each: one-line description, file and approximate location, and why it matters.
 
