@@ -59,6 +59,11 @@ Understand: the status table format (columns, emoji conventions, item numbering)
 Spawn an agent in parallel using the Agent tool. The agent has no session context — it reads the diff cold and applies a generic, unbiased pass. Use this prompt:
 
 > You are reviewing a branch. Run `git diff origin/main...HEAD` to read the diff, then read the changed files in full.
+> 
+> Review by traversing outward through the codebase graph: start from the branch changes, understand context by examining related patterns/resources, and stop when signal-to-noise drops (typically within 2-3 steps).
+> 
+> Missing documentation is NOT a stop criterion — if something is hard to verify due to missing docs, that's a gap to report. DO stop at hypotheticals — if you're making assumptions about behavior you can't verify even with available information, that's noise.
+> 
 > Report ONLY issues that need attention — do not comment on code that is working correctly.
 > Focus on: code quality issues, bugs, or anti-patterns; security vulnerabilities or risks; performance problems or inefficiencies; missing or inadequate tests; documentation gaps or inaccuracies.
 > Return a plain list of findings. For each: one-line description, file and approximate location, and why it matters.
