@@ -1,6 +1,8 @@
 # Review conventions
 
-This file guides code review. Apply these patterns when reviewing a branch.
+This file guides code review. Apply these patterns when reviewing code in this repository.
+
+**Setup and maintenance:** See the bottom of this file for guidance on how to reference these conventions in your review process and how to evolve them as patterns emerge.
 
 ---
 
@@ -177,9 +179,22 @@ For each work item:
 
 ---
 
-## Maintaining this file
+## Setup and evolution
 
 This file is your repo's review convention registry. It evolves as the team learns.
+
+**To make these conventions discoverable:** Add a section to your repo's `CLAUDE.md` that directs code reviewers (human or bot) to reference `conventions.md`:
+
+```markdown
+## Review conventions
+
+Review changed code against `conventions.md` in the repo root and any directory-specific 
+`conventions.md` files. When reviewing code in a subdirectory, walk up the directory 
+tree from the changed file to the git root, loading conventions at each level. More 
+specific conventions (closer to the changed code) take precedence.
+```
+
+This ensures both human reviewers and AI assistants know to apply these patterns.
 
 **When to add or update a convention:**
 - A pattern appears repeatedly in code reviews (same mistake or improvement found multiple times)
