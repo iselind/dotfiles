@@ -106,7 +106,7 @@ Tell the user: "Added items N–M to the plan. Ready to start with the next open
 
 ## Phase 2 — Work through open issues one at a time
 
-**Before starting Phase 2, read `~/.claude/skills/review/conventions.md` — do not skip this step.**
+**Before starting Phase 2, read `conventions.md` from the repo root (and any directory-specific ones that apply) — do not skip this step.**
 
 Work through open (⬜) items in ascending order, one at a time.
 
@@ -183,6 +183,8 @@ Before moving to `/retro review`, audit the conventions:
 - Are conventions at the right level in the directory hierarchy, or should any be moved?
 
 Update `conventions.md` (and any directory-specific ones) based on what you learned. Commit those changes before moving to retro.
+
+**Important:** The actual work is fixing code, comments, and documentation (which includes conventions.md as a documentation artifact). The conventions audit is infrastructure that supports the review process — it identifies patterns worth codifying. Do not let the audit eclipse the primary work of improving the branch.
 
 Then move directly into `/retro review`. Do not ask for permission — this is a natural continuation of the review.
 
