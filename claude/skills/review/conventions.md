@@ -174,3 +174,30 @@ For each work item:
 - **Flag descriptions that name an outcome without a mechanism** ("scoped by label selector", "X is injected", "configured with the correct Y"). If the how is unspecified and the implementer would have to invent it, that is a Gap.
 - **Distinguish plan-level contract from implementation detail.** A plan should state *what* contract must hold (e.g. "the tenant ID must be readable by the sync operator") without prescribing *how* it is satisfied (label, field, annotation). Flag items that over-specify implementation detail or under-specify the contract to the point the implementer cannot know what is required.
 - **Verify work items are consistent with relevant ADRs** — both pre-existing and branch-introduced. A contradiction is a Bug, not a wording issue.
+
+---
+
+## Maintaining this file
+
+This file is your repo's review convention registry. It evolves as the team learns.
+
+**When to add a convention:**
+- A pattern appears repeatedly across reviews (same issue found multiple times)
+- Phase 2 fixes reveal a consistent mistake or improvement opportunity
+- Phase 5's conventions audit identifies something not yet documented
+
+**Where to add it:**
+- **Phase 2 subsections** (Finding issues, Fixing issues): Discipline and judgment calls when reviewing code, comments, docs
+- **Phase 3b Pattern categories** (Bug, Security, Gap, etc.): Specific things to look for when verifying code. Add to an existing category if it fits; create a new category only if the pattern doesn't belong anywhere else
+- **ADR/OPEN scrutiny** or **Plan work items scrutiny**: Only if the pattern applies specifically to those document types
+
+**How to write a convention:**
+- Start with a clear statement of the rule or pattern
+- Follow with the reasoning (why this matters)
+- Include examples or failure modes if they clarify
+- Keep it concise — reviewers will skim this during Phase 2
+
+**Directory-specific conventions:**
+- Create `conventions.md` files in subdirectories (e.g., `src/api/conventions.md`, `tests/conventions.md`) when patterns apply to only that subsystem
+- More specific conventions override general ones (higher in the tree wins)
+- Keep directory-specific files lean — only patterns unique to that area
