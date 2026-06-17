@@ -181,23 +181,23 @@ For each work item:
 
 This file is your repo's review convention registry. It evolves as the team learns.
 
-**When to add a convention:**
-- A pattern appears repeatedly across reviews (same issue found multiple times)
-- Phase 2 fixes reveal a consistent mistake or improvement opportunity
-- Phase 5's conventions audit identifies something not yet documented
+**When to add or update a convention:**
+- A pattern appears repeatedly in code reviews (same mistake or improvement found multiple times)
+- A fix reveals a consistent principle worth documenting
+- Experience shows a convention isn't working — it needs refinement or removal
 
 **Where to add it:**
-- **Phase 2 subsections** (Finding issues, Fixing issues): Discipline and judgment calls when reviewing code, comments, docs
-- **Phase 3b Pattern categories** (Bug, Security, Gap, etc.): Specific things to look for when verifying code. Add to an existing category if it fits; create a new category only if the pattern doesn't belong anywhere else
+- **Finding issues / Fixing issues sections**: Discipline and judgment calls when reviewing code, comments, docs
+- **Pattern categories** (Bug, Security, Gap, Suggestion, Cleanup, etc.): Specific things to look for when verifying code against conventions. Add to an existing category if it fits; create a new category only if the pattern doesn't belong anywhere else
 - **ADR/OPEN scrutiny** or **Plan work items scrutiny**: Only if the pattern applies specifically to those document types
 
 **How to write a convention:**
 - Start with a clear statement of the rule or pattern
-- Follow with the reasoning (why this matters)
-- Include examples or failure modes if they clarify
-- Keep it concise — reviewers will skim this during Phase 2
+- Follow with reasoning — why this matters or what breaks if ignored
+- Include examples or failure modes if they clarify the rule
+- Keep it concise — reviewers will reference this while reviewing code
 
 **Directory-specific conventions:**
-- Create `conventions.md` files in subdirectories (e.g., `src/api/conventions.md`, `tests/conventions.md`) when patterns apply to only that subsystem
-- More specific conventions override general ones (higher in the tree wins)
-- Keep directory-specific files lean — only patterns unique to that area
+- Create `conventions.md` files in subdirectories (e.g., `src/api/conventions.md`, `tests/conventions.md`) when patterns apply only to that subsystem
+- More specific conventions override general ones (a convention in `src/api/conventions.md` takes precedence over the repo-root version for code in that directory)
+- Keep directory-specific files lean — only patterns unique to that area, not repetitions of repo-wide conventions
