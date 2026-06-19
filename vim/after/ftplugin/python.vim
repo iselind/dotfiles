@@ -6,6 +6,7 @@ setlocal smarttab
 setlocal expandtab
 setlocal nosmartindent
 setlocal foldmethod=indent
+setlocal nowrap
 
 " Mark how long is 79 columns
 setlocal colorcolumn=79
