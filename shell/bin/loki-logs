@@ -1,0 +1,235 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+parse_duration() {
+  local duration="$1"
+  local num="${duration%[a-zA-Z]*}"
+  local unit="${duration##*[0-9]}"
+
+  if [[ -z "$num" ]] || [[ -z "$unit" ]]; then
+    echo "Error: Invalid duration format '$duration'. Use: NNN{s,m,h,d} (e.g., 30m, 1h, 7d)" >&2
+    return 1
+  fi
+
+  case "$unit" in
+    s) echo $((num)) ;;
+    m) echo $((num * 60)) ;;
+    h) echo $((num * 3600)) ;;
+    d) echo $((num * 86400)) ;;
+    *)
+      echo "Error: Unknown duration unit '$unit'. Valid units: s, m, h, d" >&2
+      return 1
+      ;;
+  esac
+}
+
+setup_port_forward() {
+  local context="$1"
+
+  # Find Loki service
+  local loki_service=""
+  local loki_port=""
+
+  for service in "loki-gateway" "loki-read" "loki" "loki-backend"; do
+    if kubectl --context "$context" get svc "$service" -n "monitoring" &>/dev/null; then
+      loki_service="$service"
+      loki_port=$(kubectl --context "$context" get svc "$service" -n "monitoring" -o jsonpath='{.spec.ports[0].port}' 2>/dev/null || echo "3100")
+      break
+    fi
+  done
+
+  if [[ -z "$loki_service" ]]; then
+    echo "Error: Could not find Loki service in 'monitoring' namespace" >&2
+    return 1
+  fi
+
+  # Set up port forward
+  FORWARD_PORT=$((10000 + RANDOM % 55535))
+
+  echo "Found Loki service: $loki_service on port $loki_port" >&2
+  echo "Forwarding to localhost:$FORWARD_PORT..." >&2
+
+  kubectl --context "$context" port-forward \
+    -n "monitoring" \
+    "svc/$loki_service" \
+    "$FORWARD_PORT:$loki_port" \
+    >/dev/null 2>&1 &
+  LOKI_PID=$!
+
+  sleep 2
+
+  return 0
+}
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") <context> <namespace> <pod>
+
+Query Loki for logs from a specific pod in a given Kubernetes context.
+
+Arguments:
+  context      kubectl context (e.g., pi-dev, swis-stage)
+  namespace    Kubernetes namespace (e.g., monitoring, ipintel)
+  pod          Pod name (e.g., prometheus-alertmanager-0)
+
+Example:
+  $(basename "$0") swis-stage monitoring prometheus-alertmanager-0
+
+Options:
+  -l, --last         Time duration to look back (default: 1h)
+                     Format: NNN{s,m,h,d} (e.g., 30m, 1h, 7d)
+  -s, --since        Alias for --last (same format)
+  -q, --query        Custom LogQL query (overrides pod-based query)
+  -o, --org-id       Loki organization ID (default: corero-operations)
+  --list-labels      List available labels in Loki (requires context, pod arg ignored)
+  -h, --help         Show this help message
+
+Examples with options:
+  $(basename "$0") swis-stage monitoring prometheus-alertmanager-0 --last 24h
+  $(basename "$0") pi-dev monitoring loki-read-0 --since 30m
+  $(basename "$0") pi-dev monitoring loki-read-0 -q '{job="loki"}' --last 7d
+  $(basename "$0") swis-stage monitoring alertmanager-0 --org-id custom-tenant
+EOF
+  exit "${1:-0}"
+}
+
+# Defaults
+LOOK_BACK="1h"
+CUSTOM_QUERY=""
+ORG_ID="corero-operations"
+LIST_LABELS=false
+
+# Parse arguments
+if [[ $# -lt 3 ]]; then
+  usage 1
+fi
+
+CONTEXT="$1"
+NAMESPACE="$2"
+POD="$3"
+shift 3
+
+# Parse optional arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -l|--last|-s|--since)
+      LOOK_BACK="$2"
+      if ! parse_duration "$LOOK_BACK" >/dev/null; then
+        exit 1
+      fi
+      shift 2
+      ;;
+    -q|--query)
+      CUSTOM_QUERY="$2"
+      shift 2
+      ;;
+    -o|--org-id)
+      ORG_ID="$2"
+      shift 2
+      ;;
+    --list-labels)
+      LIST_LABELS=true
+      shift
+      ;;
+    -h|--help)
+      usage 0
+      ;;
+    *)
+      echo "Error: Unknown option $1" >&2
+      usage 1
+      ;;
+  esac
+done
+
+# Validate context exists
+echo "Using kubectl context: $CONTEXT" >&2
+if ! kubectl config get-contexts "$CONTEXT" &>/dev/null; then
+  echo "Error: kubectl context '$CONTEXT' not found" >&2
+  exit 1
+fi
+
+# Handle --list-labels early (pod arg not needed)
+if [[ "$LIST_LABELS" == "true" ]]; then
+  echo "Listing available labels in Loki..." >&2
+
+  LOKI_PID=""
+  cleanup() {
+    if [[ -n "$LOKI_PID" ]]; then
+      kill "$LOKI_PID" 2>/dev/null || true
+      wait "$LOKI_PID" 2>/dev/null || true
+    fi
+  }
+  trap cleanup EXIT
+
+  if ! setup_port_forward "$CONTEXT"; then
+    exit 1
+  fi
+
+  # Query labels
+  curl -s "http://localhost:$FORWARD_PORT/loki/api/v1/labels" \
+    -H "X-Scope-OrgID: $ORG_ID" | jq
+  exit 0
+fi
+
+echo "Querying Loki for logs from pod '$POD' in namespace '$NAMESPACE' (last $LOOK_BACK)..." >&2
+
+LOKI_PID=""
+cleanup() {
+  if [[ -n "$LOKI_PID" ]]; then
+    kill "$LOKI_PID" 2>/dev/null || true
+    wait "$LOKI_PID" 2>/dev/null || true
+  fi
+}
+trap cleanup EXIT
+
+if ! setup_port_forward "$CONTEXT"; then
+  exit 1
+fi
+
+sleep 2
+
+# Build LogQL query
+if [[ -n "$CUSTOM_QUERY" ]]; then
+  LOGQL_QUERY="$CUSTOM_QUERY"
+else
+  # Use regex matching for fuzzy pod name matching
+  LOGQL_QUERY="{pod=~\".*$POD.*\", namespace=\"$NAMESPACE\"}"
+fi
+
+# Calculate time range
+UNIX_NOW=$(date +%s)000000000
+LOOK_BACK_SECONDS=$(parse_duration "$LOOK_BACK")
+UNIX_THEN=$(( ($(date +%s) - LOOK_BACK_SECONDS) * 1000000000 ))
+
+# Query Loki
+RESPONSE=$(curl -s "http://localhost:$FORWARD_PORT/loki/api/v1/query_range" \
+  -H "X-Scope-OrgID: $ORG_ID" \
+  -G \
+  --data-urlencode "query=$LOGQL_QUERY" \
+  --data-urlencode "start=$UNIX_THEN" \
+  --data-urlencode "end=$UNIX_NOW" \
+  --data-urlencode "limit=5000" \
+  --data-urlencode "direction=backward")
+
+if ! command -v jq &> /dev/null; then
+  echo "Error: jq is not installed" >&2
+  exit 1
+fi
+
+# Check for errors
+if echo "$RESPONSE" | jq -e '.status == "error"' >/dev/null 2>&1; then
+  echo "Error from Loki:" >&2
+  echo "$RESPONSE" | jq '.error' >&2
+  exit 1
+fi
+
+# Check for results
+RESULT_COUNT=$(echo "$RESPONSE" | jq '.data.result | length' 2>/dev/null || echo 0)
+
+if [[ "$RESULT_COUNT" == "0" ]]; then
+  echo "No logs found for query: $LOGQL_QUERY" >&2
+  exit 0
+fi
+
+# Extract and display logs (replace newlines with literal \n)
+echo "$RESPONSE" | jq -r '.data.result[0].values[] | "\(.[0]) \(.[1] | gsub("\n"; "\\n"))"' | less -R

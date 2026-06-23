@@ -14,3 +14,4 @@
 | [skill_launch_failure.md](skill_launch_failure.md) | feedback | When a skill fails to launch, stop and say so — never substitute inline work or misrepresent a skill as having run |
 | [jira_core_project.md](jira_core_project.md) | reference | CORE Jira project = primary work source; shared across many teams; always scope to currentUser() by default |
 | [git_branch_from_origin_main.md](git_branch_from_origin_main.md) | feedback | New branches must be created from origin/main; branch tracks itself, not origin/main |
+| [netrc_off_limits.md](netrc_off_limits.md) | feedback | Never read or access ~/.netrc — user has PAT for Jira auth there |
