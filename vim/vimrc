@@ -52,7 +52,7 @@ set hlsearch
 
 " Enforce that the background is drawn black
 " Subject to the whims of the terminal emulator
-highlight Normal ctermbg=black guibg=black
+highlight Normal ctermbg=NONE guibg=NONE
 set background=dark
 
 set scrolloff=5
