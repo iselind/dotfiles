@@ -15,3 +15,4 @@
 | [jira_core_project.md](jira_core_project.md) | reference | CORE Jira project = primary work source; shared across many teams; always scope to currentUser() by default |
 | [git_branch_from_origin_main.md](git_branch_from_origin_main.md) | feedback | New branches must be created from origin/main; branch tracks itself, not origin/main |
 | [netrc_off_limits.md](netrc_off_limits.md) | feedback | Never read or access ~/.netrc — user has PAT for Jira auth there |
+| [document_patterns_globally_and_locally.md](document_patterns_globally_and_locally.md) | feedback | When a pattern disagreement surfaces, save as global memory AND add to the appropriate repo CLAUDE.md |

@@ -19,6 +19,13 @@
       "usePlaceholders": true
     }
   },
+  "markdownlint.config": {
+    "default": true,
+    "MD013": false,
+    "line_length": false,
+    "no-emphasis-as-heading": false,
+    "MD033": false
+  },
   "languageserver": {
     "terraform": {
       "command": "terraform-ls",
