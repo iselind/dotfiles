@@ -55,3 +55,5 @@ if [[ ! -d "$original_dir" ]]; then
     echo "Warning: your current worktree $original_dir was removed."
     echo "Run: cd $main_wt"
 fi
+
+git b
