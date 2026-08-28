@@ -7,7 +7,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'hashivim/vim-terraform'
-Plug 'yaegassy/coc-ruff', {'do': 'yarn install --frozen-lockfile'}
+"Plug 'github/copilot.vim'
+"Plug 'yaegassy/coc-ruff', {'do': 'yarn install --frozen-lockfile'}
 
 " Initialize plugin system
 call plug#end()

@@ -41,6 +41,9 @@ link_dotfile "${DOT_FILES}/claude/skills" ~/.claude/skills
 link_dotfile "${DOT_FILES}/claude/memory" ~/.claude/memory
 link_dotfile "${DOT_FILES}/claude/CLAUDE.md" ~/.claude/CLAUDE.md
 
+mkdir -p ~/.config
+link_dotfile "${DOT_FILES}/opencode" ~/.config/opencode
+
 # Install shell configuration files by sourcing them from the dotfiles repo.
 # We can't just symlink them because the user might have customizations.
 # Instead, we append a source line to the user's existing config if not already there.

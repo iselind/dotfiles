@@ -5,6 +5,9 @@
     "sh",
     "terraform"
   ],
+  "python.linting.ruffEnabled": true,
+  "pyright.organizeimports.provider": "ruff",
+  "python.formatting.provider": "ruff",
   "diagnostic": {
     "floatEnabled": true,
     "errorSign": "✖",
