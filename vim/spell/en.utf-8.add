@@ -53,3 +53,5 @@ LLM's
 CTO
 treesitter
 Invariants
+linters
+Makefile
