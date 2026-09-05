@@ -107,3 +107,8 @@ before more changes are performed.
 
 The gap analysis will need to be updated every couple of iterations as the
 changes performed shape the changes to come.
+
+## 7. Task Completion
+
+Once the gap has been removed, use the `review` skill to review the changes.
+Work with the user to resolve any concerns that come up during the review.
