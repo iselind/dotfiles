@@ -1,28 +1,31 @@
 ---
 name: correction
-description: Investigate a correction to the agent's understanding, determine why it was wrong, and identify whether any durable repository knowledge should eventually change.
+description: >
+  Investigate corrections to the agent's understanding, determine why it was
+  wrong, and document findings.
 ---
 
 # Process a Correction
 
-A correction means that something you believed about the task or repository
-was wrong.
+A correction means that something you believed about the task or repository was
+wrong.
 
-Do not immediately modify permanent documentation.
+Never modify permanent documentation directly.
 
 ## 1. Record the correction
 
 Create `.task/` if it does not exist.
 
-Record the correction in:
-
-`.task/corrections.md`
+Append the correction to `.task/corrections.md` regardless how many times it
+might already have been repeated.
 
 Include:
 
 - What I believed
-- What the user corrected
+- What the user corrected or clarified
 - Why the distinction matters
+
+Consider `.task/corrections.md` an append-only log.
 
 ## 2. Investigate
 
@@ -58,37 +61,8 @@ Update `.task/corrections.md` with:
 - Relevant existing documentation
 - Whether the issue is likely to recur
 
-## 4. Consider the smallest durable improvement
+## 4. Report
 
-If this appears to be a recurring source of misunderstanding, identify
-the smallest appropriate improvement.
-
-Possible outcomes include:
-
-- no change
-- improve an existing document
-- add a missing explanation
-- add a cross-reference
-- clarify terminology
-- add or update an ADR
-- add a test or invariant
-- change something else in the repository
-
-Do not make the durable change merely because it is possible.
-
-Do not create a new document when an existing document is appropriate.
-
-Do not add agent-specific instructions merely to compensate for poorly
-structured repository knowledge.
-
-## 5. Report
-
-Tell the user:
-
-- what was wrong
-- what you found
-- why the mistake happened
-- whether the repository should eventually change
-- what change you recommend, if any
+Tell the user what you documented regarding the correction.
 
 Do not automatically promote the correction into permanent documentation.
