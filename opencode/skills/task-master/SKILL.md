@@ -112,3 +112,6 @@ changes performed shape the changes to come.
 
 Once the gap has been removed, use the `review` skill to review the changes.
 Work with the user to resolve any concerns that come up during the review.
+
+Once review is satisfied use the `consolidate-docs` skill to promote knowledge
+gathered during the task to permanent documentation.
