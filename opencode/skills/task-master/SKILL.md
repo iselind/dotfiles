@@ -95,7 +95,9 @@ Ask only questions where:
 > your understandings are in agreement.
 
 Iteratively reduce the gap by establishing a well-fenced and verifiable change
-to some vertical in the repository.
+to some vertical in the repository. Use agents to do the actual work, having
+them report back what was achieved, what was blocking/problematic/unclear, and
+so on.
 
 All changes are not associated with the same degree of certainty. Stick firmly
 to changes that seem obvious or where the necessity and solution of the task is
