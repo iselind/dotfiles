@@ -1,11 +1,18 @@
 ---
 name: commit_at_stable_points
-description: Workflow for reaching stable points and committing; recognize stability when tests pass and change is coherent, then iterate one-change-at-a-time with IDE review
+description: Workflow for reaching stable points and committing; stability = all verification for that change type passes (tests, kubectl explain, terraform validate+plan, etc.)
 metadata:
   type: feedback
 ---
 
-**Stable Point Definition:** A state that is genuinely better than before. For code, tests pass. For docs/config, the change is complete and coherent. Do not wait to be asked — propose committing at these natural stopping points.
+**Stable Point Definition:** All appropriate verification for the change type has passed. Do not wait to be asked — propose committing at these natural stopping points.
+
+**Verification by change type** (see [[change_support_evidence]]):
+- **Code changes:** tests pass
+- **Kubernetes manifests:** `kubectl explain` validates fields and special considerations
+- **Terraform/IaC:** `terraform validate` succeeds AND `terraform plan` succeeds (shows expected changes)
+- **Documentation/config:** change is complete, coherent, and passes any linting
+- **Other changes:** appropriate validation for that type has passed
 
 **Workflow When Iterating Through Changes:**
 
@@ -20,5 +27,6 @@ metadata:
 
 **How to apply:**
 - Any time work breaks into discrete changes (review findings, PR comments, implementation steps)
+- Before committing, run the appropriate verification: tests for code, `kubectl explain` for manifests, `terraform validate && terraform plan` for IaC, linting for docs
 - For content already discussed and agreed in conversation, propose the commit rather than asking — but still as a distinct step from writing
-- Reach genuine stable points (tests pass, change is complete) before committing, not just "done with this part"
+- Do not commit until all appropriate verification passes — this defines "stable"

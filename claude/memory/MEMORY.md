@@ -3,7 +3,7 @@
 | File | Type | Summary |
 |------|------|---------|
 | [skills_location.md](skills_location.md) | reference | ~/.claude/skills is a symlink into a dotfiles repo; follow it to find the real path |
-| [commit_at_stable_points.md](commit_at_stable_points.md) | feedback | Stable point = tests pass/change coherent; workflow: implement one change → review in IDE → commit → ask before next |
+| [commit_at_stable_points.md](commit_at_stable_points.md) | feedback | Stable point = all verification passes (tests for code, kubectl explain for manifests, terraform validate+plan for IaC, etc.); iterate one change at a time |
 | [fix_the_trigger.md](fix_the_trigger.md) | feedback | After resolving any finding, consider whether the ambiguity triggering it is still present — if so, propose a clarifying change |
 | [inventory_before_removing.md](inventory_before_removing.md) | feedback | Before removing a mechanism, inventory the consumption side (manifests, callers, external repos) — the authoring side is never the full picture |
 | [write_before_review.md](write_before_review.md) | feedback | Write files immediately; user reviews via IDE diff — don't show drafts in chat first |
