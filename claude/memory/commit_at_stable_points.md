@@ -1,13 +1,13 @@
 ---
 name: commit_at_stable_points
-description: Workflow for reaching stable points and committing; stability = all verification for that change type passes (tests, kubectl explain, terraform validate+plan, etc.)
+description: Workflow for reaching stable points and committing; stability = all verification for the changes being committed passes (may include tests, kubectl explain, terraform, linting, etc.)
 metadata:
   type: feedback
 ---
 
-**Stable Point Definition:** All appropriate verification for the change type has passed. Do not wait to be asked — propose committing at these natural stopping points.
+**Stable Point Definition:** All appropriate verification for the changes being committed has passed. Do not wait to be asked — propose committing at these natural stopping points.
 
-**Verification by change type** (see [[change_support_evidence]]):
+**Verification by change type** (see [[change_support_evidence]]). A change may involve multiple types — verify all of them:
 - **Code changes:** tests pass
 - **Kubernetes manifests:** `kubectl explain` validates fields and special considerations
 - **Terraform/IaC:** `terraform validate` succeeds AND `terraform plan` succeeds (shows expected changes)
