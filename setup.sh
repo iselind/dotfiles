@@ -38,8 +38,7 @@ link_dotfile "${DOT_FILES}/screenrc" ~/.screenrc
 
 mkdir -p ~/.claude
 link_dotfile "${DOT_FILES}/claude/skills" ~/.claude/skills
-link_dotfile "${DOT_FILES}/claude/memory" ~/.claude/memory
-link_dotfile "${DOT_FILES}/claude/CLAUDE.md" ~/.claude/CLAUDE.md
+link_dotfile "${DOT_FILES}/claude/rules" ~/.claude/rules
 
 mkdir -p ~/.config
 link_dotfile "${DOT_FILES}/opencode" ~/.config/opencode
