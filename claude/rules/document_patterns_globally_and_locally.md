@@ -33,4 +33,4 @@ metadata:
 
 **Why:** Repo docs are the source of truth for all agents and team members. Corrections only help in one conversation unless they update the shared knowledge. Each correction is a signal that docs are incomplete — fix them so the disagreement doesn't recur.
 
-**How to apply:** After applying a correction at stable point, pause and identify what guidance was missing. If it's a verification method, point to the tool. If it's a cross-project pattern that repo docs can't capture, *then* consider global memory — but that's the exception, not the default. The default is: update the repo.
+**How to apply:** After applying a correction at stable point, pause and identify what guidance was missing. If it's a verification method, point to the tool. If it's a cross-project pattern that repo docs can't capture, *then* add it to `~/.claude/rules/` — but that's the exception, not the default. The default is: update the repo.
