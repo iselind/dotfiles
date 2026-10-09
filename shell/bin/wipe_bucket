@@ -1,0 +1,16 @@
+#!/bin/sh
+
+BUCKET_NAME=$1
+
+aws s3api delete-objects \
+  --bucket "$BUCKET_NAME" \
+  --delete "$(aws s3api list-object-versions \
+                --bucket "$BUCKET_NAME" \
+                --output json \
+                --query '{Objects: Versions[].{Key:Key,VersionId:VersionId}}')" 2>/dev/null && \
+aws s3api delete-objects \
+  --bucket "$BUCKET_NAME" \
+  --delete "$(aws s3api list-object-versions \
+                --bucket "$BUCKET_NAME" \
+                --output json \
+                --query '{Objects: DeleteMarkers[].{Key:Key,VersionId:VersionId}}')" 2>/dev/null
