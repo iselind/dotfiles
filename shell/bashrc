@@ -88,6 +88,7 @@ ffv() {
 #######################
 
 alias k=kubectl
+alias explain="kubectl --context dev explain"
 
 kns() {
     if [ -z "$1" ]; then
