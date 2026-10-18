@@ -1,6 +1,6 @@
 .netrwhist
 vim/plugged
-__pycache__/
+__pycache__
 *.pyc
 .pytest_cache/
 .aider*
