@@ -1,11 +1,8 @@
 ---
 name: extract-adr
 description: >
-  Scan the current branch for architectural decisions worth preserving as ADRs,
-  then draft and write approved ADR files. Use when finishing a branch, after a
-  review, or any time you want to check whether a decision made on a branch
-  deserves documentation.
-user-invocable: true
+  Use when findings or clarifications get a yes to the question "Would a new
+  team member benefit from reading about this in a year?".
 ---
 
 # Extract-ADR skill
