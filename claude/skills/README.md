@@ -11,8 +11,6 @@ A valid skill conform to [the specificaton](https://agentskills.io/specification
 
 Other than that, the following rules apply on top of the specification.
 
-- Description: Found in the skill's front matter. Describe the situation in which
-  this skill is relevant. Usually in a "Use when ..." styled paragraph.
-- Body: Found after the skill's front matter in the same file. How should the
-  system respond when that situation occurs?
-- Don't explicitly invoke other skills.
+- **Description (front matter)**: Field describes the situation where this skill is applicable. Shape: "Use when [scenario]". No instructions about *how* to use; pure *when*.
+- **Body** (after front matter): Explains system response steps when that situation occurs; may reference tools, endpoints, conventions—but no instructional prose like "invoke `/review`" or "run the fix-pr-comments skill". Document style: file paths (``~/.claude/skills/*``, `docs/prds/<slug>.md`), shell command substitutions in backticks (``!ls ...``), API endpoint patterns (`/repos/{owner}/pulls`).
+- **Don't explicitly invoke other skills** in prose (e.g., "use `/skill-name`") — describe the workflow naturally instead.

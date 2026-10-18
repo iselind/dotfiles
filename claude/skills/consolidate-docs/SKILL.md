@@ -1,9 +1,6 @@
 ---
 name: consolidate-docs
-description: >
-  Promote knowledge from the task scratch space (.task/) to permanent repository
-  documentation. Determine what should survive the task, where it belongs, and
-  what can be discarded. Reduce .task/ to nothing.
+description: Use when findings or clarifications need promotion from scratch space (.task/) to permanent repository documentation. Determines what survives the task, where it belongs, what is discarded. Reduces .task/ afterward.
 ---
 
 # Consolidate the Documentation

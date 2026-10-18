@@ -1,11 +1,7 @@
 ---
 name: fix-pr-comments
 description: >
-  Fetch open review comments on the current branch's PR and work through them
-  one at a time: understand the comment, implement the fix, review, then commit.
-  Use when the user mentions PR review comments, review feedback, or comments to
-  address — e.g. "we got PR comments", "there are review comments to fix",
-  "address the feedback", "fix the comments", "reviewer left some notes".
+  Use when a user mentions PR review comments, feedback, or items to address (we got PR comments, there are review comments to fix, address the feedback, etc.). Fetch open review comments on the current branch's PR and work through them one at a time: understand, implement fixes, review, then commit.
 argument-hint: "[pr-number | comment-url]"
 user-invocable: true
 ---
@@ -167,21 +163,9 @@ asked to skip in Phase 1.
    already used on this branch (check `git log --oneline -10`). The message
    should indicate what was changed; a reference to the comment is optional
    but useful (e.g. `fix: <what changed>, per review comment`).
+6. **Reflect: what type of feedback surfaced in the PR review?** After committing, consider whether that feedback was on style, prose, or context — name any gaps (e.g. wrong scope, missing heuristic, project-specific invariant, prose or comment quality, etc.).
 
-6. **Reflect: would `/review` have caught this?** After committing, consider
-   whether the `/review` skill would have surfaced this issue. Present a
-   verdict and your reasoning:
-   - **Yes** — it would have caught it; explain why it should have (and note
-     if the review was actually run but missed it anyway).
-   - **No — gap identified** — it would not have caught it; name the gap
-     (e.g. wrong scope, missing heuristic, project-specific invariant, prose
-     or comment quality, etc.).
-   - **Out of scope** — the comment is about style, preference, or context
-     that `/review` is not designed to catch; briefly say so.
-
-   Invite the user to respond — they may want to discuss the gap, correct
-   your reasoning, or note that the review skill should be updated. Wait for
-   the user to confirm they have nothing more to add before moving on.
+Invite the user to respond — they may want to discuss the gap, correct your reasoning, or note that the review skill should be updated for style/prose/context items and wait for confirmation of changes before moving on.
 
 7. **Move to the next.** Ask: "Done — ready for comment N+1?" — then wait for
    confirmation.
@@ -215,19 +199,14 @@ are in place.
 
 ## Phase 3 — Close review skill gaps
 
-First, check whether `/review` was actually run on this branch before the PR
-was created. If it was not, surface that as a process gap in the invoking
-workflow (e.g. the Jira starting-work path) rather than proposing review skill
-heuristic changes — the issue is that the gate was skipped, not that the gate
-has a missing heuristic.
+First, check whether a review was actually run on this branch before the PR was created. If not, surface that as a process gap in the invoking workflow rather than proposing heuristic changes — the issue is that the gate was skipped.
 
 Collect all step-6 gap findings from this session — every comment where the
 verdict was **"No — gap identified"** (including any discussion that refined
 or expanded the gap). If none were identified, skip directly to Phase 4.
 
 For each identified gap, propose a targeted change to
-`~/.claude/skills/review/SKILL.md` that would cause the `/review` skill to
-catch the class of issue in future. Work through them one at a time:
+`~/.claude/skills/review/SKILL.md` to address that gap when appropriate. Work through them one at a time:
 
 1. **Propose the change.** Describe what to add or modify in the review skill
    and why it addresses the gap. Wait for the user to confirm or redirect.
@@ -249,7 +228,7 @@ After all gaps are addressed, move directly to Phase 4.
 
 ## Phase 4 — Retrospective
 
-Move directly into `/retro fix-pr-comments`. Do not ask for permission — this
+Next: run retro fix-pr-comments. Do not ask for permission — this
 is a natural continuation of the fix.
 
 ---

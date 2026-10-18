@@ -1,9 +1,8 @@
 ---
 name: correction
 description: >
-  Record a correction to the agent's understanding. Append to the task log,
-  investigate why the belief was wrong, and document findings to support
-  future promotion to permanent documentation.
+  Use when an agent needs to correct its understanding or reasoning. Append the correction to the task log and investigate why the original belief was wrong. Document findings to support future documentation work or prevent recurrence.
+
 user-invocable: true
 ---
 

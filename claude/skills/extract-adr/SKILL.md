@@ -169,9 +169,7 @@ After the last candidate, report how many ADRs were written and their filenames.
 
 This phase must always run — even when no candidates were found, even when invoked as part of another skill.
 
-Move directly into `/retro extract-adr`. Do not ask for permission.
-
-After the retrospective completes, run exactly once — Phase 0 pushed once; this pop matches it:
+Move directly into retro extract-adr. Do not ask for permission — the retrospective is a natural continuation.
 
 ```bash
 skill-stack pop

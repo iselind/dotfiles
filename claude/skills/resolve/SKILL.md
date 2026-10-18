@@ -1,9 +1,7 @@
 ---
 name: resolve
 description: >
-  Resolve a task by reducing the gap. Use test-driven development for code changes,
-  and documentation-driven approach for non-code changes. Report progress, blockers,
-  and remaining work.
+  Use when a task needs to be reduced to completion. Resolve it by reducing the gap: apply test-driven development for code changes, documentation-driven approach for non-code changes; report progress, blockers, and remaining work.
 ---
 
 # Resolve the gap

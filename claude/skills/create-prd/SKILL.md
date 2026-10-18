@@ -1,11 +1,7 @@
 ---
 name: create-prd
 description: >
-  Conduct an interview-driven PRD creation process. Asks for an idea, interviews
-  relentlessly one question at a time (with a recommended answer for each), explores
-  the codebase when questions can be answered by reading code, then writes the PRD
-  to docs/prds/<slug>.md with valid YAML frontmatter on a new branch, committed
-  and pushed. Use when you want to go from an idea to a committed PRD.
+  Use when an idea needs to become a committed PRD. This skill interviews relentlessly (one question at a time with recommended answers), explores the codebase for context, then writes the PRD to docs/prds/<slug>.md with valid YAML frontmatter on a new branch — committed and pushed.
 user-invocable: true
 ---
 

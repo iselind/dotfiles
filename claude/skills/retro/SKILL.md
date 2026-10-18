@@ -1,9 +1,7 @@
 ---
 name: retro
 description: >
-  Run a retrospective on a skill session that just completed. Assesses what went
-  well and what could be improved, then applies skill changes one at a time.
-  Invoked automatically at the end of other skills; can also be run directly.
+  Use when a skill session has just completed and needs retrospective review. Assess what went well and what could improve, then apply changes one at a time. This skill runs automatically after other skills; can also be invoked directly.
 argument-hint: "<skill-name>"
 user-invocable: true
 ---
@@ -33,7 +31,7 @@ Set `<resume>` to the single address — a phase name, step label, or other mark
 
 If `$ARGUMENTS` is provided, use it as the skill name. Otherwise ask:
 
-> "Which skill should I run the retrospective on?"
+> "Which skill's retrospective should I run?"
 
 The skill file is at `~/.claude/skills/<name>/SKILL.md`.
 

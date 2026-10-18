@@ -1,9 +1,7 @@
 ---
 name: prd-to-issues
 description: >
-  Read the PRD for the current branch, decompose it into a reviewed set of issue files
-  with correct frontmatter and a DAG of dependencies, then commit and push on confirmation.
-  Use when you want to turn a PRD into a ready-to-orchestrate set of issues.
+  Use when a PRD should become a ready-to-orchestrate set of issues. Read the current branch's PRD, decompose it into reviewed issue files with correct frontmatter and a DAG of dependencies, then commit and push on confirmation.
 user-invocable: true
 ---
 
@@ -186,7 +184,7 @@ Report the commit hash and confirm the push succeeded.
 
 ## Phase 5 — Retrospective
 
-Move directly into `/retro prd-to-issues`. Do not ask for permission — this is a
+Move directly into retro prd-to-issues. Do not ask for permission — this is a
 natural continuation of the skill.
 
 ---

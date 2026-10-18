@@ -126,7 +126,7 @@ For collision or uniqueness bugs (two items competing for the same key, filename
 
 6. When the user's response clearly signals intent to commit — not just closes a side discussion — commit in the branch's style (look at recent commits for the pattern). If the response raises a new concern, addresses wording, or asks a question, treat it as continued review, not confirmation. **An affirmation that confirms a wording proposal ("yes", "looks good", "do that") is not a commit signal — it means implement the change. The step 5 review checkpoint must still be held after implementing it.** Then ask: "Ready for item N+1?" and wait.
 
-   Do not add a "would `/review` have caught this?" reflection after each item — you are already running the review skill; the question is circular.
+   Do not add a "what type of feedback surfaced in the PR review?" reflection after each item — you are already running the review skill; the question is circular.
 
 **Do not work on the next item until the user confirms the current one.**
 
@@ -173,7 +173,7 @@ The two checks are independent. Report each file's readiness separately. Ask for
 
 ## Phase 5 — Retrospective and conventions audit
 
-Before moving to `/retro review`, audit the conventions:
+Before running retro review, audit the conventions:
 
 **Conventions audit:**
 - Did 3a discover patterns in the codebase (beyond the actual branch changes) that should become conventions?
@@ -186,7 +186,7 @@ Update `conventions.md` (and any directory-specific ones) based on what you lear
 
 **Important:** The actual work is fixing code, comments, and documentation (which includes conventions.md as a documentation artifact). The conventions audit is infrastructure that supports the review process — it identifies patterns worth codifying. Do not let the audit eclipse the primary work of improving the branch.
 
-Then move directly into `/retro review`. Do not ask for permission — this is a natural continuation of the review.
+Then move directly into retro review. Do not ask for permission — this is a natural continuation of the review.
 
 ---
 
@@ -204,7 +204,7 @@ Wait for the user to confirm, correct, or add context.
 
 After the user responds, state the verdict:
 
-- **Warranted:** "Another round is warranted — [one sentence on what drove it]. Run `/clear` to reset context, then `/review` to start the next round."
+- **Warranted:** "Another round is warranted — [one sentence on what drove it]. Use /clear to reset context, run review to start the next round."
 - **Not warranted:** "No further rounds needed — [one sentence on why]."
 
 ---
