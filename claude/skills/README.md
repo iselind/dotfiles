@@ -12,7 +12,7 @@ A valid skill conform to [the specificaton](https://agentskills.io/specification
 Other than that, the following rules apply on top of the specification.
 
 - Description: Found in the skill's front matter. Describe the situation in which
-  this skill is relevant.
+  this skill is relevant. Usually in a "Use when ..." styled paragraph.
 - Body: Found after the skill's front matter in the same file. How should the
   system respond when that situation occurs?
 - Don't explicitly invoke other skills.
