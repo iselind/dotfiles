@@ -14,4 +14,6 @@ Reduce uncertainty that matters to the problem.
 - Treat evidence critically. Consider its reliability, limitations, and alternative interpretations.
 - Update conclusions in proportion to the strength of the evidence. Do not turn a plausible explanation into an established fact.
 - Stop investigating when the available evidence is sufficient for the decision at hand, or when further investigation is unlikely to justify its cost. Preserve important unresolved uncertainty.
+- Record the investigation on the working branch.
+  - Include what triggered the investigation and the outcome.
 - Do not invoke other skills.

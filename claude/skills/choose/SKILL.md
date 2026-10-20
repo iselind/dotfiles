@@ -15,4 +15,5 @@ Make a reasoned choice in the context of the current objective.
 - Select the alternative best supported by the available reasoning.
 - If no alternative is sufficiently justified, identify what prevents a sound choice and leave the decision unresolved rather than manufacturing certainty.
 - Keep the choice proportional to its consequences. Prefer preserving options when commitment is unnecessary.
+- Record the choice on the working branch.
 - Do not invoke other skills.

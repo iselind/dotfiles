@@ -15,4 +15,5 @@ Address discrepancies between what is understood and what the evidence supports.
 - Revise affected assumptions, conclusions, decisions, and artifacts. Do not preserve an earlier conclusion merely because other work depends on it.
 - Reassess the validity of prior work to the extent that it depends on the discrepancy. Avoid discarding unaffected work without reason.
 - Treat the current understanding as provisional: resolving one discrepancy may expose another.
+- Record the discrepancies and their resolution on the working branch.
 - Do not invoke other skills.
