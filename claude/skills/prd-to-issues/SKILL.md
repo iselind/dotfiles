@@ -24,18 +24,6 @@ Complete the phases below in order.
 
 ---
 
-## Phase 0 — Register on skill stack
-
-Determine the resume from the calling context visible in the conversation — identify where the calling skill continues after this skill completes. Then run:
-
-```bash
-skill-stack push prd-to-issues "<resume>"
-```
-
-Set `<resume>` to the single address — a phase name, step label, or other marker — where the calling skill should pick up once this skill completes. Derive this from the calling context visible in the conversation; if context is thin, read ahead in the calling skill's file as a fallback. If invoked standalone with no calling skill, omit the resume argument.
-
----
-
 ## Phase 1 — Read the PRD
 
 **Step 1 — Identify the PRD**
@@ -186,13 +174,3 @@ Report the commit hash and confirm the push succeeded.
 
 Move directly into retro prd-to-issues. Do not ask for permission — this is a
 natural continuation of the skill.
-
----
-
-## Final step — Pop skill stack
-
-Phase 0 pushed exactly once; this pop fires exactly once to match it. Do not pop earlier in the skill — even if a phase feels "complete" mid-session.
-
-```bash
-skill-stack pop
-```

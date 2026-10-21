@@ -30,18 +30,6 @@ Complete the phases below in order.
 
 ---
 
-## Phase 0 — Register on skill stack
-
-Determine the resume from the calling context visible in the conversation — identify where the calling skill continues after this skill completes. Then run:
-
-```bash
-skill-stack push review "<resume>"
-```
-
-Set `<resume>` to the single address — a phase name, step label, or other marker — where the calling skill should pick up once this skill completes. Derive this from the calling context visible in the conversation; if context is thin, read ahead in the calling skill's file as a fallback. If invoked standalone with no calling skill, omit the resume argument.
-
----
-
 ## Phase 1 — Review & populate the plan
 
 **Step 1 — Find the plan**
@@ -61,13 +49,13 @@ Understand: the status table format (columns, emoji conventions, item numbering)
 Spawn an agent in parallel using the Agent tool. The agent has no session context — it reads the diff cold. Use this prompt:
 
 > You are reviewing a branch. Run `git diff origin/main...HEAD` to read the diff, then read the changed files in full.
-> 
+>
 > **Environmental anchoring:** Review by traversing outward through the codebase graph: start from the branch changes, understand context by examining related patterns/resources, and stop when signal-to-noise drops (typically within 2-3 steps). Do the changes make sense in the context of the codebase? Are they anchored in existing patterns and infrastructure?
-> 
+>
 > **Convention placement:** As you traverse, also verify: Are conventions documented at the appropriate level in the directory hierarchy? A convention buried too deep or too high won't be discoverable when it matters.
-> 
+>
 > Missing documentation is NOT a stop criterion — if something is hard to verify due to missing docs, that's a gap to report. DO stop at hypotheticals — if you're making assumptions about behavior you can't verify even with available information, that's noise.
-> 
+>
 > Report ONLY issues that need attention — do not comment on code that is working correctly. Return a plain list of findings. For each: one-line description, file and approximate location, and why it matters.
 
 **Step 3b — Convention verification**
@@ -206,13 +194,3 @@ After the user responds, state the verdict:
 
 - **Warranted:** "Another round is warranted — [one sentence on what drove it]. Use /clear to reset context, run review to start the next round."
 - **Not warranted:** "No further rounds needed — [one sentence on why]."
-
----
-
-## Final step — Pop skill stack
-
-Phase 0 pushed exactly once; this pop fires exactly once to match it. Do not pop earlier in the skill — even if a phase feels "complete" mid-session.
-
-```bash
-skill-stack pop
-```

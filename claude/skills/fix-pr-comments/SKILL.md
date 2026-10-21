@@ -19,18 +19,6 @@ user has reviewed.
 
 ---
 
-## Phase 0 — Register on skill stack
-
-Determine the resume from the calling context visible in the conversation — identify where the calling skill continues after this skill completes. Then run:
-
-```bash
-skill-stack push fix-pr-comments "<resume>"
-```
-
-Set `<resume>` to the single address — a phase name, step label, or other marker — where the calling skill should pick up once this skill completes. Derive this from the calling context visible in the conversation; if context is thin, read ahead in the calling skill's file as a fallback. If invoked standalone with no calling skill, omit the resume argument.
-
----
-
 ## Phase 1 — Identify the comments to work through
 
 **Step 1 — Check what's already in context**
@@ -230,13 +218,3 @@ After all gaps are addressed, move directly to Phase 4.
 
 Next: run retro fix-pr-comments. Do not ask for permission — this
 is a natural continuation of the fix.
-
----
-
-## Final step — Pop skill stack
-
-Phase 0 pushed exactly once; this pop fires exactly once to match it. Do not pop after fixing individual comments — this step runs once, after all comments are resolved and the session is complete.
-
-```bash
-skill-stack pop
-```

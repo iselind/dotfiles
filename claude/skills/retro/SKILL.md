@@ -15,18 +15,6 @@ honestly, surface improvements, and apply them to the skill file.
 
 ---
 
-## Phase 0 — Register on skill stack
-
-Determine the resume from the calling context visible in the conversation — identify where the calling skill continues after this skill completes. Then run:
-
-```bash
-skill-stack push retro "<resume>"
-```
-
-Set `<resume>` to the single address — a phase name, step label, or other marker — where the calling skill should pick up once this skill completes. Derive this from the calling context visible in the conversation; if context is thin, read ahead in the calling skill's file as a fallback. If invoked standalone with no calling skill, omit the resume argument.
-
----
-
 ## Phase 1 — Identify the skill
 
 If `$ARGUMENTS` is provided, use it as the skill name. Otherwise ask:
@@ -89,13 +77,3 @@ change → assess → review → commit → next flow:
 
 After the last change is committed, end the retro. Do not ask for further
 additions — that was already covered in Phase 2.
-
----
-
-## Final step — Pop skill stack
-
-Phase 0 pushed exactly once; this pop fires exactly once to match it. Do not pop earlier in the skill — even if a phase feels "complete" mid-session.
-
-```bash
-skill-stack pop
-```

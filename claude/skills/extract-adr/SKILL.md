@@ -26,18 +26,6 @@ Identify architectural decisions made on this branch that are worth preserving a
 
 ---
 
-## Phase 0 — Register on skill stack
-
-Determine the resume from the calling context visible in the conversation — identify where the calling skill continues after this skill completes. Then run:
-
-```bash
-skill-stack push extract-adr "<resume>"
-```
-
-Set `<resume>` to the single address — a phase name, step label, or other marker — where the calling skill should pick up once this skill completes. Derive this from the calling context visible in the conversation; if context is thin, read ahead in the calling skill's file as a fallback. If invoked standalone with no calling skill, omit the resume argument.
-
----
-
 ## Phase 1 — Identify candidates
 
 **Step 1 — Read the branch**
@@ -170,9 +158,3 @@ After the last candidate, report how many ADRs were written and their filenames.
 This phase must always run — even when no candidates were found, even when invoked as part of another skill.
 
 Move directly into retro extract-adr. Do not ask for permission — the retrospective is a natural continuation.
-
-```bash
-skill-stack pop
-```
-
-This announces the return to the invoking skill automatically.
