@@ -62,6 +62,8 @@ Spawn an agent in parallel using the Agent tool. The agent has no session contex
 
 Load `conventions.md` from the repo root and any directory-specific `conventions.md` files that apply to the changed code. Read the full diff and all changed files yourself. Verify the changed code against the patterns documented in those files.
 
+If no `conventions.md` exists, use the repo's equivalent, such as `CONVENTIONS.md` or `docs/CONVENTIONS.md` and the guides it links to (for ADRs and plans, e.g. `docs/plans-and-adrs.md`). Tell the user which files you are using in place of `conventions.md`, and use them wherever this skill says `conventions.md`.
+
 Classify each finding into the categories in `conventions.md` (Bug, Security, Gap, Suggestion, Cleanup, etc.). If you find an issue pattern that is *not* covered by any convention in the repo, flag it as a potential convention: this pattern should potentially become one.
 
 **Review scope:**
