@@ -56,7 +56,7 @@ Spawn an agent in parallel using the Agent tool. The agent has no session contex
 >
 > Missing documentation is NOT a stop criterion — if something is hard to verify due to missing docs, that's a gap to report. DO stop at hypotheticals — if you're making assumptions about behavior you can't verify even with available information, that's noise.
 >
-> Report ONLY issues that need attention — do not comment on code that is working correctly. Return a plain list of findings. For each: one-line description, file and approximate location, and why it matters.
+> Report ONLY issues that need attention — do not comment on code that is working correctly. Return a plain list of findings, with no cap on the count. For each: one-line description, file and approximate location, why it matters, a severity (high / medium / low), and a short theme label (for example "terminology", "cross-repo scope", "convention placement") so related findings can be grouped later.
 
 **Step 3b — Convention verification**
 
@@ -84,7 +84,18 @@ Present the finding to the user and ask how to proceed. Typical handling:
 
 Wait for the Step 3a agent to complete. Combine its findings with your Step 3b findings — deduplicate where they overlap, and classify each into the tracking file categories above.
 
-In one edit: append a table row `| N | Short description | Type | ⬜ Open |` and append a detailed section following the exact heading, paragraph, and code-block style already used in the document.
+**Settled-decision check.** Before recording a finding, check it against decisions already made: the repo's ADRs, OPEN documents and plans, and any decision the user has made in this session. A finding that restates a settled decision is dropped, or rewritten as a confirmation that the decision holds. Do not record it as an open item. The 3a agent has no session context by design, so this check belongs to the orchestrator.
+
+**Verify before recording.** Re-read the cited location and confirm the claim against the file. A finding that does not hold is dropped and noted in the report, not recorded.
+
+**Group, do not cap.** Do not drop findings to keep the list short. Cluster the verified findings into groups:
+- Each group is a theme, with one tracking item per group and one sub-bullet per finding.
+- Rank groups by impact (Pareto): the few groups that remove most of the risk come first. Lower-ranked groups stay tracked and are deferred, not dropped.
+- A group is well-sized when its resolution is one decision: it can be stated in one sentence and needs one question to the user. If a group needs two independent decisions, split it.
+- Items that change the same concept belong in one group. Items that only share a file do not.
+- Soft limit: about five sub-bullets is a prompt to check the decision test above, not a rule. A group with more sub-bullets that all serve one decision stays whole.
+
+In one edit: append a table row per group `| N | Theme: short description | Type | ⬜ Open |` and append a detailed section for the group, with a lettered sub-bullet for each finding, following the exact heading, paragraph, and code-block style already used in the document.
 
 If no new issues were found, run a secondary pass: explicitly identify the top 3 worst findings you can locate (even if minor — test gaps, brittleness, usability concerns, design inflexibilities). Present them ranked by severity with context about why they're not blocking. This gives the user visibility into what's present even in a clean review, and demonstrates the review actually looked critically. If there are existing open items, skip to Phase 2. If there are no open items at all, skip to Phase 3.
 
@@ -98,11 +109,11 @@ Tell the user: "Added items N–M to the plan. Ready to start with the next open
 
 **Before starting Phase 2, read `conventions.md` from the repo root (and any directory-specific ones that apply) — do not skip this step.**
 
-Work through open (⬜) items in ascending order, one at a time.
+Work through open (⬜) items in ascending order, one at a time. An item is a group: work through its sub-bullets together, and ask one question per group, not one per sub-bullet. If a sub-bullet turns out to need a separate decision while you work through the group, split it into its own item before going on.
 
 **For each item:**
 
-1. State the item number and describe the problem: what is wrong, where it is, and why it matters. Do not propose a fix yet — let the user engage with the problem first. Wait for the user to respond.
+1. State the item number and describe the problem: what is wrong, where it is, and why it matters. For a group, name each sub-bullet briefly, then state the one decision the group needs. Do not propose a fix yet — let the user engage with the problem first. Wait for the user to respond.
 
 2. Once the user has engaged, propose a fix (and alternatives if they exist). Prefer structural fixes over scattered per-instance changes — if a single change point (e.g. a shared function, a global redirect, a convention) can replace many individual changes, propose that first. If there are alternatives, confirm which to implement before proceeding.
 
@@ -110,7 +121,7 @@ For collision or uniqueness bugs (two items competing for the same key, filename
 
 3. Fix the issue. Read the relevant files first. Make the minimal, focused change. Apply the guidance in `conventions.md` throughout.
 
-4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>`.
+4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>`. For a group, mark each sub-bullet done and the group row done once all are resolved.
 
 5. Stop for review: "Ready for review — let me know when you're ready to commit." Wait.
 
