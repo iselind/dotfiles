@@ -56,3 +56,5 @@ Invariants
 linters
 Makefile
 SQLite
+Anthropic
+subagent
