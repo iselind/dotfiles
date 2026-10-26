@@ -2,9 +2,30 @@
 
 Anthropic documents how to create a skill
 [here](https://claude.com/docs/skills/how-to). That should be a good starting
-point.
+point. Essentially a skill should "fix" something the model gets wrong according
+to their docs.
 
-## Rules
+Their first step in creating a new skill is to complete the task without a
+skill. The information that gets provided repeatedly should be noticed.
+
+What we need to do is leave Claude alone doing its thing until it makes
+mistakes, then add the infrastructure and files like skills to give it some
+support to get to that final destination.
+
+The Anthropic team actually also say that most of their own best skills began as
+just a few lines and a single gotcha that basically corrected something that
+Claude can do out of the box. So this treats skills as a list of things that
+Claude actually got wrong, not a manual for the whole process anymore.
+
+Some of the insights here come from [this YouTube
+video](https://www.youtube.com/watch?v=J9NQTYUP6k0). Other things are my own
+thinking and/or findings. They don't always agree.
+
+What you'll see reading through this document is me trying to marry my thoughts
+on working on higher-level tasks with reality. "Reality" here is defined as what
+we can do with Claude today using Haiku and Sonnet models.
+
+## My Rules
 
 All skills need to conform to the prescribed rules unless deliberately commented
 in the skill why it deviates.
@@ -107,3 +128,32 @@ I've observed using the skill's description to describe a situation doesn't seem
 to trigger the skill. Based on my exploration there are instead suggestions that
 skills will only ever be invoked if specifically requested by a user, either by
 name or description.
+
+## Working on high-level tasks
+
+I tend to think more in high-level tasks than in the tiny changes that together
+compose together to create the solution. That's not really how LLMs tend to
+operate.
+
+As most of us, when we have a task to complete we need to know when we're done,
+or at least done "enough". So having a high-level task would only act as the
+guiding star. We still need to figure out the tiny changes that together compose
+the solution. Once we reach that definition of done, that's where we publish the
+PR.
+
+A prompt should basically consist of
+
+- Task
+- Guardrails
+- DoD - Definition of Done
+
+This would mean I need to change a bit in how I work with LLMs. I need to get
+better at defining done, creating something that result in a Boolean result.
+Important here is that definition of done doesn't have to be executable!
+
+So we should be able to turn a DoD into something that the LLM can check,
+for example through Claude's `/goal` feature.
+
+Anthropic says that a good goal has one end state. It says how to prove that end
+state and says what mustn't change. And it should also have a turn limit to stop
+it running indefinitely.
