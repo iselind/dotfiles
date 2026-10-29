@@ -17,7 +17,7 @@ which is rarely true.
 
 When the decision captures a general pattern motivated by a concrete first
 instance, state the problem at the generic level first, then introduce the
-concrete instance marked with "e.g." or "in the current implementation".
+concrete instance marked with "e.g.".
 Concrete-first framing makes a generic ADR read as system-specific, which
 ages badly as the pattern recurs elsewhere.
 
@@ -48,6 +48,7 @@ include if a specific, verifiable instance exists in the codebase.
 
 - Sentence case: `ADR-003: Foo bar baz`, not `ADR-003: Foo Bar Baz`
 - No status field — the branch/PR workflow provides status
+- ADRs are timeless: describe the decision and the reasons for it, not the state of the implementation when it was written. Avoid wording tied to a moment, such as "currently", "today", "for now" or "in the current implementation"; mark concrete instances as examples with "e.g."
 - Sub-headings within Rationale are fine when reasoning has distinct parts
 - Code blocks and tables are fine where they clarify
 - Do not reference specific tickets (Jira, GitHub issues, etc.) by ID — describe the problem or constraint directly. Ticket IDs may appear in filenames (e.g. a hook script named after its ticket) when quoting that filename, but never as a reference for context.

@@ -129,7 +129,7 @@ Otherwise ask: "Shall I draft all of these, or pick specific numbers?" — then 
 
 Work through approved candidates one at a time. If the user said "draft all", write all files first, then present them to the user. Then go through each for approval and commit **one at a time** — ask "ADR-NNN looks good?" for each, wait for the response, commit that one, then move to the next. Do not batch commits. A single "ready" signal after seeing multiple ADRs is approval for review, not a commit signal for all of them.
 
-When drafting, verify that enumerated sets meant to be complete (options considered, failure modes, required steps) are exhaustive. Illustrative examples in generic decisions should be marked with "e.g." or "in the current implementation" rather than expanded to a complete enumeration.
+When drafting, verify that enumerated sets meant to be complete (options considered, failure modes, required steps) are exhaustive. Illustrative examples in generic decisions should be marked with "e.g." rather than expanded to a complete enumeration. Do not tie the text to the present with "currently", "today" or "in the current implementation"; an ADR is timeless.
 
 Before writing the Options section, verify each option is executable within the actual deployment model. Confirm the artifacts each option claims to act on exist at the point it claims to act — e.g., in a GitOps pipeline, distinguish between what is present in the source tree at packaging time vs what is rendered by controllers at runtime. An option that cannot act on what it claims to act on is not a real option; describe what it would actually require instead.
 
