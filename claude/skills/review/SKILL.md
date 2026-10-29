@@ -164,7 +164,7 @@ extract-adr runs its own mandatory retrospective before returning.
 
 You will need both in Phase 6.
 
-**Review tracking file:** If open items remain (extract-adr may have added new ones), return to Phase 2 and work through them using the normal review workflow. There is no need to re-run extract-adr afterward. Once all items are resolved, check for deletion.
+**Review tracking file:** If open items remain (extract-adr may have added new ones), return to Phase 2 and work through them using the normal review workflow. There is no need to re-run extract-adr afterward. Once all items are resolved, check for deletion. Deleting the file discards the record of any item marked skipped, so when reporting readiness list the skipped items and ask whether any should be tracked elsewhere, such as in a ticket or a plan item, before deleting.
 
 **Plan file:** If all work items are complete and no open questions remain, the plan is ready to delete. Any "plan ready for deletion" cleanup item identified in Phase 1 belongs here; if it was deferred, handle it now.
 
