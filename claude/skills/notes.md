@@ -76,7 +76,7 @@ Mixed results but the re-review after fixing comments did catch issues.
 belongs in core-platform repo, not a generic Claude skill
 
 **Potential improvement:** Slim down review to generic principles, make repository-specific
-patterns configurable or loaded from repo's own conventions.md
+patterns configurable or loaded from repo's own CONVENTIONS.md
 
 ---
 

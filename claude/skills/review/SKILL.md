@@ -24,7 +24,7 @@ Changed files: !`git diff origin/main...HEAD --stat`
 
 ## Your job
 
-Review the branch, find issues, and fix them. Fixes go everywhere: code, comments, tests, documentation, CLAUDE.md, conventions.md, or plan files. The skill also maintains a learning loop through conventions: patterns discovered during review may become conventions, and conventions are audited to stay accurate.
+Review the branch, find issues, and fix them. Fixes go everywhere: code, comments, tests, documentation, README.md, CLAUDE.md, CONVENTIONS.md, or plan files. The skill also maintains a learning loop through conventions: patterns discovered during review may become conventions, and conventions are audited to stay accurate.
 
 Complete the phases below in order.
 
@@ -60,11 +60,11 @@ Spawn an agent in parallel using the Agent tool. The agent has no session contex
 
 **Step 3b — Convention verification**
 
-Load `conventions.md` from the repo root and any directory-specific `conventions.md` files that apply to the changed code. Read the full diff and all changed files yourself. Verify the changed code against the patterns documented in those files.
+Load `CONVENTIONS.md` from the repo root and any directory-specific `CONVENTIONS.md` files that apply to the changed code. Read the full diff and all changed files yourself. Verify the changed code against the patterns documented in those files.
 
-If no `conventions.md` exists, use the repo's equivalent, such as `CONVENTIONS.md` or `docs/CONVENTIONS.md` and the guides it links to (for ADRs and plans, e.g. `docs/plans-and-adrs.md`). Tell the user which files you are using in place of `conventions.md`, and use them wherever this skill says `conventions.md`.
+If no `CONVENTIONS.md` exists, look for `docs/CONVENTIONS.md` and the guides it links to (for ADRs and plans, e.g. `docs/plans-and-adrs.md`). Tell the user which files you are using in place of `CONVENTIONS.md`, and use them wherever this skill says `CONVENTIONS.md`.
 
-Classify each finding into the categories in `conventions.md` (Bug, Security, Gap, Suggestion, Cleanup, etc.). If you find an issue pattern that is *not* covered by any convention in the repo, flag it as a potential convention: this pattern should potentially become one.
+Classify each finding into the categories in `CONVENTIONS.md` (Bug, Security, Gap, Suggestion, Cleanup, etc.). If you find an issue pattern that is *not* covered by any convention in the repo, flag it as a potential convention: this pattern should potentially become one.
 
 **Review scope:**
 
@@ -107,7 +107,7 @@ Tell the user: "Added items N–M to the plan. Ready to start with the next open
 
 ## Phase 2 — Work through open issues one at a time
 
-**Before starting Phase 2, read `conventions.md` from the repo root (and any directory-specific ones that apply) — do not skip this step.**
+**Before starting Phase 2, read `CONVENTIONS.md` from the repo root (and any directory-specific ones that apply) — do not skip this step.**
 
 Work through open (⬜) items in ascending order, one at a time. An item is a group: work through its sub-bullets together, and ask one question per group, not one per sub-bullet. If a sub-bullet turns out to need a separate decision while you work through the group, split it into its own item before going on.
 
@@ -119,7 +119,7 @@ Work through open (⬜) items in ascending order, one at a time. An item is a gr
 
 For collision or uniqueness bugs (two items competing for the same key, filename, or slot), consider both the disambiguation approach (make the key more specific) and the consolidation approach (merge into a shared container with a separator or composite) before proposing. One is not always better than the other.
 
-3. Fix the issue. Read the relevant files first. Make the minimal, focused change. Apply the guidance in `conventions.md` throughout.
+3. Fix the issue. Read the relevant files first. Make the minimal, focused change. Apply the guidance in `CONVENTIONS.md` throughout. If the defect is a pattern, such as a wording, a reference, a term or a path, search the whole branch for other instances and fix them in the same edit, so the same defect does not come back as a separate finding in the second pass.
 
 4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>`. For a group, mark each sub-bullet done and the group row done once all are resolved.
 
@@ -183,9 +183,9 @@ Before running retro review, audit the conventions:
 - Did any convention fail you — did you verify against it, but the code still had problems? That convention may need refinement.
 - Are conventions at the right level in the directory hierarchy, or should any be moved?
 
-Update `conventions.md` (and any directory-specific ones) based on what you learned. Commit those changes before moving to retro.
+Update `CONVENTIONS.md` (and any directory-specific ones) based on what you learned. Commit those changes before moving to retro.
 
-**Important:** The actual work is fixing code, comments, and documentation (which includes conventions.md as a documentation artifact). The conventions audit is infrastructure that supports the review process — it identifies patterns worth codifying. Do not let the audit eclipse the primary work of improving the branch.
+**Important:** The actual work is fixing code, comments, and documentation (which includes CONVENTIONS.md as a documentation artifact). The conventions audit is infrastructure that supports the review process — it identifies patterns worth codifying. Do not let the audit eclipse the primary work of improving the branch.
 
 Then move directly into retro review. Do not ask for permission — this is a natural continuation of the review.
 
