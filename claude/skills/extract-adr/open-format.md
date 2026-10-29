@@ -45,5 +45,3 @@ If "the trade-offs are obvious or already captured" — skip it.
 If "someone will need to decide this and the analysis is worth preserving" — write it.
 
 An OPEN is not a failed ADR — it is a different artifact. Something can clearly not merit an ADR (the decision is obvious) but still merit an OPEN (how to implement it has real unresolved trade-offs). Evaluate both independently.
-
-If a question is already tracked in the plan with enough context to drive a decision, a standalone OPEN duplicates that work. Defer it: the work will naturally produce the ADR or OPEN. Only propose an OPEN when the question has no active home — it would otherwise be lost when the plan is deleted.

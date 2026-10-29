@@ -72,6 +72,8 @@ For candidates closely related to an existing ADR, extending is only safe when b
 
 When both conditions hold, prefer extension over a new ADR if the candidate is a direct consequence of the existing ADR's chosen mechanism — a decision that only makes sense in the context of that mechanism. A satellite ADR whose rationale begins "because ADR-NNN chose X…" is a weaker home for the reasoning than the parent document itself.
 
+**Check that an OPEN candidate has no home yet.** For each OPEN candidate, check whether the plan or a ticket already tracks the question with enough context to drive a decision, and whether the plan's own work will settle it. If so, drop it from the list: a standalone OPEN would duplicate that work, and the work will produce the ADR or OPEN when the question is decided. Propose an OPEN only for a question with no such home, one that would be lost when the plan is deleted.
+
 **State the decision before proposing it.** For each candidate that survives the checks above, write the decision as one sentence at the generic level — the rule itself, not the tool or situation where it first appeared. Then list what the candidate takes for granted: the scope it covers, the conditions it holds under, and anything about its context it treats as given. For each, ask whether it was decided or merely assumed. An assumption that was never itself decided means the candidate sits at the wrong altitude or scope. Ask the user to confirm the scope before drafting, instead of discovering it through rounds of revision. The one-sentence decision goes into the candidate list in Step 4.
 
 **Non-ADR work surfaced during this skill**
