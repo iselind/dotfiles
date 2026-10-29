@@ -4,7 +4,8 @@ description: >
   Review the current branch and populate a tracking plan with found issues,
   then work through open issues one at a time. Use when the user asks to
   review a branch, review a plan, add review findings to a plan, or work
-  through issues in a plan.
+  through issues in a plan. Also use it before creating a pull request for
+  the branch, and before pushing commits to update an open pull request.
 argument-hint: "[plan-file-path]"
 user-invocable: true
 ---
