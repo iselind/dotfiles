@@ -91,7 +91,7 @@ Wait for the Step 3a agent to complete. Combine its findings with your Step 3b f
 **Group, do not cap.** Do not drop findings to keep the list short. Cluster the verified findings into groups:
 - Each group is a theme, with one tracking item per group and one sub-bullet per finding.
 - Rank groups by impact (Pareto): the few groups that remove most of the risk come first. Lower-ranked groups stay tracked and are deferred, not dropped.
-- A group is well-sized when its resolution is one decision: it can be stated in one sentence and needs one question to the user. If a group needs two independent decisions, split it.
+- A group is well-sized when its resolution is one decision: it can be stated in one sentence and needs one question to the user. If a group needs two independent decisions, split it. A group whose fix is mechanical needs no decision: its section has no "Decision:" line and no stand-in sentence such as "No decision needed".
 - Items that change the same concept belong in one group. Items that only share a file do not.
 - Soft limit: about five sub-bullets is a prompt to check the decision test above, not a rule. A group with more sub-bullets that all serve one decision stays whole.
 
@@ -113,7 +113,7 @@ Work through open (⬜) items in ascending order, one at a time. An item is a gr
 
 **For each item:**
 
-1. State the item number and describe the problem: what is wrong, where it is, and why it matters. For a group, name each sub-bullet briefly, then state the one decision the group needs. Do not propose a fix yet — let the user engage with the problem first. Wait for the user to respond.
+1. State the item number and describe the problem: what is wrong, where it is, and why it matters. For a group, name each sub-bullet briefly, then state the one decision the group needs, if it needs one. A group with no decision to make, such as a mechanical fix, gets the problem and nothing more: no stand-in sentence such as "No decision needed". Do not propose a fix yet — let the user engage with the problem first. Wait for the user to respond.
 
 2. Once the user has engaged, propose a fix (and alternatives if they exist). Prefer structural fixes over scattered per-instance changes — if a single change point (e.g. a shared function, a global redirect, a convention) can replace many individual changes, propose that first. If there are alternatives, confirm which to implement before proceeding.
 
