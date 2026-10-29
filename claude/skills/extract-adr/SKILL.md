@@ -72,6 +72,8 @@ For candidates closely related to an existing ADR, extending is only safe when b
 
 When both conditions hold, prefer extension over a new ADR if the candidate is a direct consequence of the existing ADR's chosen mechanism — a decision that only makes sense in the context of that mechanism. A satellite ADR whose rationale begins "because ADR-NNN chose X…" is a weaker home for the reasoning than the parent document itself.
 
+**State the decision before proposing it.** For each candidate that survives the checks above, write the decision as one sentence at the generic level — the rule itself, not the tool or situation where it first appeared. Then list what the candidate takes for granted: the scope it covers, the conditions it holds under, and anything about its context it treats as given. For each, ask whether it was decided or merely assumed. An assumption that was never itself decided means the candidate sits at the wrong altitude or scope. Ask the user to confirm the scope before drafting, instead of discovering it through rounds of revision. The one-sentence decision goes into the candidate list in Step 4.
+
 **Non-ADR work surfaced during this skill**
 
 While reading ADRs or discussing candidates, you may surface work that is not an ADR or OPEN — errors in branch-introduced ADRs (wrong attributions, missing cases, factual mistakes), documentation placement improvements, other follow-up. None of these are extract-adr's job to fix. When any such work surfaces:
@@ -95,7 +97,7 @@ Then output two lists — ADR candidates and OPEN candidates — one line each:
 
 ```
 ADR candidates:
-1. <Short description of settled decision>
+1. <One-sentence decision at the generic level, plus any presumption that needs confirming>
 2. (borderline) <Short description — real trade-off exists, but a lighter-weight form may be a better home>
 3. Extend ADR-NNN: <short description of the addendum>
 
