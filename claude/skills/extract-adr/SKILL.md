@@ -30,7 +30,9 @@ Identify architectural decisions made on this branch that are worth preserving a
 
 **Step 1 — Read the branch**
 
-Read the full diff and all changed files. Also read the review tracking file if one exists (typically `*-review.md` alongside the branch's plan in `docs/plans/`) — read its current content now, rather than relying on what's already in context. Review resolutions often contain architectural decisions — a bug fix that required choosing between approaches, or a verification item whose resolution established a convention. These are easy to miss in the diff alone.
+Read the full diff and all changed files, deleted ones included. Also read the review tracking file if one exists (typically `*-review.md` alongside the branch's plan in `docs/plans/`) — read its current content now, rather than relying on what's already in context. Review resolutions often contain architectural decisions — a bug fix that required choosing between approaches, or a verification item whose resolution established a convention. These are easy to miss in the diff alone.
+
+Deletions deserve the same attention as additions. For each deleted or rewritten document, check that it was removed for the right reason, and that the documents that remain still support each other. What it carried (a decision, a rationale, a constraint) should be recorded somewhere that lasts or knowingly dropped, and nothing that remains should rely on it, whether through a reference or through an assumption that no longer holds.
 
 You are looking for decisions, not bugs or improvements — things that required a deliberate choice between real alternatives.
 
