@@ -180,7 +180,7 @@ Before running retro review, audit the conventions:
 **Conventions audit:**
 - Did 3a discover patterns in the codebase (beyond the actual branch changes) that should become conventions?
 - Were there cases in 3b where you verified against a convention that works well? Note that — it's working.
-- Were there cases in Phase 2 fixes where the pattern wasn't yet documented in conventions? Those are candidates for adding.
+- Were there cases in Phase 2 fixes where the pattern wasn't yet documented in conventions? Those are candidates for adding, but only if the convention would have prevented a finding in this review and is a rule about this repository's documents. Do not derive one from a single instance, or from the user's own skills or memory.
 - Did any convention fail you — did you verify against it, but the code still had problems? That convention may need refinement.
 - Are conventions at the right level in the directory hierarchy, or should any be moved?
 
