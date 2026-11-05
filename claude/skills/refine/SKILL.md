@@ -51,6 +51,13 @@ Work through these in order. Before each Jira write (edit, comment, link, epic c
 
 **4.3 Place.** Choose an existing epic that fits, or propose a new one. Every work ticket ends up under an epic, so "unassigned" is a `parent is EMPTY` query. Epics may be small. A one-story epic is fine.
 
+When proposing a new epic:
+
+- Frame it as an outcome, not a task list. State the goal, why it matters, and a "done when" condition.
+- Define scope as a condition that can be checked, plus the command that finds its members. Do not write an open-ended "audit for X" line without saying what to look for. If you cannot name the signal, the scope is not ready.
+- Do not assume the current repo is the whole picture. Other repos may deploy to the same cluster. When the scope spans repos or concerns deployed state, detect members against the live cluster (for example a `kubectl ... | jq` query the user runs) and put the query, example output and how to read it in the epic description.
+- Name only the members you have verified. Say which facts are still unchecked.
+
 When creating a ticket or epic, set `project` to CORE and `customfield_10032` to `{"value": "CORE", "child": {"value": "Platform"}}`.
 
 ## 5. Record the analysis
