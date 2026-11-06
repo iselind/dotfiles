@@ -47,7 +47,7 @@ include if a specific, verifiable instance exists in the codebase.
 ## Format rules
 
 - Sentence case: `ADR-003: Foo bar baz`, not `ADR-003: Foo Bar Baz`
-- No status field — the branch/PR workflow provides status
+- No status field: the branch/PR workflow provides status (on a branch means proposed, merged to main means accepted). An ADR that has never been merged to main may be deleted. Once it has been merged, it is never deleted. A superseded ADR gets the bold supersession line that the repository's ADR guidance defines, directly under its title: `**Superseded by [ADR-NNN](…)**`. A discarded ADR gets the bold line `**Discarded because …**` directly under its title, giving the reason.
 - ADRs are timeless: describe the decision and the reasons for it, not the state of the implementation when it was written. Avoid wording tied to a moment, such as "currently", "today", "for now" or "in the current implementation"; mark concrete instances as examples with "e.g."
 - Sub-headings within Rationale are fine when reasoning has distinct parts
 - Code blocks and tables are fine where they clarify

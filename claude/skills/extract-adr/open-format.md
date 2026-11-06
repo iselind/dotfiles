@@ -32,7 +32,7 @@ Before listing something as open, test it: could it be answered from the context
 
 - Separate number sequence from ADRs: OPEN-001, OPEN-002, …
 - No Decision or Rationale sections — those do not exist yet
-- When the question is decided, the OPEN becomes the foundation for an ADR: Context transfers directly, Decision and Rationale are added, OPEN is deleted
+- When the question is decided, the OPEN becomes the foundation for an ADR: Context transfers directly, Decision and Rationale are added, the OPEN is deleted in the same PR as the new ADR, since OPENs are ephemeral and ADRs never reference them
 - OPEN documents are never referenced by ADRs (the reference would outlive the file)
 
 ## What makes a good OPEN

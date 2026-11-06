@@ -146,14 +146,14 @@ Before writing the Rationale, check each failure mode attributed to a rejected o
 3. Wait for user response:
    - **Approval** ("yes", "looks good", no comment) → commit, then go to step 4
    - **Edit request** → revise in place, wait for approval again
-   - **Rejection** ("skip", "no", "not this one") → delete the file. Check whether the source content in the plan fits better in a Future Directions section; propose the move proactively.
+   - **Rejection** ("skip", "no", "not this one") → an ADR that has never been merged to main may be deleted. One that has been merged is never deleted: mark it superseded using the repository's supersession line, and keep the file so its number stays taken. A discarded ADR gets the bold line `**Discarded because …**` directly under its title, giving the reason. Check whether the source content in the plan fits better in a Future Directions section; propose the move proactively.
 4. After committing, replace extracted content in the source document with a reference to the new ADR. Commit this alongside or immediately after the ADR commit. Do not skip this step for any individual ADR.
 
 **For each OPEN candidate:**
 
 1. Draft following the OPEN format in `open-format.md`.
 2. Write the file immediately to `docs/adrs/OPEN-NNN-kebab-case-title.md`.
-3. Wait for user response: Approval → commit; Edit request → revise; Rejection → delete.
+3. Wait for user response: Approval → commit; Edit request → revise; Rejection → delete the draft. OPENs are ephemeral, so a rejected OPEN is deleted in full.
 
 Use commit messages in the style already used on this branch.
 
