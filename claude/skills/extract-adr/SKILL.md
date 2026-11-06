@@ -58,7 +58,7 @@ Weak signals — do not propose for these alone:
 
 **Step 2 — Read existing ADRs**
 
-List all files in `docs/adrs/` and identify the correct next number for both ADRs and OPENs. Gaps can exist — check `git log --all --oneline -- docs/adrs/` if you suspect in-flight additions on other branches. Fill the lowest free slot rather than assuming max+1 is safe.
+List all files in `docs/adrs/` and identify the correct next number for both ADRs and OPENs. Gaps can exist. Before proposing a number, check the used numbers across all branches and history: `git log --all --name-only --format= -- docs/adrs/` (and the same for OPEN). A number that appears on any branch, or in history, is taken, even when its file was deleted or its ADR may never merge. Propose the next free number above all of them. A hole left by a discarded ADR is acceptable, since a collision costs more.
 
 Read in full only the ADRs topically related to the branch's changed files — title and number alone are sufficient for unrelated ADRs.
 
