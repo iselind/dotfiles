@@ -130,7 +130,7 @@ For collision or uniqueness bugs (two items competing for the same key, filename
 
 5. Stop for review: "Ready for review — let me know when you're ready to commit." Wait.
 
-6. When the user's response clearly signals intent to commit — not just closes a side discussion — commit in the branch's style (look at recent commits for the pattern). If the response raises a new concern, addresses wording, or asks a question, treat it as continued review, not confirmation. **An affirmation that confirms a wording proposal ("yes", "looks good", "do that") is not a commit signal — it means implement the change. The step 5 review checkpoint must still be held after implementing it.** Then ask: "Ready for item N+1?" and wait.
+6. When the user's response clearly signals intent to commit — not just closes a side discussion — commit in the branch's style (look at recent commits for the pattern). If the response raises a new concern, addresses wording, or asks a question, treat it as continued review, not confirmation. A request to fix an item and move on ("fix it and go") authorizes the fix, not the commit: show the change and wait before committing. **An affirmation that confirms a wording proposal ("yes", "looks good", "do that") is not a commit signal — it means implement the change. The step 5 review checkpoint must still be held after implementing it.** Then ask: "Ready for item N+1?" and wait.
 
    Do not add a "what type of feedback surfaced in the PR review?" reflection after each item — you are already running the review skill; the question is circular.
 
