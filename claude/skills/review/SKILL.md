@@ -91,6 +91,8 @@ Wait for the Step 3a agent to complete. Combine its findings with your Step 3b f
 
 **Verify before recording.** Re-read the cited location and confirm the claim against the file. Then check that the consequence the finding draws follows from what the file shows: a quote can be accurate while the conclusion built on it is not, as when a finding says a document is tied to one provider but the document names only provider-neutral values. A finding whose own claim does not hold is dropped and noted in the report, not recorded. A claim that the reviewed documents make and that does not hold, such as a constraint, a reason or a statement of fact, is itself a finding: record it and name the claim that fails. When two statements contradict each other, establish which one fails and why, and record that statement, not the contradiction.
 
+**Use the repository's terms.** Name things in a finding with the words the repository's documents give them. Before using a word that has an established sense there, such as "placeholder", "fallback" or "condition", check how the documents use it, and do not apply it to something else. If a finding needs a distinction the documents do not draw, say so in the finding and propose the word, instead of borrowing one that means something different.
+
 **Group, do not cap.** Do not drop findings to keep the list short. Cluster the verified findings into groups:
 - Each group is a theme, with one tracking item per group and one sub-bullet per finding.
 - Rank groups by impact (Pareto): the few groups that remove most of the risk come first. Lower-ranked groups stay tracked and are deferred, not dropped.
