@@ -145,6 +145,7 @@ Before writing the Rationale, check each failure mode attributed to a rejected o
 
 1. Draft following the ADR format in `adr-format.md`.
 2. Write the file immediately to `docs/adrs/ADR-NNN-kebab-case-title.md`. Do not wait for approval.
+   Before asking for approval, if the ADR describes behaviour implemented on the branch, check each statement of the Decision against the implementing code, and against a test that would fail if the statement were false. A test that cannot fail, for example because its setup does not do what its name says, does not count. Do not fix a mismatch inline: add it to the review tracking file as non-ADR work, as described above, and tell the user with the draft.
 3. Wait for user response:
    - **Approval** ("yes", "looks good", no comment) → commit, then go to step 4
    - **Edit request** → revise in place, wait for approval again
