@@ -63,6 +63,8 @@ Spawn an agent in parallel using the Agent tool. The agent has no session contex
 
 Load `CONVENTIONS.md` from the repo root and any directory-specific `CONVENTIONS.md` files that apply to the changed code. Read the full diff and all changed files yourself. Verify the changed code against the patterns documented in those files.
 
+Also read the list of deleted files, not only the added and modified ones. For each deleted file, confirm that the branch's stated purpose accounts for the deletion, and that nothing the file carried, such as a resource a running environment uses, is lost with it. A deletion that the purpose does not explain is a finding, even when the diff of the other files looks right.
+
 If no `CONVENTIONS.md` exists, look for `docs/CONVENTIONS.md` and the guides it links to (for ADRs and plans, e.g. `docs/plans-and-adrs.md`). Tell the user which files you are using in place of `CONVENTIONS.md`, and use them wherever this skill says `CONVENTIONS.md`.
 
 Classify each finding into the categories in `CONVENTIONS.md` (Bug, Security, Gap, Suggestion, Cleanup, etc.). If you find an issue pattern that is *not* covered by any convention in the repo, flag it as a potential convention: this pattern should potentially become one.
