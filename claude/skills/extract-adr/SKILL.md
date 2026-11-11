@@ -159,6 +159,8 @@ Before writing the Rationale, check each failure mode attributed to a rejected o
 
 Use commit messages in the style already used on this branch.
 
+Commit with explicit paths. The ADR file exists before it is approved, and the user may have staged files to review the next changes while iterating, so a plain commit would sweep them in. Look at `git status` first. `git add` the files of this commit, then `git commit -m "..." -- <those paths>`: only those paths are committed, and whatever else the user staged stays staged. Never unstage the user's files.
+
 After the last candidate, report how many ADRs were written and their filenames. Confirm all plan edits (relocations, removals, reference additions) are committed before proceeding.
 
 ---
