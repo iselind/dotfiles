@@ -19,8 +19,8 @@ trap 'rm -rf "$TMP"' EXIT
 mkdir -p "$TMP/bin"
 cat >"$TMP/bin/gh" <<'EOF'
 #!/usr/bin/env bash
-[ "${GH_STATE:-}" = "error" ] && exit 1
-[ "${GH_STATE:-}" = "none" ] && exit 1
+[ "${GH_STATE:-}" = "error" ] && { echo "HTTP 401: Bad credentials" >&2; exit 1; }
+[ "${GH_STATE:-}" = "none" ] && { echo 'no pull requests found for branch "x"' >&2; exit 1; }
 echo "${GH_STATE:-OPEN}"
 EOF
 chmod +x "$TMP/bin/gh"
@@ -42,8 +42,24 @@ new_repo() { # new_repo <branch>
 stop_in() { # stop_in <dir> <active>
     jq -n --arg cwd "$1" --argjson a "$2" '{cwd: $cwd, stop_hook_active: $a}' | "$STOP"
 }
+stop_in_script() { # stop_in_script <script> <dir> <active>
+    jq -n --arg cwd "$2" --argjson a "$3" '{cwd: $cwd, stop_hook_active: $a}' | "$1"
+}
 guard_cmd() { # guard_cmd <dir> <command>
     jq -n --arg cwd "$1" --arg c "$2" '{cwd: $cwd, tool_name: "Bash", tool_input: {command: $c}}' | "$GUARD"
+}
+has_warning() { # has_warning <output> <substring>: valid JSON with a matching systemMessage
+    jq -e --arg s "$2" '.systemMessage | contains($s)' <<<"$1" >/dev/null 2>&1
+}
+# restricted_path <omit...>: a PATH directory with every tool the hooks need except the omitted ones.
+restricted_path() {
+    local d tool omit
+    d="$(mktemp -d -p "$TMP")"
+    for tool in jq perl git sed find sort grep cat env bash dirname gh; do
+        for omit in "$@"; do [ "$tool" = "$omit" ] && continue 2; done
+        if [ "$tool" = gh ]; then ln -s "$TMP/bin/gh" "$d/gh"; else ln -s "$(command -v "$tool")" "$d/$tool"; fi
+    done
+    echo "$d"
 }
 denied() { grep -q '"permissionDecision": "deny"' <<<"$1"; }
 
@@ -134,12 +150,61 @@ GH_STATE=CLOSED out="$(guard_cmd "$repo" "git push")"
 [ -z "$out" ]; check "guard: closed PR allows push" $?
 GH_STATE=none out="$(guard_cmd "$repo" "git push")"
 [ -z "$out" ]; check "guard: no PR allows push" $?
-GH_STATE=error out="$(guard_cmd "$repo" "git push")"
-[ -z "$out" ]; check "guard: gh failure allows push" $?
+GH_STATE=error out="$(guard_cmd "$repo" "git push" 2>/dev/null)"
+! denied "$out"; check "guard: gh failure allows push" $?
 
 rm "$repo/.task/corrections.md"
 out="$(guard_cmd "$repo" "gh pr create")"
 [ -z "$out" ]; check "guard: empty .task/ allows gh pr create" $?
+
+# ---- Warnings are visible (systemMessage) ---------------------------------------
+repo="$(new_repo feature/CORE-77-warn)"
+mkdir -p "$repo/.task"
+echo x >"$repo/.task/corrections.md"
+input_push="$(jq -n --arg cwd "$repo" '{cwd: $cwd, tool_input: {command: "git push"}}')"
+
+GH_STATE=error out="$(guard_cmd "$repo" "git push" 2>/dev/null)"
+has_warning "$out" "gh pr view failed"; check "warn: gh failure shows a systemMessage" $?
+! denied "$out"; check "warn: gh failure still allows the push" $?
+GH_STATE=none out="$(guard_cmd "$repo" "git push" 2>/dev/null)"
+[ -z "$out" ]; check "warn: no PR for the branch stays silent" $?
+
+out="$(PATH="$(restricted_path gh)" "$GUARD" <<<"$input_push" 2>/dev/null)"
+has_warning "$out" "gh not found"; check "warn: missing gh shows a systemMessage" $?
+out="$(PATH="$(restricted_path jq)" "$GUARD" <<<"$input_push" 2>/dev/null)"
+has_warning "$out" "DISABLED, jq not found"; check "warn: guard without jq shows valid JSON systemMessage" $?
+out="$(PATH="$(restricted_path perl)" "$GUARD" <<<"$input_push" 2>/dev/null)"
+has_warning "$out" "DISABLED, perl not found"; check "warn: guard without perl shows a systemMessage" $?
+out="$(GH_STATE=OPEN guard_cmd "$repo" "git status" 2>/dev/null)"
+[ -z "$out" ]; check "warn: unrelated command stays silent" $?
+rm -r "$repo/.task"
+GH_STATE=error out="$(guard_cmd "$repo" "git push" 2>/dev/null)"
+[ -z "$out" ]; check "warn: empty .task/ stays silent even if gh would fail" $?
+
+out="$(PATH="$(restricted_path jq)" "$STOP" <<<"{}" 2>/dev/null)"
+has_warning "$out" "DISABLED, jq not found"; check "warn: stop hook without jq shows a systemMessage" $?
+
+noprompt="$TMP/noprompt"
+mkdir -p "$noprompt/scripts"
+cp "$STOP" "$noprompt/scripts/"
+out="$(stop_in_script "$noprompt/scripts/extract-on-stop.sh" "$repo" false 2>/dev/null)"
+has_warning "$out" "prompt file missing"; check "warn: stop hook with missing prompt shows a systemMessage" $?
+
+mkdir -p "$repo/.task"
+echo y >"$repo/.task/corrections.md"
+touch "$(git -C "$repo" rev-parse --absolute-git-dir)/MERGE_HEAD"
+out="$(stop_in "$repo" true 2>/dev/null)"
+has_warning "$out" "NOT committed"; check "warn: skipped commit during a merge shows a systemMessage" $?
+rm "$(git -C "$repo" rev-parse --absolute-git-dir)/MERGE_HEAD"
+
+printf '#!/bin/sh\nexit 1\n' >"$(git -C "$repo" rev-parse --absolute-git-dir)/hooks/pre-commit"
+chmod +x "$(git -C "$repo" rev-parse --absolute-git-dir)/hooks/pre-commit"
+out="$(stop_in "$repo" true 2>/dev/null)"
+has_warning "$out" "commit FAILED"; check "warn: failed commit shows a systemMessage" $?
+git -C "$repo" diff --cached --name-only | grep -qx .task/corrections.md; check "warn: failed commit leaves .task/ staged" $?
+rm "$(git -C "$repo" rev-parse --absolute-git-dir)/hooks/pre-commit"
+out="$(stop_in "$repo" true 2>/dev/null)"
+[ -z "$out" ]; check "warn: a successful commit prints nothing" $?
 
 echo
 echo "passed: $pass, failed: $fail"

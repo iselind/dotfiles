@@ -46,8 +46,13 @@ The denial lists the files and suggests running `consolidate-docs`. Deleting
   stop-hook continuations after 8.
 - The first push of a branch with no PR is allowed; enforcement begins at
   `gh pr create`.
-- The guard fails open: no `jq`, `perl`, `gh` or network, or not a git repo,
-  means the command is allowed.
+- The guard fails open: no `jq`, `perl`, `gh`, or a failing `gh pr view`
+  (auth, network), means the command is allowed. These cases are not silent:
+  the hook prints a `systemMessage`, which Claude Code shows as a notice
+  (`PreToolUse:Bash says: knowledge-extraction: push NOT checked ...`). "No pull
+  request for this branch" and "not a git repo" are normal and stay silent. The
+  Stop hook warns the same way when it is disabled (no `jq`, missing prompt) or
+  when the `.task/` commit is skipped or fails (`.task/` stays staged).
 - `cd dir && git push` is judged by the session's working directory. A push of
   another branch through an explicit refspec is judged by the current branch.
 - `git add -A` by hand can still put `.task/` into a work commit; the push guard

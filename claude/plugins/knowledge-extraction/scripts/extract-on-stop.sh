@@ -10,10 +10,23 @@ set -uo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROMPT_FILE="${SCRIPT_DIR}/../prompts/extract.md"
 
-warn() { echo "knowledge-extraction: $*" >&2; }
+# Problems must be visible to the user, not only on stderr: collect them and
+# print one `systemMessage` (shown by Claude Code) before exiting.
+warnings=()
+warn() {
+    echo "knowledge-extraction: $*" >&2
+    warnings+=("$*")
+}
+emit_warnings() {
+    [ "${#warnings[@]}" -gt 0 ] || return 0
+    local IFS=';'
+    jq -n --arg m "knowledge-extraction: ${warnings[*]}" '{systemMessage: $m}'
+}
 
 if ! command -v jq >/dev/null 2>&1; then
-    warn "jq not found; skipping"
+    # No jq to build JSON with; this message has no characters needing escapes.
+    echo "knowledge-extraction: jq not found" >&2
+    printf '{"systemMessage": "knowledge-extraction: DISABLED, jq not found"}\n'
     exit 0
 fi
 
@@ -29,10 +42,12 @@ commit_task_dir() {
     [ -n "$(git -C "$root" status --porcelain -- .task 2>/dev/null)" ] || return 0
 
     # Do not commit in the middle of a merge, rebase or cherry-pick.
-    local marker
+    # --git-path output is relative to $root, so build absolute paths instead.
+    local marker gitdir
+    gitdir="$(git -C "$root" rev-parse --absolute-git-dir)"
     for marker in MERGE_HEAD CHERRY_PICK_HEAD REVERT_HEAD rebase-merge rebase-apply; do
-        if [ -e "$(git -C "$root" rev-parse --git-path "$marker")" ]; then
-            warn "git operation in progress; not committing .task/"
+        if [ -e "${gitdir}/${marker}" ]; then
+            warn ".task/ NOT committed, a git operation is in progress"
             return 0
         fi
     done
@@ -51,20 +66,25 @@ commit_task_dir() {
     # Stage only .task/ and commit only .task/. --only leaves every other
     # path, staged or not, exactly as it was.
     if ! git -C "$root" add -A -- .task >/dev/null 2>&1; then
-        warn "could not stage .task/"
+        warn ".task/ NOT committed, staging failed"
         return 0
     fi
     if ! git -C "$root" commit --only -q -m "$msg" -- .task >/dev/null 2>&1; then
-        warn "could not commit .task/ (left staged for you to handle)"
+        warn ".task/ commit FAILED, left staged"
     fi
     return 0
 }
 
 if [ "$active" = "true" ]; then
     commit_task_dir
+    emit_warnings
     exit 0
 fi
 
-[ -r "$PROMPT_FILE" ] || { warn "missing $PROMPT_FILE"; exit 0; }
+if [ ! -r "$PROMPT_FILE" ]; then
+    warn "extraction DISABLED, prompt file missing"
+    emit_warnings
+    exit 0
+fi
 jq -Rs '{decision: "block", reason: .}' <"$PROMPT_FILE"
 exit 0

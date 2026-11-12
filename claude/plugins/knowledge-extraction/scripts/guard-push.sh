@@ -11,11 +11,18 @@
 # push of another branch via an explicit refspec is judged by the current one.
 set -uo pipefail
 
-warn() { echo "knowledge-extraction: $*" >&2; }
+# Fail-open paths must be visible: a broken guard must not look like a guard
+# that found nothing to block. `systemMessage` is shown to the user by Claude
+# Code. Fixed messages only (no quotes or backslashes), because jq may be the
+# very thing that is missing.
+warn() {
+    echo "knowledge-extraction: $*" >&2
+    printf '{"systemMessage": "knowledge-extraction: %s"}\n' "$*"
+}
 
 for tool in jq perl; do
     if ! command -v "$tool" >/dev/null 2>&1; then
-        warn "$tool not found; push guard disabled"
+        warn "push guard DISABLED, $tool not found"
         exit 0
     fi
 done
@@ -63,8 +70,19 @@ files="$(cd "$root/.task" && find . -mindepth 1 -type f -not -path '*/.*' 2>/dev
 [ -n "$files" ] || exit 0
 
 if [ "$kind" = "push" ]; then
-    command -v gh >/dev/null 2>&1 || exit 0
-    state="$(cd "$root" && gh pr view --json state -q .state 2>/dev/null)" || exit 0
+    if ! command -v gh >/dev/null 2>&1; then
+        warn "push NOT checked against .task/, gh not found; push allowed"
+        exit 0
+    fi
+    if ! state="$(cd "$root" && gh pr view --json state -q .state 2>&1)"; then
+        # gh exits non-zero both for "no pull requests found" (fine) and for
+        # real failures (auth, network). Only the first is silent.
+        if grep -qi 'no pull requests found' <<<"$state"; then
+            exit 0
+        fi
+        warn "push NOT checked against .task/, gh pr view failed; push allowed"
+        exit 0
+    fi
     [ "$state" = "OPEN" ] || exit 0
     what="push to a branch that has an open pull request"
 else
