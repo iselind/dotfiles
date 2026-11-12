@@ -126,6 +126,8 @@ For collision or uniqueness bugs (two items competing for the same key, filename
 
 3. Fix the issue. Read the relevant files first. Make the minimal, focused change. Apply the guidance in `CONVENTIONS.md` throughout. If the defect is a pattern, such as a wording, a reference, a term or a path, search the whole branch for other instances and fix them in the same edit, so the same defect does not come back as a separate finding in the second pass.
 
+   If the fix writes prose that states what code covers or does, such as a scope, an "every" or "all", or a rule, verify each such claim against the code before writing it. When the prose states a rule, check it against every code path that implements it, so its exceptions are in the text from the start.
+
 4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>`. For a group, mark each sub-bullet done and the group row done once all are resolved.
 
 5. Stop for review: "Ready for review — let me know when you're ready to commit." Wait.
