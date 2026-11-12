@@ -1,0 +1,6 @@
+{
+  "name": "knowledge-extraction",
+  "version": "0.1.0",
+  "description": "Records corrections, clarifications, decisions and discrepancies to the repo's .task/ at every turn end, and blocks PR creation and pushes to open PRs until .task/ is consolidated.",
+  "author": { "name": "Patrik Iselind" }
+}

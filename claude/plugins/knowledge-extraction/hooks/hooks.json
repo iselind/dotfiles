@@ -1,0 +1,28 @@
+{
+  "description": "Record knowledge at turn end; guard PR creation and pushes while .task/ has content",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/extract-on-stop.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/guard-push.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

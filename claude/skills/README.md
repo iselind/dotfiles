@@ -95,8 +95,11 @@ signal that "Use when creating tickets" does not.
 | Mechanically checkable (formatting, a forbidden file, a failing test) | A hook, a linter or a test. A validator beats an instruction. |
 | About reasoning quality (jumped to a conclusion, didn't check the repo) | Probably not a skill. Task, guardrails and DoD in the prompt (see below). |
 
-The last row is where `act`, `choose` and `reconcile` live, and a skill is the
-weakest tool for those errors.
+The last row is where `act`, `choose` and `reconcile` lived, and a skill is the
+weakest tool for those errors. They never got invoked, so they were retired. The
+recording half of `correction`, `choose` and `reconcile` moved to the
+[knowledge-extraction plugin](../plugins/knowledge-extraction/README.md), whose
+Stop hook triggers it deterministically; `act` was dropped.
 
 ### One set of skills, or one per model
 

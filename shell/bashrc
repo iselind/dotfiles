@@ -84,6 +84,15 @@ ffv() {
 #######################
 
 #######################
+# Claude Code
+#######################
+
+# Plugins placed in ~/.claude/plugins/ are not auto-discovered (that directory
+# is Claude Code's own state), so load ours explicitly for every session
+# started from this shell. Does not apply to IDE or desktop sessions.
+alias claude="claude --plugin-dir $(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/claude/plugins/knowledge-extraction"
+
+#######################
 # Kubernetes helpers
 #######################
 

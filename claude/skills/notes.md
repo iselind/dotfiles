@@ -16,6 +16,11 @@ than prescriptive PRD structure. Adapts to task at hand rather than forcing temp
 
 ## Deprecation candidates
 
+### `correction`, `choose`, `reconcile`, `act`
+- **Status:** Replaced by the `knowledge-extraction` plugin (`claude/plugins/knowledge-extraction/`)
+- **Rationale:** They describe reasoning the model does unaided, so they never got invoked (see `triggering.md`)
+- **Replacement:** A Stop hook makes Claude append corrections, clarifications, decisions and discrepancies to `.task/` at every turn end; `consolidate-docs` promotes them. `act` was not migrated: recording every action is noise.
+
 ### `create-prd` and `prd-to-issues`
 - **Status:** Candidate for deprecation
 - **Rationale:** PRD-based approach felt "blunt" and didn't always hit the sweet spot

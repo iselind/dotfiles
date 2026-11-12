@@ -110,3 +110,12 @@ with one concrete skill (`fix-pr-comments`) and one abstract one (`reconcile`).
 
 Record results as: model, date, skill, query set, trigger rate. A finding
 without those is a hypothesis.
+
+## Outcome for `correction`, `choose`, `reconcile`, `act`
+
+The hook idea was implemented as a plugin instead of a `settings.json` entry:
+[knowledge-extraction](../plugins/knowledge-extraction/README.md). Its Stop hook
+fires at every turn end and re-prompts the main agent to record corrections,
+clarifications, decisions and discrepancies in `.task/`. That sidesteps skill
+matching entirely, at the cost of one extra model turn per turn. Whether Haiku
+follows the re-prompt reliably is not yet measured.

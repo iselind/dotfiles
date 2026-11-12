@@ -20,7 +20,17 @@ Read the contents of `.task/`:
 - `.task/understanding.md` — what we learned about the task
 - `.task/gap.md` — what we needed to change
 - `.task/corrections.md` — corrections and investigations (if present)
+- `.task/clarifications.md`, `.task/decisions.md`, `.task/discrepancies.md` —
+  recorded automatically by the `knowledge-extraction` plugin at each turn end
+  (if present)
 - Any other notes accumulated during the task
+
+The plugin's entries are raw signals, append-only. They are not checked against
+the repository docs: that check is yours. For each correction or clarification,
+find out whether the information was already documented, documented ambiguously
+or incorrectly, only implicit in code, or genuinely absent. A gap in any of the
+last four cases is what promotion should fix. A subject that appears in several
+entries was repeated on purpose and signals importance.
 
 Understand:
 
