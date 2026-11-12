@@ -74,10 +74,11 @@ Run the tests with `tests/run.sh`. Requires `jq`, `perl` and `git`.
 
 ## Install
 
-`shell/bashrc` (sourced by `setup.sh`) aliases `claude` to
-`claude --plugin-dir <this directory>`, so every CLI session started from that
-shell loads the plugin (listed as `knowledge-extraction@inline`). IDE and
-desktop sessions do not go through the alias and do not load it.
+`shell/bashrc` (sourced by `setup.sh`) defines a `claude` function that adds
+`--plugin-dir` for every directory in `claude/plugins/` containing
+`.claude-plugin/plugin.json`, so every CLI session started from that shell
+loads the plugin (listed as `knowledge-extraction@inline`). IDE and desktop
+sessions do not go through the function and do not load it.
 
 A symlink into `~/.claude/plugins/` does **not** work: that directory is Claude
 Code's own state, plugins placed there are not discovered, and linking the

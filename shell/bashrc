@@ -90,7 +90,17 @@ ffv() {
 # Plugins placed in ~/.claude/plugins/ are not auto-discovered (that directory
 # is Claude Code's own state), so load ours explicitly for every session
 # started from this shell. Does not apply to IDE or desktop sessions.
-alias claude="claude --plugin-dir $(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/claude/plugins/knowledge-extraction"
+# Every directory under claude/plugins/ that has .claude-plugin/plugin.json is
+# loaded, so a new plugin needs no change here. The path is captured now, at
+# source time: BASH_SOURCE inside the function would describe the caller.
+_DOTFILES_CLAUDE_PLUGINS="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/claude/plugins"
+claude() {
+    local plugin_args=() dir
+    for dir in "$_DOTFILES_CLAUDE_PLUGINS"/*/; do
+        [ -f "${dir}.claude-plugin/plugin.json" ] && plugin_args+=(--plugin-dir "${dir%/}")
+    done
+    command claude "${plugin_args[@]}" "$@"
+}
 
 #######################
 # Kubernetes helpers
