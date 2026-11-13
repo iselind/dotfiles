@@ -57,6 +57,10 @@ commit_task_dir() {
     if [[ "$branch" =~ ^(feature|fix)/(CORE-[0-9]+)- ]]; then
         ticket="${BASH_REMATCH[2]}: "
     fi
+    if [ "$branch" = "main" ]; then
+        # Don't commit on main
+        exit 0
+    fi
     if [ -d "$root/.task" ] && [ -n "$(find "$root/.task" -type f -print -quit)" ]; then
         msg="${ticket}record task knowledge"
     else
