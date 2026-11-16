@@ -56,8 +56,11 @@ Apply these criteria:
 - It documents a pattern now used in the codebase
 - It explains why something is the way it is
 
-**Do not promote if:**
+**Do not promote to the repository if:**
 
+- It is a user preference about how to work (workflow, style, tooling habits)
+  rather than knowledge about the repo. Do not drop these: route them as
+  described in Phase 3, "Preferences".
 - It is specific to this task and will not apply again
 - It documents implementation details that are obvious from the code
 - It duplicates information already in the repository
@@ -78,6 +81,20 @@ Promote to the repository with these preferences:
 
 **Avoid CLAUDE.md by default** — keep it tight and minimal.
 Only add if it is guidance for agents (not humans) working on the codebase.
+
+**Preferences.** Preferences the user stated (usually in
+`.task/clarifications.md`) are recorded, never dropped, and never put in
+project memory: most of them are not specific to this repo. Sort each one:
+
+- *Applies across projects* (how the user wants to work, review, commit, write
+  PRs, and so on): record it as a rule in `~/.claude/rules/<descriptive_name>.md`,
+  following the existing rules' shape (the rule, **Why:**, **How to apply:**).
+  `~/.claude/rules` lives in the dotfiles repo, so follow the dotfiles rules for
+  committing there. Check the existing rules first and extend a matching one
+  instead of adding a duplicate.
+- *Specific to this repo* (a constraint, convention or fact about this codebase):
+  it is repo knowledge, so promote it to the repo docs using the locations below.
+- *Only mattered in this task*: drop it.
 
 **Consider these locations first:**
 
