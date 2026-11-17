@@ -1,0 +1,5 @@
+When a comment, doc or ADR refers to something in another repository, say how to find it, not what it currently contains. Name the kind of object or the search term and the directory to search, not exact file paths, listener or resource names, or values.
+
+**Why:** In CORE-955 a template comment about a gateway listener named core-platform's exact file, hostname, certificate and sibling listeners. The user pushed back: "I don't want to remember to maintain that comment if core-platform ever decides to rearrange things. Couldn't we just suggest searching core-platform's gitops/ for a \"Gateway\" kind?" A snapshot of another repo's layout goes stale silently, and nothing in the repo that holds the comment will flag it.
+
+**How to apply:** Verify the specifics first, then write only the durable pointer (for example "search core-platform's `gitops/` for `kind: Gateway`; the listeners may be spread over more than one file"). Put the verified specifics in the commit message or PR description, where being a snapshot is fine. Keep a caveat in the comment when a single-file look would mislead.
