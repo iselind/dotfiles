@@ -20,4 +20,6 @@ When creating tickets related to the user or their work, always set:
 - `project`: CORE
 - `customfield_10032` (Product/Component, cascading select): `{"value": "CORE", "child": {"value": "Platform"}}`
 
+CORE has no `Task` issue type. The valid types are Epic, Story, Bug, Sub-task, Docs Story and Vulnerability; use Story for ordinary work and cleanup tickets.
+
 **How to apply:** When listing CORE tickets, default to `assignee = currentUser()` unless asked for a broader view. When creating tickets, pre-fill project=CORE and component=Platform unless told otherwise. When planning a branch, check whether the ticket scope fits in one branch or needs scoping down first.
