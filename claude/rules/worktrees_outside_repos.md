@@ -1,0 +1,5 @@
+Never create a git worktree inside another git repository, including the repository the worktree belongs to (so not under `.claude/worktrees/` in the checkout). Create it outside any repository, for example as a sibling directory named `<repo>-<ticket>` under the directory that holds the checkouts.
+
+**Why:** User said, when a worktree for CORE-1044 was created under the core-platform checkout's `.claude/worktrees/`: "that will be problematic. Never create worktrees within other git repos." A worktree nested in another repo's tree is picked up by that repo's tooling and git commands, which can act on the wrong repo.
+
+**How to apply:** Use `git worktree add -b <branch> <path> origin/main` with a `<path>` outside every git repo (check with `git -C <parent> rev-parse --is-inside-work-tree`). Do not use the `EnterWorktree` tool with a `name`, since it creates the worktree under `.claude/worktrees/`. The branch rules still apply (see [[git_branch_from_origin_main]]); push with `-u` so the branch tracks its own remote counterpart.
