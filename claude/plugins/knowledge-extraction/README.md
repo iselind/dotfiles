@@ -35,6 +35,10 @@ non-dotfile, the hook denies:
 - `gh pr create`
 - `git push` when the current branch has an `OPEN` pull request (`gh pr view`)
 
+Every simple command in a chained command line is judged, so `gh pr create` is
+denied even when it follows a `git push` that is itself allowed. Text inside
+quoted strings and heredoc bodies is not treated as commands.
+
 The denial lists the files and suggests running `consolidate-docs`. Deleting
 `.task/` (what `consolidate-docs` does last) lifts the block.
 

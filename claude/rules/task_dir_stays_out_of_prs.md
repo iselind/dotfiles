@@ -1,0 +1,5 @@
+`.task/` must be empty (deleted) before a branch is pushed to a pull request or a pull request is opened, and a pull request description never mentions `.task/` files.
+
+**Why:** User said, after PR #1057 was opened with four `.task/` files in its diff: "the .task/ stuff should not find its way into a PR". `.task/` is scratch space and is committed on the branch during the work on purpose (see the knowledge-extraction plugin README). The knowledge-extraction guard blocks PR creation and pushes to an open PR while `.task/` holds anything, but a command that chained a push and the PR creation once slipped past it, and the guard fails open when `jq`, `perl` or `gh` is missing.
+
+**How to apply:** Before the first push of a branch meant for a PR, run the consolidate-docs skill so `.task/` is promoted and deleted. Check `git diff origin/main...HEAD --stat -- .task` is empty. Run the push and the PR creation as separate commands. If `.task/` is already in an open PR, delete it in a normal commit; rewriting the branch history needs the user's approval. Do not write about `.task/` in a PR description (see [[pr_text_before_push]]).
