@@ -146,6 +146,16 @@ out="$(guard_cmd "$repo" "git status")"
 out="$(guard_cmd "$repo" "gh pr create --title x")"
 denied "$out"; check "guard: gh pr create is denied" $?
 
+GH_STATE=none out="$(guard_cmd "$repo" "git push -u origin x && gh pr create --title x")"
+denied "$out"; check "guard: push then gh pr create in one command is denied" $?
+GH_STATE=none out="$(guard_cmd "$repo" "git push -u origin x
+gh pr create --title x")"
+denied "$out"; check "guard: push then gh pr create on two lines is denied" $?
+GH_STATE=none out="$(guard_cmd "$repo" "git -C $repo push -u origin x; gh pr create")"
+denied "$out"; check "guard: git -C push then gh pr create is denied" $?
+GH_STATE=none out="$(guard_cmd "$repo" "git push -u origin x && git status")"
+[ -z "$out" ]; check "guard: chained push without a PR creation is still allowed" $?
+
 GH_STATE=CLOSED out="$(guard_cmd "$repo" "git push")"
 [ -z "$out" ]; check "guard: closed PR allows push" $?
 GH_STATE=none out="$(guard_cmd "$repo" "git push")"

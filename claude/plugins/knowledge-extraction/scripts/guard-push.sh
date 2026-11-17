@@ -41,19 +41,23 @@ push_re='^[[:space:]]*(([A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]]+)*)git([
 pr_re='^[[:space:]]*(([A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]]+)*)gh[[:space:]]+pr[[:space:]]+create([[:space:]]|$)'
 dir_re='[[:space:]]-C[[:space:]]+([^[:space:]]+)'
 
+# Judge every segment, not just the first match. A chained command can hold both a
+# push and a PR creation, and the push of a branch without a PR is allowed, so
+# stopping at the push would let the PR creation through. PR creation wins over a
+# push: it is denied whenever .task/ holds anything, whatever the branch's PR state.
 kind=""
 target_dir="$cwd"
 while IFS= read -r seg; do
     if [[ "$seg" =~ $pr_re ]]; then
         kind="pr-create"
+        target_dir="$cwd"
         break
-    elif [[ "$seg" =~ $push_re ]]; then
+    elif [[ "$seg" =~ $push_re ]] && [ "$kind" != "push" ]; then
         kind="push"
         if [[ "$seg" =~ $dir_re ]]; then
             target_dir="${BASH_REMATCH[1]}"
             [[ "$target_dir" = /* ]] || target_dir="${cwd}/${target_dir}"
         fi
-        break
     fi
 done <<<"$segments"
 
