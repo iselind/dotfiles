@@ -32,9 +32,13 @@ command_line="$(jq -r '.tool_input.command // empty' <<<"$input")"
 cwd="$(jq -r '.cwd // empty' <<<"$input")"
 [ -n "$command_line" ] || exit 0
 
-# Blank out quoted strings (commit messages, echo arguments) so that text
-# inside them never counts as a command. Then split into simple commands.
-stripped="$(perl -0777 -pe 's/("(?:[^"\\]|\\.)*"|\x27[^\x27]*\x27)/""/gs' <<<"$command_line")"
+# Drop heredoc bodies, then blank out quoted strings (commit messages, echo
+# arguments), so that text inside them never counts as a command. Heredoc bodies
+# go first: an apostrophe in the body would otherwise open a "quoted string" that
+# swallows real commands. The first substitution keeps the `<<WORD` line and the
+# terminator and removes what lies between; `<<<` here-strings are not heredocs.
+# An unterminated heredoc is left alone. Then split into simple commands.
+stripped="$(perl -0777 -pe 's/((?<!<)<<(?!<)-?[ \t]*(["\x27]?)([A-Za-z_][A-Za-z0-9_]*)\2[^\n]*\n)(?:.*?\n)?([ \t]*\3[ \t]*(?:\n|\z))/$1$4/gs; s/("(?:[^"\\]|\\.)*"|\x27[^\x27]*\x27)/""/gs' <<<"$command_line")"
 segments="$(sed -E 's/(&&|\|\||[;|&])/\n/g' <<<"$stripped")"
 
 push_re='^[[:space:]]*(([A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]]+)*)git([[:space:]]+(-C[[:space:]]+[^[:space:]]+|-c[[:space:]]+[^[:space:]]+|--[^[:space:]]+))*[[:space:]]+push([[:space:]]|$)'

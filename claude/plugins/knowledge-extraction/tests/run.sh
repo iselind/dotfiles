@@ -140,6 +140,23 @@ git push
 EOF
 )\"")"
 [ -z "$out" ]; check "guard: multi-line quoted text is ignored" $?
+out="$(guard_cmd "$repo" "cat >notes.md <<'EOF'
+it's recorded: run x && gh pr create
+git push
+EOF")"
+[ -z "$out" ]; check "guard: unquoted heredoc body is ignored" $?
+out="$(guard_cmd "$repo" "cat >notes.md <<-EOF
+	git push
+	EOF
+git push")"
+denied "$out"; check "guard: a push after a <<- heredoc is still denied" $?
+out="$(guard_cmd "$repo" "cat >notes.md <<'EOF'
+body
+EOF
+gh pr create --title x")"
+denied "$out"; check "guard: PR creation after a heredoc is still denied" $?
+out="$(guard_cmd "$repo" "cat <<< \"x\" && git push")"
+denied "$out"; check "guard: a here-string is not mistaken for a heredoc" $?
 out="$(guard_cmd "$repo" "git status")"
 [ -z "$out" ]; check "guard: unrelated command is allowed" $?
 
