@@ -49,6 +49,8 @@ Work through these in order. Before each Jira write (edit, comment, link, epic c
 
 **4.2 Reshape.** Update the summary and description so they describe what remains, not what was originally asked. If the ticket covers several goals, consider splitting it, or cloning it and linking the clones, but only when the parts can land independently. Otherwise keep it as one ticket.
 
+The description must also state the ticket's purpose, briefly and clearly (clarity matters more than a single sentence): what the work is for, and what would be wrong if it were done in a way that defeats that. Later work, including the `review` skill, tests the branch against this purpose. If the ticket has none, draft a statement from the ticket and the gap analysis and ask the user to confirm it. If you cannot draft one without guessing, ask the user for it.
+
 **4.3 Place.** Choose an existing epic that fits, or propose a new one. Every work ticket ends up under an epic, so "unassigned" is a `parent is EMPTY` query. Epics may be small. A one-story epic is fine.
 
 When proposing a new epic:

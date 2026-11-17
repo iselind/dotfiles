@@ -45,6 +45,10 @@ If no plan exists, create a review tracking file. Preferred pattern: `<plan-name
 
 Understand: the status table format (columns, emoji conventions, item numbering), the format of detailed sections (how each item is written below the table), and all existing work items and their content.
 
+**Step 2b — Establish the purpose**
+
+State the branch's purpose, as briefly as it can be said clearly. A clear purpose matters more than a single sentence. Take it from the plan file if it states one; otherwise from the ticket named in the branch name, or the pull request description. If none of these gives a clear purpose, ask the user for it rather than inferring it from the diff. Show the statement to the user, wait for confirmation or a correction, and only then continue. Write the confirmed purpose at the top of the review tracking file (or the plan). Step 4 tests findings against it.
+
 **Step 3a — Unbiased environmental anchoring**
 
 Spawn an agent in parallel using the Agent tool. The agent has no session context — it reads the diff cold. Use this prompt:
@@ -88,6 +92,8 @@ Present the finding to the user and ask how to proceed. Typical handling:
 Wait for the Step 3a agent to complete. Combine its findings with your Step 3b findings — deduplicate where they overlap, and classify each into the tracking file categories above.
 
 **Settled-decision check.** Before recording a finding, check it against decisions already made: the repo's ADRs, OPEN documents and plans, and any decision the user has made in this session. A finding that restates a settled decision is dropped, or rewritten as a confirmation that the decision holds. Do not record it as an open item. The 3a agent has no session context by design, so this check belongs to the orchestrator.
+
+**Purpose check.** Check each finding against the purpose from Step 2b. A finding that argues for something the purpose rules out, such as an opt-out for a check whose point is to fail early, is dropped, or rewritten as a confirmation that the purpose holds. A finding that asks whether the branch achieves its purpose stays.
 
 **Verify before recording.** Re-read the cited location and confirm the claim against the file. Then check that the consequence the finding draws follows from what the file shows: a quote can be accurate while the conclusion built on it is not, as when a finding says a document is tied to one provider but the document names only provider-neutral values. A finding whose own claim does not hold is dropped and noted in the report, not recorded. A claim that the reviewed documents make and that does not hold, such as a constraint, a reason or a statement of fact, is itself a finding: record it and name the claim that fails. When two statements contradict each other, establish which one fails and why, and record that statement, not the contradiction.
 
