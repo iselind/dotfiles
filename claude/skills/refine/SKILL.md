@@ -92,7 +92,10 @@ While you refine, harness hooks append to `.task/` at the repository root of the
 2. Distil what a later reader of the ticket needs: constraints and facts the user stated, decisions with the rejected alternatives and why, and discrepancies between ticket and reality that affect the work (resolved or not). Drop what only mattered during this session: tool quirks, progress narration, and anything already in the description or the analysis comment. Group by theme, not by source file.
 3. Show the proposed comment and wait for approval, as for every Jira write. If nothing is worth keeping, say so and skip the comment.
 4. Post it as a separate comment, titled as a refinement note, after the analysis comment. Do not mention `.task/` in it.
-5. Delete `.task/` (`rm -r .task`) and commit the deletion, and nothing else: `git add -A -- .task`, then `git commit -m "CORE-NNN: Clean out .task/" -- .task`, using the refined ticket's key and the commit attribution line the session specifies. Do this even when you skipped the comment in step 3. If nothing under `.task/` is tracked, there is nothing to commit: say so and skip. Do not push.
+5. Delete `.task/` and commit the deletion, and nothing else. Do this even when you skipped the comment in step 3, and do not push.
+   - Run `git ls-files .task`. If it is empty, nothing is tracked: say so, `rm -r .task` if the directory exists, and skip the commit.
+   - Otherwise delete and commit in one command, so no turn boundary falls between them (a hook can recreate `.task/` files in between, and the commit would then carry the new entries instead of the deletion): `git rm -r -q .task && git commit -m "CORE-NNN: Clean out .task/" -- .task`, using the refined ticket's key and the commit attribution line the session specifies. `git rm` leaves untracked files in place, so run `rm -r .task` afterwards if the directory remains.
+   - Check `git show --stat HEAD`: it must show only deletions under `.task/`. If it shows anything else, report that and stop. Hook commits ("record task knowledge") may already have removed some files, so the file count can differ from what you expected; that is fine.
 
 Hooks may append more entries after your last turn. That is expected; they are left uncommitted and the next run consolidates them.
 
