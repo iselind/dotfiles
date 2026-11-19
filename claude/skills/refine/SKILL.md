@@ -32,11 +32,13 @@ Read the ticket in full, including its comments, before anything else. Tickets w
 
 Use the repo path from the argument if given. Otherwise search under `~/code/` for the repo or repos the ticket is about. `core-platform` is the usual one. Use the ticket text and the Jira development info to pick others. Name the repos you chose and why, and ask if the choice is unclear.
 
+**Always analyse the latest `origin/main`, never HEAD.** The checkout's HEAD can be on any branch or commit, and harness hooks commit to it during the session, so it moves. For every repo you examine, run `git fetch origin` first, then read files at `origin/main` (`git show origin/main:<path>`, `git grep <pattern> origin/main -- <paths>`, `git log origin/main -- <paths>`), not from the working tree. Record `git rev-parse origin/main` as that repo's SHA. If the repo's default branch is not `main`, use its default branch.
+
 ## 3. Check staleness of any prior analysis
 
 Look for an earlier gap-analysis comment on the ticket. It records, per repo, the commit SHA examined and the paths looked at.
 
-- The analysis is **stale** if, for any recorded path, `git log <sha>..HEAD -- <paths>` in that repo is non-empty.
+- The analysis is **stale** if, for any recorded path, `git log <sha>..origin/main -- <paths>` in that repo is non-empty (after `git fetch origin`).
 - It is **fresh** otherwise. Report that, and stop for this ticket unless the user asked for a re-analysis.
 
 Do not use the Jira `updated` field. Our own writes change it.
@@ -67,11 +69,23 @@ When creating a ticket or epic, set `project` to CORE and `customfield_10032` to
 Post the gap analysis as a comment on the ticket. Include:
 
 - The verdict and evidence.
-- For each repo examined: `<repo> @ <commit SHA>`.
+- For each repo examined: `<repo> @ <origin/main commit SHA>` (the fetched `origin/main`, not HEAD).
 - The paths examined.
 
 Do not put branch names in ticket descriptions or comments. The Jira–GitHub integration links them automatically.
 
-## 6. Stop
+## 6. Consolidate `.task/` into the ticket
+
+While you refine, harness hooks append to `.task/` at the repository root of the checkout you work in (`corrections.md`, `clarifications.md`, `decisions.md`, `discrepancies.md`). Do this once the analysis comment is posted and the user has no more changes to the ticket:
+
+1. Read every file in `.task/`.
+2. Distil what a later reader of the ticket needs: constraints and facts the user stated, decisions with the rejected alternatives and why, and discrepancies between ticket and reality that affect the work (resolved or not). Drop what only mattered during this session: tool quirks, progress narration, and anything already in the description or the analysis comment. Group by theme, not by source file.
+3. Show the proposed comment and wait for approval, as for every Jira write. If nothing is worth keeping, say so and skip the comment.
+4. Post it as a separate comment, titled as a refinement note, after the analysis comment. Do not mention `.task/` in it.
+5. Delete `.task/` (`rm -r .task`). Leave the deletion uncommitted; the hooks and the user decide when to commit.
+
+Hooks may append more entries after your last turn. That is expected; the next run consolidates them.
+
+## 7. Stop
 
 Report what changed on the ticket and where it now sits. Do not start the next ticket. The user runs this skill again for that.
