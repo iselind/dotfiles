@@ -45,9 +45,19 @@ Do not use the Jira `updated` field. Our own writes change it.
 
 ## 4. Refinement steps
 
-Work through these in order. Before each Jira write (edit, comment, link, epic change), show the proposed change and wait for approval. Ask one question at a time.
+Work through these in order (an obsolete or done verdict takes the shorter path after 4.1). Jira descriptions and comments are Markdown, not wiki markup, and ADR-style names go in backticks; read the Jira quirks memory before the first write. Before each Jira write (edit, comment, link, epic change), show the proposed change and wait for approval. Ask one question at a time.
 
 **4.1 Gap analysis.** Compare what the ticket asks for with what the repos contain. Give one verdict: done, partly done, obsolete, or open. Back it with evidence: file paths, commit SHAs, and the relevant lines. Derive the paths you examine from the analysis itself, not from ticket text. Tickets often name files that have since moved or been removed.
+
+**If the verdict is obsolete (or done), skip 4.2 and 4.3.** No work remains, so there is nothing to reshape, no purpose statement to write, and no epic to place the ticket under. Instead:
+
+1. Look for leftovers the ticket was about: search every repo you examined (at `origin/main`) and Jira for references to the branch, files, ADRs or plans the ticket names, and check for local branches and worktrees. Report what you found, including "nothing".
+2. Name any question from the ticket that nothing else answers. It is not part of closing; offer it to the user as a separate ticket.
+3. Post the analysis comment (step 5), including the tip SHA of any branch to be deleted so it stays recoverable.
+4. Ask before deleting a remote branch, and delete it only on approval.
+5. Ask before closing the ticket. Closing needs a required Development Resolution field (`customfield_10047`). `jira_get_field_options` returns no values for it, so read the values used on other closed CORE tickets (e.g. `Do Not Fix` for superseded work, not `Done/Fixed`) and propose one. The user may close the ticket themselves.
+
+Then continue with step 6 and step 7.
 
 **4.2 Reshape.** Update the summary and description so they describe what remains, not what was originally asked. If the ticket covers several goals, consider splitting it, or cloning it and linking the clones, but only when the parts can land independently. Otherwise keep it as one ticket.
 
