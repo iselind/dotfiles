@@ -104,7 +104,10 @@ Wait for the Step 3a agent to complete. Combine its findings with your Step 3b f
 **Group, do not cap.** Do not drop findings to keep the list short. Cluster the verified findings into groups:
 - Each group is a theme, with one tracking item per group and one sub-bullet per finding.
 - Rank groups by impact (Pareto): the few groups that remove most of the risk come first. Lower-ranked groups stay tracked and are deferred, not dropped.
-- A group is well-sized when its resolution is one decision: it can be stated in one sentence and needs one question to the user. If a group needs two independent decisions, split it. A group whose fix is mechanical needs no decision, but a fix that pins down a behavior rule nobody specified is not mechanical (see the unspecified-behavior check above): its section has no "Decision:" line and no stand-in sentence such as "No decision needed".
+- A group is well-sized when its resolution is one decision: it can be stated in one sentence and needs one question to the user. If a group needs two independent decisions, split it.
+- What a group's section says depends on whether it needs a decision. A section never contains a "Decision:" line, options, or a recommended fix: those belong to Phase 2, after the user has engaged with the problem.
+  - A mechanical group needs no decision. Its section states the problem and stops: no stand-in sentence such as "No decision needed".
+  - A group that needs the user to decide states the question and the behavior before the branch. A fix that pins down a behavior rule nobody specified is never mechanical (see the unspecified-behavior check above), so it is this kind.
 - Items that change the same concept belong in one group. Items that only share a file do not.
 - Soft limit: about five sub-bullets is a prompt to check the decision test above, not a rule. A group with more sub-bullets that all serve one decision stays whole.
 
