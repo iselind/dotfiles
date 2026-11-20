@@ -129,7 +129,11 @@ Work through open (⬜) items in ascending order, one at a time. An item is a gr
 
 **For each item:**
 
-1. State the item number and describe the problem: what is wrong, where it is, and why it matters. For a group, name each sub-bullet briefly, then state the one decision the group needs, if it needs one. A group with no decision to make, such as a mechanical fix, gets the problem and nothing more: no stand-in sentence such as "No decision needed". Do not propose a fix yet — let the user engage with the problem first. Wait for the user to respond.
+1. State the item number and describe the problem: what is wrong, where it is, and why it matters. For a group, name each sub-bullet briefly. Then end the message according to the group's kind:
+   - A group that needs the user to decide ends with the one question the decision comes down to.
+   - A mechanical group ends on its last sentence about the problem. Nothing in the message says whether a decision is needed: not "No decision needed", not "This item needs no decision from you", and not a rewording of either.
+
+   Do not propose a fix yet — let the user engage with the problem first. Wait for the user to respond.
 
 2. Once the user has engaged, propose a fix (and alternatives if they exist). Prefer structural fixes over scattered per-instance changes — if a single change point (e.g. a shared function, a global redirect, a convention) can replace many individual changes, propose that first. If there are alternatives, confirm which to implement before proceeding.
 
