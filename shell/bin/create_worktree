@@ -1,0 +1,47 @@
+#!/bin/sh
+
+set -e
+
+if [ "$#" -ne 2 ]; then
+    echo "Usage: create_worktree <branch> <worktree-path>" >&2
+    exit 2
+fi
+
+branch=$1
+worktree_basepath=$2
+
+REPO_BASE="$HOME/code"
+mkdir -p "$REPO_BASE"
+
+get_repo_name() {
+    url=$(git remote get-url origin) || exit
+    repo=${url##*/}
+    repo=${repo%.git}
+    printf '%s\n' "$repo"
+}
+
+git fetch origin
+git remote set-head origin --auto
+
+default_ref=$(git symbolic-ref --quiet refs/remotes/origin/HEAD) || {
+    echo "Could not determine origin's default branch" >&2
+    exit 1
+}
+default_branch=${default_ref#refs/remotes/origin/}
+repo_name=$(get_repo_name)
+worktree="$worktree_basepath/$repo_name"
+mkdir -p "$(dirname "$worktree")"
+
+git worktree add --no-track -b "$branch" "$worktree" \
+"origin/$default_branch"
+
+(
+    cd "$worktree" || exit
+    git push -u origin "$branch"
+)
+
+# Example usage:
+# create_worktree \
+#   feature/PROJ-1-descriptive-title \
+#   "$REPO_BASE/worktrees/PROJ-1"
+
