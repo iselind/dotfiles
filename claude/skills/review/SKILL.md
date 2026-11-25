@@ -61,6 +61,8 @@ Spawn an agent in parallel using the Agent tool. The agent has no session contex
 >
 > Missing documentation is NOT a stop criterion — if something is hard to verify due to missing docs, that's a gap to report. DO stop at hypotheticals — if you're making assumptions about behavior you can't verify even with available information, that's noise.
 >
+> **Verify with the repository's own tools.** Where a claim can be settled by running something read-only, run it instead of inferring: the linters and test suites the repository documents, template or manifest renderers, schema validators. Do not run anything that changes state, such as a deploy, a push or a write to a live system. In each finding, say whether you verified it this way or only read the code.
+>
 > Report ONLY issues that need attention — do not comment on code that is working correctly. Return a plain list of findings, with no cap on the count. For each: one-line description, file and approximate location, why it matters, a severity (high / medium / low), and a short theme label (for example "terminology", "cross-repo scope", "convention placement") so related findings can be grouped later.
 
 **Step 3b — Convention verification**
@@ -144,6 +146,8 @@ For collision or uniqueness bugs (two items competing for the same key, filename
    If the fix writes prose that states what code covers or does, such as a scope, an "every" or "all", or a rule, verify each such claim against the code before writing it. When the prose states a rule, check it against every code path that implements it, so its exceptions are in the text from the start.
 
    If the fix writes a comment or prose that states why code is written a certain way, the reason must come from somewhere other than your own guess. If it is evident from the code or its surroundings, state it. If it is not, look for a record (commit history, a document), then ask the user, who may know it. If nobody knows it, the text states only what the code does, and the missing reason is added to the review tracking file as an open question, so it is not lost and not invented.
+
+   If the fix writes new prose, comments or names, check them against the purpose from Step 2b as well, not only against the finding. A purpose can rule out wording that the surrounding text still uses: a purpose of environment-neutrality, for example, rules out new text that names a provider's mechanism, even when the sentence it replaces did. Existing text outside the fix stays as it is, unless cleaning it up is the purpose.
 
 4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>`. For a group, mark each sub-bullet done and the group row done once all are resolved.
 
