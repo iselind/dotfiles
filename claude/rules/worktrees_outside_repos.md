@@ -1,4 +1,4 @@
-Never create a git worktree inside another git repository, including the repository the worktree belongs to (so not under `.claude/worktrees/` in the checkout). Create it outside any repository, for example as a sibling directory named `<repo>-<ticket>` under the directory that holds the checkouts.
+Never create a git worktree inside another git repository, including the repository the worktree belongs to (so not under `.claude/worktrees/` in the checkout). Create it outside any repository, at `~/code/worktrees/<ticket>/<repo>/`, so the folder names the Jira ticket the worktree belongs to and one ticket's repositories sit together. For work that has no ticket, use a descriptive name in place of `<ticket>`.
 
 **Why:** User said, when a worktree for CORE-1044 was created under the core-platform checkout's `.claude/worktrees/`: "that will be problematic. Never create worktrees within other git repos." A worktree nested in another repo's tree is picked up by that repo's tooling and git commands, which can act on the wrong repo.
 
