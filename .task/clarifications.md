@@ -5,3 +5,9 @@ Preference: hook output should not flood the CLI UI; the extraction prompt (curr
 
 ## 2026-11-27 — Aim is to move toward the "Ways of Working with AI" doc; task-master is not on main
 User: "let's move closer to the way of working described in the artifact 'Ways of Working with AI'. I've already added the definition of a PR boundary to the rules. the task-master skill mentioned is not on main today, it was on main a while back though". The doc (a Claude Docs artifact) is the target description; the PR-boundary rule is already done, and `task-master` has to be recovered from history, not read from main.
+
+## 2026-11-27 — Worktree location does not matter, but it must show the Jira ticket
+User: "I cannot say I care much in particular where exactly the worktrees end up, but it would be great if it was somehow clear which Jira ticket they belong to." Also on the glossary: "I agree that 'round' should be consistently called 'branch' instead as that's far more accurate."
+
+## 2026-11-27 — Settle inconsistencies first; a concern comes before the rules work
+User, after the layout and wording were fixed: "before we work on the rules and onward, I have a concern we should cover first". The concern itself has not been stated yet.
