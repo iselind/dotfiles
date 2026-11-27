@@ -39,6 +39,7 @@ link_dotfile "${DOT_FILES}/screenrc" ~/.screenrc
 mkdir -p ~/.claude
 link_dotfile "${DOT_FILES}/claude/skills" ~/.claude/skills
 link_dotfile "${DOT_FILES}/claude/rules" ~/.claude/rules
+link_dotfile "${DOT_FILES}/claude/agents" ~/.claude/agents
 
 mkdir -p ~/.config
 link_dotfile "${DOT_FILES}/opencode" ~/.config/opencode

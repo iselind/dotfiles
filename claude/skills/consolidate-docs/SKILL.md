@@ -21,8 +21,6 @@ in the appropriate locations, then delete `.task/`.
 
 Read the contents of `.task/`:
 
-- `.task/understanding.md` — what we learned about the task
-- `.task/gap.md` — what we needed to change
 - `.task/corrections.md` — corrections and investigations (if present)
 - `.task/clarifications.md`, `.task/decisions.md`, `.task/discrepancies.md` —
   recorded automatically by the `knowledge-extraction` plugin at each turn end

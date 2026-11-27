@@ -56,6 +56,34 @@ time. Rules are advisory, so a rule alone is a weak guarantee for anything that
 must not be skipped. A plugin bundling the parts comes later, once they stop
 changing.
 
+## Phase agents
+
+Phases of the work are moving into agents in `agents/` that run as subagents of
+one orchestrating session, which is the only one I talk to. An agent cannot ask
+while it runs. The task's fence is its delegation boundary: inside it the agent
+decides and notes the decision, and outside it, or on anything not covered
+before, it stops and reports. The agent's definition points at the skill that
+holds the procedure, so the procedure stays in one place and the skill still
+works when run directly.
+
+Every phase agent ends with the same report:
+
+```
+Status: done | stopped
+Reached: how far it got
+Needs from the user: each item with its kind (clarification or choice outside
+  the fence), the question, the options, and what it blocks
+Decided inside the fence: the decisions it made
+Discrepancies: expected against found, and how it was resolved
+Changed: the files and commits
+```
+
+The orchestrating session puts what I decide into the next phase and records the
+decisions and discrepancies, since a subagent has no turns of mine for the
+knowledge-extraction hook to read. Where this is heading, and what is still
+unverified, is in the doc's "Phase agents" section. `agents/consolidate-docs.md`
+is the first.
+
 ## Where a change goes
 
 | It is | It goes in |
@@ -75,6 +103,7 @@ any one repo (see [rules/document_patterns_globally_and_locally.md](rules/docume
 ```
 rules/      always-on stances, one per file, each with a Why and a How to apply
 skills/     procedures; see skills/README.md
+agents/     phase agents that run without asking and end with a phase report
 plugins/    hooks and scripts, e.g. knowledge-extraction
 concerns.md open concerns about how Claude is set up to work
 ```
