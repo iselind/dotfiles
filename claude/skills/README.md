@@ -98,7 +98,7 @@ idea are in [triggering.md](triggering.md).
 | `consolidate-docs` | Consolidate: promotes `.task/` into repo docs, then deletes it |
 | `extract-adr` | Consolidate: records a decision a new team member would benefit from reading |
 | `review` | Review: reviews a branch against its confirmed purpose |
-| `fix-pr-comments` | Review: works through PR review comments one at a time |
+| `fix-pr-comments` | Review: works through PR review comments inside the fence |
 | `first-principles` | Rethinking a design before committing to it |
 | `retro` | Retrospective after a skill session; slated for deprecation in [notes.md](notes.md) |
 

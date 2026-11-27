@@ -131,7 +131,7 @@ Otherwise ask: "Shall I draft all of these, or pick specific numbers?" — then 
 
 **Before drafting, read `~/.claude/skills/extract-adr/adr-format.md` and `~/.claude/skills/extract-adr/open-format.md` — do not skip this step.**
 
-Work through approved candidates one at a time. If the user said "draft all", write all files first, then present them to the user. Then go through each for approval and commit **one at a time** — ask "ADR-NNN looks good?" for each, wait for the response, commit that one, then move to the next. Do not batch commits. A single "ready" signal after seeing multiple ADRs is approval for review, not a commit signal for all of them.
+Work through the approved candidates. Write each draft, run the checks below, and commit each ADR in its own commit, then report all of them to the user at the end. Do not batch commits.
 
 When drafting, verify that enumerated sets meant to be complete (options considered, failure modes, required steps) are exhaustive. Illustrative examples in generic decisions should be marked with "e.g." rather than expanded to a complete enumeration. Do not tie the text to the present with "currently", "today" or "in the current implementation"; an ADR is timeless.
 
@@ -146,23 +146,20 @@ Before writing the Rationale, check each failure mode attributed to a rejected o
 **For each ADR candidate:**
 
 1. Draft following the ADR format in `adr-format.md`.
-2. Write the file immediately to `docs/adrs/ADR-NNN-kebab-case-title.md`. Do not wait for approval.
-   Before asking for approval, if the ADR describes behaviour implemented on the branch, check each statement of the Decision against the implementing code, and against a test that would fail if the statement were false. A test that cannot fail, for example because its setup does not do what its name says, does not count. Do not fix a mismatch inline: add it to the review tracking file as non-ADR work, as described above, and tell the user with the draft.
-3. Wait for user response:
-   - **Approval** ("yes", "looks good", no comment) → commit, then go to step 4
-   - **Edit request** → revise in place, wait for approval again
-   - **Rejection** ("skip", "no", "not this one") → an ADR that has never been merged to main may be deleted. One that has been merged is never deleted: mark it superseded using the repository's supersession line, and keep the file so its number stays taken. A discarded ADR gets the bold line `**Discarded because …**` directly under its title, giving the reason. Check whether the source content in the plan fits better in a Future Directions section; propose the move proactively.
+2. Write the file immediately to `docs/adrs/ADR-NNN-kebab-case-title.md`.
+   Before committing, if the ADR describes behaviour implemented on the branch, check each statement of the Decision against the implementing code, and against a test that would fail if the statement were false. A test that cannot fail, for example because its setup does not do what its name says, does not count. Do not fix a mismatch inline: add it to the review tracking file as non-ADR work, as described above, and tell the user with the draft.
+3. Commit once the checks pass, then go to step 4. If the user later asks for edits, revise in place and commit the revision. If the user rejects it ("skip", "no", "not this one"), then an ADR that has never been merged to main may be deleted. One that has been merged is never deleted: mark it superseded using the repository's supersession line, and keep the file so its number stays taken. A discarded ADR gets the bold line `**Discarded because …**` directly under its title, giving the reason. Check whether the source content in the plan fits better in a Future Directions section; propose the move proactively.
 4. After committing, replace extracted content in the source document with a reference to the new ADR. Commit this alongside or immediately after the ADR commit. Do not skip this step for any individual ADR.
 
 **For each OPEN candidate:**
 
 1. Draft following the OPEN format in `open-format.md`.
 2. Write the file immediately to `docs/adrs/OPEN-NNN-kebab-case-title.md`.
-3. Wait for user response: Approval → commit; Edit request → revise; Rejection → delete the draft. OPENs are ephemeral, so a rejected OPEN is deleted in full.
+3. Commit. If the user later asks for edits, revise; if the user rejects it, delete the draft. OPENs are ephemeral, so a rejected OPEN is deleted in full.
 
 Use commit messages in the style already used on this branch.
 
-Commit with explicit paths. The ADR file exists before it is approved, and the user may have staged files to review the next changes while iterating, so a plain commit would sweep them in. Look at `git status` first. `git add` the files of this commit, then `git commit -m "..." -- <those paths>`: only those paths are committed, and whatever else the user staged stays staged. Never unstage the user's files.
+Commit with explicit paths. The user may have staged files to review the next changes while iterating, so a plain commit would sweep them in. Look at `git status` first. `git add` the files of this commit, then `git commit -m "..." -- <those paths>`: only those paths are committed, and whatever else the user staged stays staged. Never unstage the user's files.
 
 After the last candidate, report how many ADRs were written and their filenames. Confirm all plan edits (relocations, removals, reference additions) are committed before proceeding.
 

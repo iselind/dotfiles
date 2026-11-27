@@ -1,7 +1,7 @@
 ---
 name: retro
 description: >
-  Use when a skill session has just completed and needs retrospective review. Assess what went well and what could improve, then apply changes one at a time. This skill runs automatically after other skills; can also be invoked directly.
+  Use when a skill session has just completed and needs retrospective review. Assess what went well and what could improve, then apply changes. This skill runs automatically after other skills; can also be invoked directly.
 argument-hint: "<skill-name>"
 user-invocable: true
 ---
@@ -59,18 +59,18 @@ response, end here.
 
 ## Phase 3 — Apply changes
 
-Work through the skill changes one at a time using the
-change → assess → review → commit → next flow:
+Apply the skill changes using the change → assess → commit flow, one commit per
+change:
 
 1. **Implement the change.** Read the skill file at
    `~/.claude/skills/<name>/SKILL.md`, then make the targeted edit. Do not
    rewrite the file from scratch.
 
-2. **Assess coverage.** Before asking the user to review, assess how likely the
-   implemented change is to prevent the original issue from recurring. Be honest:
-   if the change addresses the surface symptom but leaves the underlying cause
-   unaddressed, say so and propose a refinement. Only move to review once the
-   change is well-aimed at the root cause.
+2. **Assess coverage.** Before committing, assess how likely the implemented
+   change is to prevent the original issue from recurring. Be honest: if the
+   change addresses the surface symptom but leaves the underlying cause
+   unaddressed, say so and refine it. Only commit once the change is well-aimed
+   at the root cause.
 
 3. When committing, resolve the symlink `~/.claude/skills` to find the dotfiles
    repo and commit from there.

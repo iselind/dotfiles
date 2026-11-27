@@ -1,7 +1,7 @@
 ---
 name: fix-pr-comments
 description: >
-  Use when a user mentions PR review comments, feedback, or items to address (we got PR comments, there are review comments to fix, address the feedback, etc.). Fetch open review comments on the current branch's PR and work through them one at a time: understand, implement fixes, review, then commit.
+  Use when a user mentions PR review comments, feedback, or items to address (we got PR comments, there are review comments to fix, address the feedback, etc.). Fetch open review comments on the current branch's PR and work through them: understand, implement fixes, verify, then commit.
 argument-hint: "[pr-number | comment-url]"
 user-invocable: true
 ---
@@ -12,10 +12,11 @@ Current branch: !`git branch --show-current`
 
 ## Your job
 
-Work through PR review comments one at a time. For each comment: read it,
-understand the surrounding code, implement the fix, stop for the user to review,
-commit that fix, then move to the next. Do not batch fixes or commit before the
-user has reviewed.
+Work through PR review comments inside the fence (see
+`~/.claude/rules/work_inside_the_fence.md`). For each comment: read it,
+understand the surrounding code, implement the fix, verify it, commit that fix
+in its own commit, then move to the next. Put a comment to the user only when
+the fix is a choice the fence does not settle.
 
 ---
 
@@ -91,15 +92,13 @@ Open comments (N total):
 
 If there are no comments, say so and end here.
 
-Ask: "Any of these to skip? Otherwise I'll start with comment 1." — then wait
-for the user's response before proceeding to Phase 2.
+Skip any the user has already said to skip, and go on to Phase 2 with the rest.
 
 ---
 
-## Phase 2 — Work through comments one at a time
+## Phase 2 — Work through the comments
 
-Work through comments in ascending order, one at a time. Skip any the user
-asked to skip in Phase 1.
+Work through comments in ascending order. Skip any the user asked to skip.
 
 **For each comment:**
 
@@ -110,16 +109,16 @@ asked to skip in Phase 1.
    - For inline comments: the code at that location — read the file and show
      ±5 lines around the referenced line so the context is clear
 
-   If the fix is unambiguous and small (a single-line or purely mechanical
-   change), include the proposed fix in the same message and ask for
-   confirmation. If the user confirms, skip step 2 and go straight to step 3.
+   If the fix is unambiguous, go straight to step 3.
 
-   If the fix is ambiguous or has real alternatives, present the problem only
-   and wait for the user to engage before proposing anything.
+   If the fix is ambiguous or has real alternatives that the task's fence does
+   not settle, set the comment aside with the problem and the options, and put
+   it to the user together with the other such comments once the rest are done.
 
-2. **Once the user has engaged**, propose a concrete fix. If multiple
-   approaches exist, present them briefly with pros and cons and ask the user
-   to confirm which one to implement before proceeding. If proposing an
+2. **Choose the fix.** For a comment the user decided, start from their
+   answer. If multiple approaches exist and the fence settles the choice, take
+   that one and say why in the commit message; if the fence does not settle it,
+   ask. If proposing an
    alternative API or stdlib function, verify its documented behaviour before
    recommending it — or flag the uncertainty explicitly rather than presenting
    it as a known-good improvement.
@@ -141,28 +140,24 @@ asked to skip in Phase 1.
    factual claim against the code before writing. Do not write from assumption
    — an inaccurate comment is worse than no comment.
 
-4. **Stop for review.** End with: "Ready for review — let me know when you're
-   ready to commit." Then wait.
+4. **Verify the fix** with the tests or checks that apply to the change.
 
-   If the user requests changes, apply them and repeat this step.
-
-5. **Once the user approves**, commit the fix in its own commit — do not
+5. **Once verified**, commit the fix in its own commit — do not
    batch multiple comment fixes together. Use a commit message in the style
    already used on this branch (check `git log --oneline -10`). The message
    should indicate what was changed; a reference to the comment is optional
    but useful (e.g. `fix: <what changed>, per review comment`).
 6. **Reflect: what type of feedback surfaced in the PR review?** After committing, consider whether that feedback was on style, prose, or context — name any gaps (e.g. wrong scope, missing heuristic, project-specific invariant, prose or comment quality, etc.).
 
-Invite the user to respond — they may want to discuss the gap, correct your reasoning, or note that the review skill should be updated for style/prose/context items and wait for confirmation of changes before moving on.
+Keep the gaps for Phase 3 and tell the user about them in the final report.
 
-7. **Move to the next.** Ask: "Done — ready for comment N+1?" — then wait for
-   confirmation.
-
-**Do not move to the next comment until the user confirms the current one.**
+7. **Move to the next.**
 
 **When a comment is not actionable** (question already answered, superseded by
 other changes, or applies to code that no longer exists) — say so, describe
-why, and ask the user whether to skip it or reply to it before moving on.
+why, and ask the user whether to skip it or reply to it. A reply to a reviewer
+is outward-facing, so it is the user's call. Ask together with the other
+questions, once the other comments are done.
 
 **After the last comment is committed**, re-read every file altered during this
 session. Check for artifacts introduced by the fixes — extra blank lines, stale

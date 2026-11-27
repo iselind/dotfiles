@@ -2,7 +2,7 @@
 name: review
 description: >
   Review the current branch and populate a tracking plan with found issues,
-  then work through open issues one at a time. Use when the user asks to
+  then work through open issues. Use when the user asks to
   review a branch, review a plan, add review findings to a plan, or work
   through issues in a plan. Also use it before creating a pull request for
   the branch, and before pushing commits to update an open pull request.
@@ -127,27 +127,23 @@ If no new issues were found, run a secondary pass: explicitly identify the top 3
 
 Commit the tracking file (or the updated plan) before waiting for the user's confirmation. This ensures findings survive a context reset between Phase 1 and Phase 2.
 
-Tell the user: "Added items N–M to the plan. Ready to start with the next open issue?" — then wait for confirmation.
+Tell the user which items were added (N–M), then go on to Phase 2.
 
 ---
 
-## Phase 2 — Work through open issues one at a time
+## Phase 2 — Work through open issues
 
 **Before starting Phase 2, read `CONVENTIONS.md` from the repo root (and any directory-specific ones that apply) — do not skip this step.**
 
-**If the user waives the one-at-a-time loop** (for example "fix the items yourself"), the waiver covers this session only and only the stop-for-review steps. Record every item as ⬜ Open in the tracking file first, and mark an item ✅ Done only after its fix is made and verified. Still ask the user about any group that needs a decision (see the unspecified-behavior check in Phase 1), and still commit only after verification passes, one commit per group or per kind of change.
+**Work inside the fence** (see `~/.claude/rules/work_inside_the_fence.md`). Record every item as ⬜ Open in the tracking file first, and mark an item ✅ Done only after its fix is made and verified. Resolve the items that need no decision from the user without stopping between them, and commit after verification passes, one commit per group or per kind of change. Ask the user about any group that needs a decision (see the unspecified-behavior check in Phase 1): set those aside, and put their questions to the user together, one per group, once the other items are done.
 
-Work through open (⬜) items in ascending order, one at a time. An item is a group: work through its sub-bullets together, and ask one question per group, not one per sub-bullet. If a sub-bullet turns out to need a separate decision while you work through the group, split it into its own item before going on.
+Work through open (⬜) items in ascending order. An item is a group: work through its sub-bullets together, and ask one question per group, not one per sub-bullet. If a sub-bullet turns out to need a separate decision while you work through the group, split it into its own item before going on.
 
 **For each item:**
 
-1. State the item number and describe the problem: what is wrong, where it is, and why it matters. For a group, name each sub-bullet briefly. Then end the message according to the group's kind:
-   - A group that needs the user to decide ends with the one question the decision comes down to.
-   - A mechanical group ends on its last sentence about the problem. Nothing in the message says whether a decision is needed: not "No decision needed", not "This item needs no decision from you", and not a rewording of either.
+1. State the item number and describe the problem: what is wrong, where it is, and why it matters. For a group, name each sub-bullet briefly. A group that needs the user to decide ends with the one question the decision comes down to, and is set aside for the batch of questions. A mechanical group goes straight to step 3, and nothing says whether a decision is needed: not "No decision needed", and not a rewording of it.
 
-   Do not propose a fix yet — let the user engage with the problem first. Wait for the user to respond.
-
-2. Once the user has engaged, propose a fix (and alternatives if they exist). Prefer structural fixes over scattered per-instance changes — if a single change point (e.g. a shared function, a global redirect, a convention) can replace many individual changes, propose that first. If there are alternatives, confirm which to implement before proceeding.
+2. Choose the fix. For a group the user decided, start from their answer. Prefer structural fixes over scattered per-instance changes — if a single change point (e.g. a shared function, a global redirect, a convention) can replace many individual changes, choose that first. If there are alternatives and the fence settles the choice, take that one and say why in the item's resolution line; if the fence does not settle it, ask.
 
 For collision or uniqueness bugs (two items competing for the same key, filename, or slot), consider both the disambiguation approach (make the key more specific) and the consolidation approach (merge into a shared container with a separator or composite) before proposing. One is not always better than the other.
 
@@ -161,26 +157,19 @@ For collision or uniqueness bugs (two items competing for the same key, filename
 
 4. Update the plan: change `⬜ Open` to `✅ Done — <one-line resolution>`. For a group, mark each sub-bullet done and the group row done once all are resolved.
 
-5. Stop for review: "Ready for review — let me know when you're ready to commit." Wait.
+5. Verify the fix with the tests or checks that apply to the change.
 
-6. When the user's response clearly signals intent to commit — not just closes a side discussion — commit in the branch's style (look at recent commits for the pattern). If the response raises a new concern, addresses wording, or asks a question, treat it as continued review, not confirmation. A request to fix an item and move on ("fix it and go") authorizes the fix, not the commit: show the change and wait before committing. **An affirmation that confirms a wording proposal ("yes", "looks good", "do that") is not a commit signal — it means implement the change. The step 5 review checkpoint must still be held after implementing it.** Then ask: "Ready for item N+1?" and wait.
+6. Commit in the branch's style (look at recent commits for the pattern) once verification passes. Then go on to the next item.
 
    Do not add a "what type of feedback surfaced in the PR review?" reflection after each item — you are already running the review skill; the question is circular.
 
-**Do not work on the next item until the user confirms the current one.**
-
-If you reach the last open item and complete it, follow the normal confirmation flow for that item (step 4 → step 5 review → user confirms → step 6 commit).
+When the open items are done, report how each was resolved, and put the questions for the groups that need a decision.
 
 **After all items — second pass**
 
-Re-read every document edited during Phase 2. Check whether fixes introduced new issues. If found, present the list and ask: "These new issues surfaced from the edits — work through them, or skip?"
+Re-read every document edited during Phase 2. Check whether fixes introduced new issues. If found, add them to the tracking file and work through them the same way, repeating the pass after each round until it is clean. An issue that needs a decision goes to the user with the other questions; one that is not worth fixing is recorded as `⏭ Skipped — <reason>`.
 
-- **Work through them**: add to tracking file, continue Phase 2 loop, repeat pass after each round until clean or user skips.
-- **Skip**: add as `⏭ Skipped — <reason>` then proceed to Phase 3.
-
-If no new issues: "Second pass complete — no new issues. Ready to move to Phase 3 (extract-adr)?" Wait for confirmation.
-
-> **STOP — do not enter Phase 3 until the user confirms the second pass is done.**
+When the pass is clean, say so and go on to Phase 3 (extract-adr).
 
 ---
 
