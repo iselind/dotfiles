@@ -17,12 +17,12 @@ metadata:
 **Workflow When Iterating Through Changes:**
 
 1. **Implement one change** — write files immediately (user reviews via IDE diff, not chat)
-2. **Stop and note** — briefly describe what changed, wait for feedback
+2. **Note** — briefly describe what changed. Carry on unless the change touches something outside the fence (see [[work_inside_the_fence]])
 3. **If corrections needed** — agent records them in `.task/corrections.md` (see [[record_corrections_to_task]]), does not apply immediately; loop back to step 2 if more work on current change
 4. **Run verification** — once the change is complete, run appropriate verification (tests, terraform plan, etc.) until all passes
 5. **Apply corrections** — integrate all corrections from `.task/corrections.md` into relevant repo files, then delete the corrections file
 6. **Commit** — this is implied when stable point is reached; do not wait to be asked
-7. **Ask before next** — "Ready for the next?" and wait for confirmation before proceeding
+7. **Continue** — go on to the next change inside the fence; ask only when it needs a choice outside it (see [[work_inside_the_fence]])
 
 **Why:** Edits are reversible; commits are not. Recording corrections without applying them immediately keeps focus on current work. Verifying first ensures the baseline is sound before integrating feedback. Committing at natural stopping points creates a clear history.
 
