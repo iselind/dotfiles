@@ -59,7 +59,7 @@ State the branch's purpose, as briefly as it can be said clearly. A clear purpos
 
 **Step 3a — Unbiased environmental anchoring**
 
-Spawn an agent in parallel using the Agent tool. The agent has no session context — it reads the diff cold. Use this prompt:
+Spawn an agent in parallel using the Agent tool. The agent has no session context — it reads the diff cold — and it does not use the purpose from Step 2b, so you may launch it while you wait for the user to confirm that purpose. Use this prompt:
 
 > You are reviewing a branch. Run `git diff origin/main...HEAD` to read the diff, then read the changed files in full. If a `.task/` directory is present, ignore it: it is scratch space and not part of the change.
 >
