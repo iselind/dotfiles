@@ -47,7 +47,7 @@ If `$ARGUMENTS` is provided, use that path as the plan file. Confirm the file co
 
 Otherwise search for a tracking plan in `.github/`, `docs/plans/`, and the repo root — look for files named `*readiness*.md`, `*review*.md`, `*plan*.md`, `*tracker*.md`.
 
-If no plan exists, create a review tracking file. Preferred pattern: `<plan-name>-review.md` alongside the plan (e.g. `helm-chart-migration-review.md`). This file is ephemeral — deleted when all items are resolved. Derive the name from the branch's plan file (present or recently deleted in git history). If the right location is genuinely unclear, ask before creating.
+If no plan exists, create a review tracking file. Preferred pattern: `<plan-name>-review.md` alongside the plan (e.g. `helm-chart-migration-review.md`). This file is ephemeral — deleted when all items are resolved. Derive the name from the branch's plan file (present or recently deleted in git history). If the repository keeps scratch space in `.task/` (see the `consolidate-docs` skill), put the file there, so it never reaches a pull request. If the right location is still unclear, ask before creating.
 
 **Step 2 — Read the plan**
 
@@ -79,7 +79,7 @@ Load `CONVENTIONS.md` from the repo root and any directory-specific `CONVENTIONS
 
 Also read the list of deleted files, not only the added and modified ones. For each deleted file, confirm that the branch's stated purpose accounts for the deletion, and that nothing the file carried, such as a resource a running environment uses, is lost with it. A deletion that the purpose does not explain is a finding, even when the diff of the other files looks right.
 
-If no `CONVENTIONS.md` exists, look for `docs/CONVENTIONS.md` and the guides it links to (for ADRs and plans, e.g. `docs/plans-and-adrs.md`). Tell the user which files you are using in place of `CONVENTIONS.md`, and use them wherever this skill says `CONVENTIONS.md`.
+If no `CONVENTIONS.md` exists, look for `docs/CONVENTIONS.md` and the guides it links to (for ADRs and plans, e.g. `docs/plans-and-adrs.md`). Also read every `CLAUDE.md` and `README.md` in the directories of the changed files and in their parent directories, since a repository often keeps its conventions there instead, and check each against the new behavior: a document that governs a changed directory can contradict the branch without appearing in the diff. List the directories by walking up from each changed file, not by listing subdirectories. Tell the user which files you are using in place of `CONVENTIONS.md`, and use them wherever this skill says `CONVENTIONS.md`.
 
 Classify each finding into the categories in `CONVENTIONS.md` (Bug, Security, Gap, Suggestion, Cleanup, etc.). If you find an issue pattern that is *not* covered by any convention in the repo, flag it as a potential convention: this pattern should potentially become one.
 
@@ -134,6 +134,8 @@ Tell the user: "Added items N–M to the plan. Ready to start with the next open
 ## Phase 2 — Work through open issues one at a time
 
 **Before starting Phase 2, read `CONVENTIONS.md` from the repo root (and any directory-specific ones that apply) — do not skip this step.**
+
+**If the user waives the one-at-a-time loop** (for example "fix the items yourself"), the waiver covers this session only and only the stop-for-review steps. Record every item as ⬜ Open in the tracking file first, and mark an item ✅ Done only after its fix is made and verified. Still ask the user about any group that needs a decision (see the unspecified-behavior check in Phase 1), and still commit only after verification passes, one commit per group or per kind of change.
 
 Work through open (⬜) items in ascending order, one at a time. An item is a group: work through its sub-bullets together, and ask one question per group, not one per sub-bullet. If a sub-bullet turns out to need a separate decision while you work through the group, split it into its own item before going on.
 
