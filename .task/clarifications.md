@@ -17,3 +17,6 @@ User: "The concern is the intersection between separating the why, what, and how
 
 ## 2026-11-27 — Work-start skill next, and the skills README is to be rewritten
 User: "go straight to the work-start skill. We should also rewrite claude/skills/README.md as that's also a work in progress". The direction of the README rewrite has not been given yet.
+
+## 2026-11-27 — What the README should do: steer skill writing and the way of working
+User: "I'm not at all sure, a mix of A and B I guess. What I need from that readme is something steering the direction of how skills are written and the way of working. Perhaps that's something more appropriate for claude/README.md".
