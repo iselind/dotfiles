@@ -14,3 +14,6 @@ User, after the layout and wording were fixed: "before we work on the rules and 
 
 ## 2026-11-27 — The ticket is the contract: why, what and fence live there; refine cannot be assumed to have run
 User: "The concern is the intersection between separating the why, what, and how and where those are stored compared to the refine and task-master skills. What we want, I think, is the ticket reshaped - unless already in that shape - to make the why, what, and the fence clear so the ticket can be revisited to continue work by finding the new gap and how much of it we can do before we hit a PR boundary." And: "`refine` is something I use to improve tickets that are yet to be worked on ... If that were to get the ticket into the desired shape with regard to the what, why, and the fence as well, then that would be wonderful. We cannot assume that `refine` has touched a ticket before we start working on it though."
+
+## 2026-11-27 — Work-start skill next, and the skills README is to be rewritten
+User: "go straight to the work-start skill. We should also rewrite claude/skills/README.md as that's also a work in progress". The direction of the README rewrite has not been given yet.
