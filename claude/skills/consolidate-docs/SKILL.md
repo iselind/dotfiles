@@ -5,6 +5,10 @@ description: Use when findings or clarifications need promotion from scratch spa
 
 # Consolidate the Documentation
 
+**Ownership.** This skill is the only one that reads, routes and deletes `.task/`. Run it last, before
+a pull request is created: the pull request must not contain `.task/`. Other skills may read `.task/`
+as evidence but never change it.
+
 The `.task/` directory has been your scratch space during task work.
 Now we promote durable knowledge into the repository's documentation.
 
@@ -100,7 +104,10 @@ project memory: most of them are not specific to this repo. Sort each one:
 
 - `README.md` — high-level concepts, architecture overview
 - `CONVENTIONS.md` — patterns and best practices
-- Architecture docs or decision records — design decisions (ADRs)
+- Architecture docs — design that is not a decision between options
+- Design decisions that a new team member would want to read about in a year: do not write the ADR
+  here. List them under "Handed to extract-adr", then invoke the `extract-adr` skill with the Skill
+  tool, naming those decisions
 - Domain-specific docs — concepts, terminology, constraints
 - Code comments — where the behavior is implemented
 - Configuration docs — if the change affects how the project is configured
@@ -156,6 +163,10 @@ Commit changes with clear messages explaining what knowledge is being promoted a
 ---
 
 ## Phase 6 — Cleanup
+
+First check the state; do not rely on remembering where you were after `extract-adr`. For each
+architectural decision in `.task/decisions.md`, find its ADR in `docs/adrs/`, or write "not an ADR:
+<reason>" in your report. If one has neither, invoke `extract-adr` for it and run this check again.
 
 After all durable knowledge has been promoted:
 

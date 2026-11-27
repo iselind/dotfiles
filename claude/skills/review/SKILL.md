@@ -12,6 +12,14 @@ user-invocable: true
 
 # Review skill
 
+**Keep this in mind throughout, and after any interruption.** The phases are: 1 find and record,
+2 fix, 3 `extract-adr`, 4 delete the finished documents, 5 conventions audit and retro, 6 round
+assessment. If you are unsure which phase you are in, read the plan and the review tracking file to
+find out. Decide inside the branch's purpose and the repository's conventions, and say what you
+decided; ask the user only when a finding needs a behaviour rule nobody specified, a choice between
+options, or a clarification. Before a pull request is created, tell the user to run
+`consolidate-docs`, which owns `.task/` and deletes it.
+
 Current branch: !`git branch --show-current`
 
 <!-- git log origin/main..HEAD shows commits reachable from HEAD but not from origin/main,
@@ -47,13 +55,13 @@ Understand: the status table format (columns, emoji conventions, item numbering)
 
 **Step 2b — Establish the purpose**
 
-State the branch's purpose, as briefly as it can be said clearly. A clear purpose matters more than a single sentence. Take it from the plan file if it states one; otherwise from the ticket named in the branch name, or the pull request description. If none of these gives a clear purpose, ask the user for it rather than inferring it from the diff. Show the statement to the user, wait for confirmation or a correction, and only then continue. Write the confirmed purpose at the top of the review tracking file (or the plan). Step 4 tests findings against it.
+State the branch's purpose, as briefly as it can be said clearly. A clear purpose matters more than a single sentence. Take it from the ticket named in the branch name, the plan file, or the pull request description. If none of these gives a clear purpose, stop and ask the user for it rather than inferring it from the diff: a review without a clear purpose produces findings that are off. If the user already confirmed the purpose earlier in this session, state it and continue; otherwise show the statement to the user, wait for confirmation or a correction, and only then continue. Write the confirmed purpose at the top of the review tracking file (or the plan). Step 4 tests findings against it.
 
 **Step 3a — Unbiased environmental anchoring**
 
 Spawn an agent in parallel using the Agent tool. The agent has no session context — it reads the diff cold. Use this prompt:
 
-> You are reviewing a branch. Run `git diff origin/main...HEAD` to read the diff, then read the changed files in full.
+> You are reviewing a branch. Run `git diff origin/main...HEAD` to read the diff, then read the changed files in full. If a `.task/` directory is present, ignore it: it is scratch space and not part of the change.
 >
 > **Environmental anchoring:** Review by traversing outward through the codebase graph: start from the branch changes, understand context by examining related patterns/resources, and stop when signal-to-noise drops (typically within 2-3 steps). Do the changes make sense in the context of the codebase? Are they anchored in existing patterns and infrastructure?
 >
@@ -192,7 +200,7 @@ extract-adr runs its own mandatory retrospective before returning.
 
 You will need both in Phase 6.
 
-**Review tracking file:** If open items remain (extract-adr may have added new ones), return to Phase 2 and work through them using the normal review workflow. There is no need to re-run extract-adr afterward. Once all items are resolved, check for deletion. Deleting the file discards the record of any item marked skipped, so when reporting readiness list the skipped items and ask whether any should be tracked elsewhere, such as in a ticket or a plan item, before deleting.
+**Review tracking file:** If open items remain (extract-adr may have added new ones), return to Phase 2 and work through them using the normal review workflow. There is no need to re-run extract-adr afterward. Once all items are resolved, delete the file and commit the deletion. Deleting it discards the record of any item marked skipped, so first move each skipped item to a comment on the ticket, or to a plan item, and tell the user where it went. Do not ask for confirmation before deleting.
 
 **Plan file:** If all work items are complete and no open questions remain, the plan is ready to delete. Any "plan ready for deletion" cleanup item identified in Phase 1 belongs here; if it was deferred, handle it now.
 
