@@ -115,3 +115,53 @@ When removing skills, consider:
 - Documentation of why (DEPRECATED.md in claude/skills/?)
 - Migration path for users still using old skills
 - Clear signaling about which new approach replaces it
+
+---
+
+## Modeling skills as corporate roles (moved from README.md, 2026-11-27)
+
+An architect or a tech-lead is not a skill!
+
+Any role is composed of a multitude of capabilities, which could be regarded as
+skills. Looking at companies and what their role X does I've found they differ
+vastly. Companies reuse the role titles but roles also use different subsets of
+the available capabilities.
+
+Take a junior developer and a tech-lead as an example. The junior role is a
+fairly stable set of capabilities from one company to the next: write code, test
+it, review a colleague's change. A tech-lead sits far closer to a CTO and varies
+much more. One company's tech-lead mostly designs and reviews, another's mostly
+manages people and delivery. The higher the seniority, the less the title tells
+you about which capabilities are involved.
+
+What we try to mimic with skills is not corporate roles as such, but the
+capabilities they use. Those capabilities vary far less than roles do.
+
+## Working on high-level tasks (moved from README.md, 2026-11-27)
+
+I tend to think more in high-level tasks than in the tiny changes that together
+compose together to create the solution. That's not really how LLMs tend to
+operate.
+
+As most of us, when we have a task to complete we need to know when we're done,
+or at least done "enough". So having a high-level task would only act as the
+guiding star. We still need to figure out the tiny changes that together compose
+the solution. Once we reach that definition of done, that's where we publish the
+PR.
+
+A prompt should basically consist of
+
+- Task
+- Guardrails
+- DoD - Definition of Done
+
+This would mean I need to change a bit in how I work with LLMs. I need to get
+better at defining done, creating something that result in a Boolean result.
+Important here is that definition of done doesn't have to be executable!
+
+So we should be able to turn a DoD into something that the LLM can check,
+for example through Claude's `/goal` feature.
+
+Anthropic says that a good goal has one end state. It says how to prove that end
+state and says what mustn't change. And it should also have a turn limit to stop
+it running indefinitely.

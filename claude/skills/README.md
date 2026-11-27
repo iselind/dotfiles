@@ -1,175 +1,106 @@
 # Skills
 
+How skills are written here, and which ones exist. The way of working they serve
+is described in [../README.md](../README.md). Design thinking that is not yet a
+rule lives in [notes.md](notes.md), and what is known about skills triggering in
+[triggering.md](triggering.md).
+
 Anthropic documents how to create a skill
-[here](https://claude.com/docs/skills/how-to). That should be a good starting
-point. Essentially a skill should "fix" something the model gets wrong according
-to their docs.
+[here](https://claude.com/docs/skills/how-to). A skill should fix something the
+model gets wrong. Their best skills began as a few lines and a single gotcha,
+so a skill here is a list of things Claude actually got wrong, not a manual for
+the whole process. Leave Claude alone doing its thing until it makes mistakes,
+then add the support. The first step in creating a skill is to complete the task
+without one, and notice the information that has to be given repeatedly.
 
-Their first step in creating a new skill is to complete the task without a
-skill. The information that gets provided repeatedly should be noticed.
+A valid skill conforms to [the specification](https://agentskills.io/specification).
 
-What we need to do is leave Claude alone doing its thing until it makes
-mistakes, then add the infrastructure and files like skills to give it some
-support to get to that final destination.
+## What a skill is for
 
-The Anthropic team actually also say that most of their own best skills began as
-just a few lines and a single gotcha that basically corrected something that
-Claude can do out of the box. So this treats skills as a list of things that
-Claude actually got wrong, not a manual for the whole process anymore.
-
-Some of the insights here come from [this YouTube
-video](https://www.youtube.com/watch?v=J9NQTYUP6k0). Other things are my own
-thinking and/or findings. They don't always agree.
-
-What you'll see reading through this document is me trying to marry my thoughts
-on working on higher-level tasks with reality. "Reality" here is defined as what
-we can do with Claude today using Haiku and Sonnet models.
-
-Haiku is the main target, since it's what I use for most of my work. Sonnet is
-for when I need that little extra. Skills are written with Haiku as the floor
-and checked against Sonnet for regressions. Findings are labelled with the model
-they were observed on and a date, since behaviour changes between releases.
-Anything not measured is a hypothesis, and is called one.
-
-## My Rules
-
-All skills need to conform to the prescribed rules unless deliberately commented
-in the skill why it deviates.
-
-A valid skill conform to [the
-specification](https://agentskills.io/specification).
-
-Other than that, the following rules apply on top of the specification.
-
-- **Description** (front matter): Field describes the task the user asks for and
-  the specific context it applies in (system, repo, tool). Shape: "Use when
-  [task] in [context]". Worded with the words a request for that task would use,
-  and pushy about the contexts it covers. No instructions about *how* to use;
-  pure *when*. The docs say a description covers what the skill does and when to
-  use it, so "pure *when*" is my stricter choice. It is untested.
-- **Body** (after front matter): Explains system response steps when that
-  situation occurs; may reference tools, endpoints, conventions—but no
-  instructional prose like "invoke `/review`" or "run the fix-pr-comments
-  skill". Document style: file paths (``~/.claude/skills/*``,
-  `docs/prds/<slug>.md`), shell command substitutions in back-ticks (``!ls
-  ...``), API endpoint patterns (`/repos/{owner}/pulls`).
-- **Don't explicitly invoke other skills** in prose (e.g., "use `/skill-name`")
-  — describe the workflow naturally instead. We're not building workflows! (My
-  own preference. The docs endorse procedures, checklists and validation loops
-  inside a skill.)
-
-My experience so far is that skills following these rules were not invoked at
-the right time. That was mostly observed on Haiku and never measured, so treat
-it as a hypothesis (see [triggering.md](triggering.md)).
-
-## The shape of a skill
-
-- **Description** = the task and the context it applies in. A skill loads when a
-  task matches, so the description has to name something a user would ask for.
-- **Body** starts as a list of gotchas: concrete facts that defy reasonable
-  assumptions. "Be careful with the Jira custom field" is advice.
-  "`customfield_10032` takes `{"value": "CORE", "child": {"value":
-  "Platform"}}`" is a gotcha.
-- **Procedure** (steps, a template, a checklist, a validation loop) is added
-  only where an observed failure on Haiku demands it. Gotchas alone work when
-  the model knows how to do the task and only misses specifics. They won't carry
-  a task the model doesn't know how to approach.
-- **The error is never the trigger.** The agent doesn't know it's about to make
-  an error, so there is nothing to match on. The task during which the error
-  happens is the trigger, and the error becomes a line in that skill's body.
-
-### The confidence paradox
-
-A gotchas-only skill covers tasks the agent thinks it can do alone, which are the
-tasks where it is least likely to consult a skill. The docs' counter is to be
-specific in the description: name the system, repo or tool where the gotchas
-apply. "Use when creating or updating Jira tickets in the CORE project" gives a
-signal that "Use when creating tickets" does not.
-
-### Where a correction goes
+Skills hold procedures that need judgment at a specific moment: understanding a
+task, scoping a branch, reviewing a diff, consolidating what a task taught.
+Stances that hold in every task are rules. What must happen every time, or can
+be checked mechanically, is a hook or a script, because a validator beats an
+instruction. See the table in [../README.md](../README.md) for where a change goes.
 
 | Where the error lives | Where the fix goes |
 |---|---|
-| Happens during one recurring task | A gotcha in that task's skill. With no such skill, that's a reason to create one. |
-| Happens in any task (naming, commit format, don't touch X) | `~/.claude/rules/` or a CLAUDE.md. The docs say instructions for every conversation belong there, not in a skill. |
-| Mechanically checkable (formatting, a forbidden file, a failing test) | A hook, a linter or a test. A validator beats an instruction. |
-| About reasoning quality (jumped to a conclusion, didn't check the repo) | Probably not a skill. Task, guardrails and DoD in the prompt (see below). |
+| Happens during one recurring task | A gotcha in that task's skill. With no such skill, that is a reason to create one. |
+| Happens in any task (naming, commit format, don't touch X) | `rules/` or a CLAUDE.md. |
+| Mechanically checkable (formatting, a forbidden file, a failing test) | A hook, a linter or a test. |
+| About reasoning quality (jumped to a conclusion, didn't check the repo) | Probably not a skill. Put task, guardrails and a definition of done in the prompt. |
 
-The last row is where `act`, `choose` and `reconcile` lived, and a skill is the
-weakest tool for those errors. They never got invoked, so they were retired. The
-recording half of `correction`, `choose` and `reconcile` moved to the
-[knowledge-extraction plugin](../plugins/knowledge-extraction/README.md), whose
-Stop hook triggers it deterministically; `act` was dropped.
+The last row is where `act`, `choose` and `reconcile` lived. They never got
+invoked and were retired; recording corrections moved to the
+[knowledge-extraction plugin](../plugins/knowledge-extraction/README.md).
 
-### One set of skills, or one per model
+## Rules for writing one
 
-One set, written for Haiku, checked on Sonnet. Split a skill per model only
-when there's a recorded measurement of it failing on Haiku and a fix that
-measurably hurts Sonnet. The order of escalation:
+- **Description** (front matter) names the task the user asks for and the
+  specific context it applies in (system, repo, tool). Shape: "Use when [task]
+  in [context]". Use the words a request for that task would use, and be pushy
+  about the contexts it covers. It says when, never how to use the skill. The
+  stricter "pure when" is my choice and is untested.
+- **Body** explains what happens in that situation: steps, conventions, tools,
+  endpoints, file paths, shell commands in back-ticks.
+- **Reusing another skill's procedure:** cite its `SKILL.md` path, as in
+  `~/.claude/skills/shape-ticket/SKILL.md`, and name the steps to follow. Do not
+  tell the model to run or invoke a skill by name. A skill that depends on
+  another must still work when the other does not load: the failure rule in
+  [../rules/skill_launch_failure.md](../rules/skill_launch_failure.md) is to
+  stop and say so, never to replace it with inline work. (This loosens an earlier
+  rule against any reference to another skill. The docs endorse procedures and
+  checklists inside a skill; I had not tested the stricter form either.)
+- **Gotchas first.** A gotcha is a concrete fact that defies reasonable
+  assumptions. "Be careful with the Jira custom field" is advice.
+  "`customfield_10032` takes `{"value": "CORE", "child": {"value": "Platform"}}`"
+  is a gotcha.
+- **Procedure only where a failure demands it.** Add steps, a template or a
+  checklist where a failure has been observed. Gotchas alone work when the model
+  knows how to do the task and misses only specifics. They will not carry a task
+  the model does not know how to approach.
+- **The error is never the trigger.** The agent does not know it is about to
+  err, so there is nothing to match on. The task during which the error happens
+  is the trigger, and the error becomes a line in that skill's body.
+- **Intent belongs in the ticket.** A skill that needs the why, the what or the
+  fence reads it from the ticket, and does not create a plan file for it.
+- **Writes to Jira need approval each time.** Show the change, wait, then write.
 
-1. One set, Haiku as the floor, Sonnet checked for regressions.
-2. Same set, model-specific wording in a few skills where a measurement shows a
-   gap.
-3. Two sets. Every correction would then need to land in both, and a wrong set
-   loading would be hard to spot.
+The confidence paradox: a gotchas-only skill covers tasks the model thinks it can
+do alone, which are the tasks where it is least likely to consult a skill. The
+counter is a specific description, naming the system, repo or tool where the
+gotchas apply. "Use when creating or updating Jira tickets in the CORE project"
+is a signal that "Use when creating tickets" is not.
 
-An explicitly invoked skill (`/skill-name`) doesn't depend on triggering, so
-model differences there are mostly about how well the body is followed.
+## Models
 
-## Triggering skills
+One set of skills, written with Haiku as the floor and checked on Sonnet for
+regressions. Split by model only with a recorded measurement of a skill failing
+on Haiku and a fix that measurably hurts Sonnet. Findings are labelled with the
+model they were observed on and a date, since behaviour changes between releases.
+Anything not measured is called a hypothesis.
 
-Details, doc quotes, the hook idea and how to measure it are in
-[triggering.md](triggering.md). In short: the docs describe matching on the
-user's task, skills for things the model does unaided are expected to trigger
-rarely, and my "skills don't fire at the right time" experience is an
-unmeasured, mostly-Haiku hypothesis.
+## Triggering
 
-## Observations
+The docs describe matching on the user's task. Skills for things the model does
+unaided are expected to trigger rarely, and my experience that skills do not fire
+at the right time is an unmeasured, mostly-Haiku hypothesis. An explicitly
+invoked skill (`/skill-name`) does not depend on triggering. Details and a hook
+idea are in [triggering.md](triggering.md).
 
-### Modeling skills as corporate roles
+## The skills
 
-An architect or a tech-lead is not a skill!
+| Skill | Step of the way of working |
+|---|---|
+| `shape-ticket` | Understand: verifies and fixes the why, what, fence and sources in a ticket |
+| `task-master` | Understand, confirm, iterate: builds context, confirms the understanding, finds the gap, scopes the branch |
+| `refine` | Understand, ahead of time: gap analysis, reshape through `shape-ticket`, place under an epic |
+| `consolidate-docs` | Consolidate: promotes `.task/` into repo docs, then deletes it |
+| `extract-adr` | Consolidate: records a decision a new team member would benefit from reading |
+| `review` | Review: reviews a branch against its confirmed purpose |
+| `fix-pr-comments` | Review: works through PR review comments one at a time |
+| `first-principles` | Rethinking a design before committing to it |
+| `retro` | Retrospective after a skill session; slated for deprecation in [notes.md](notes.md) |
 
-Any role is composed of a multitude of capabilities, which could be regarded as
-skills. Looking at companies and what their role X does I've found they differ
-vastly. Companies reuse the role titles but roles also use different subsets of
-the available capabilities.
-
-Take a junior developer and a tech-lead as an example. The junior role is a
-fairly stable set of capabilities from one company to the next: write code, test
-it, review a colleague's change. A tech-lead sits far closer to a CTO and varies
-much more. One company's tech-lead mostly designs and reviews, another's mostly
-manages people and delivery. The higher the seniority, the less the title tells
-you about which capabilities are involved.
-
-What we try to mimic with skills is not corporate roles as such, but the
-capabilities they use. Those capabilities vary far less than roles do.
-
-## Working on high-level tasks
-
-I tend to think more in high-level tasks than in the tiny changes that together
-compose together to create the solution. That's not really how LLMs tend to
-operate.
-
-As most of us, when we have a task to complete we need to know when we're done,
-or at least done "enough". So having a high-level task would only act as the
-guiding star. We still need to figure out the tiny changes that together compose
-the solution. Once we reach that definition of done, that's where we publish the
-PR.
-
-A prompt should basically consist of
-
-- Task
-- Guardrails
-- DoD - Definition of Done
-
-This would mean I need to change a bit in how I work with LLMs. I need to get
-better at defining done, creating something that result in a Boolean result.
-Important here is that definition of done doesn't have to be executable!
-
-So we should be able to turn a DoD into something that the LLM can check,
-for example through Claude's `/goal` feature.
-
-Anthropic says that a good goal has one end state. It says how to prove that end
-state and says what mustn't change. And it should also have a turn limit to stop
-it running indefinitely.
+`review` still takes the branch's purpose from free text in the ticket. It could
+read the ticket's `## Why` section once `shape-ticket` is in use.
