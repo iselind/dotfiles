@@ -4,3 +4,6 @@ Decided: the doc's layout, replacing the rule's sibling `<repo>-<ticket>` sugges
 
 ## 2026-11-27 — "Round" renamed "branch" in the doc, edited in place
 Decided: replace "round" with "branch" across the doc text, glossary and three diagrams, as plain edits and not suggestions, since the user asked for exactly this wording change. Easy to undo through the doc's history.
+
+## 2026-11-27 — Proposed: shared ticket-shape reference used by refine and the work-start skill
+Proposed, awaiting the user's answer on where the file lives: one reference file defining the ticket shape (why, what, fence, authoritative sources), read by both `refine` (step 4.2 extended) and the revived `task-master`, which checks the shape first and reshapes only if missing. Rejected: one skill invoking the other, because of the skill-launch-failure rule. `.task/understanding.md` and `.task/gap.md` of the old `task-master` would go away. Easy to undo: nothing is written yet.
