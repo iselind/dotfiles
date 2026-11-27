@@ -1,0 +1,3 @@
+
+## 2026-11-27 — A skill owning the ticket shape is better than a shared reference file
+Believed: the ticket shape should live in a shared reference file read by both `refine` and the work-start skill, because one skill invoking another would clash with the skill-launch-failure rule. User said: "Wouldn't it make sense to have a skill specifically to verify and fix the shape of a ticket. Might be the new improved/reshaped 'refine' skill, I don't know but I think it would make sense keeping the ticket shape in one place." Matters because the objection was overstated: that rule only says to stop and tell the user when a skill fails to launch, which applies equally to a dependency on a shape skill.
