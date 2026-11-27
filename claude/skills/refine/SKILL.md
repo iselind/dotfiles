@@ -49,7 +49,7 @@ Work through these in order (an obsolete or done verdict takes the shorter path 
 
 **4.1 Gap analysis.** Compare what the ticket asks for with what the repos contain. Give one verdict: done, partly done, obsolete, or open. Back it with evidence: file paths, commit SHAs, and the relevant lines. Derive the paths you examine from the analysis itself, not from ticket text. Tickets often name files that have since moved or been removed.
 
-**If the verdict is obsolete (or done), skip 4.2 and 4.3.** No work remains, so there is nothing to reshape, no purpose statement to write, and no epic to place the ticket under. Instead:
+**If the verdict is obsolete (or done), skip 4.2 and 4.3.** No work remains, so there is nothing to reshape, no shape to write, and no epic to place the ticket under. Instead:
 
 1. Look for leftovers the ticket was about: search every repo you examined (at `origin/main`) and Jira for references to the branch, files, ADRs or plans the ticket names, and check for local branches and worktrees. Report what you found, including "nothing".
 2. Name any question from the ticket that nothing else answers. It is not part of closing; offer it to the user as a separate ticket.
@@ -61,7 +61,7 @@ Then continue with step 6 and step 7.
 
 **4.2 Reshape.** Update the summary and description so they describe what remains, not what was originally asked. If the ticket covers several goals, consider splitting it, or cloning it and linking the clones, but only when the parts can land independently. Otherwise keep it as one ticket.
 
-The description must also state the ticket's purpose, briefly and clearly (clarity matters more than a single sentence): what the work is for, and what would be wrong if it were done in a way that defeats that. Later work, including the `review` skill, tests the branch against this purpose. If the ticket has none, draft a statement from the ticket and the gap analysis and ask the user to confirm it. If you cannot draft one without guessing, ask the user for it.
+The description must also hold the ticket's shape: the why, the what, the fence and the sources. The shape, how to verify it and how to fix it are defined in `~/.claude/skills/shape-ticket/SKILL.md`; follow its steps 2 and 3 for the reshaped ticket, using the gap analysis from 4.1 as input. Later work, including the `review` skill, tests the branch against the why. A ticket already in that shape is left as it is.
 
 **4.3 Place.** Choose an existing epic that fits, or propose a new one. Every work ticket ends up under an epic, so "unassigned" is a `parent is EMPTY` query. Epics may be small. A one-story epic is fine.
 
